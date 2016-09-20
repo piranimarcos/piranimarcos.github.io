@@ -63,7 +63,7 @@
 
 	<!-- Section: intro -->
     <section id="intro" class="intro">
-	
+
 		<div class="slogan">
 			<h2>PAGINA PERSONAL</span> </h2>
 			<h4>Marcos Pirani - full stack developer</h4>
@@ -148,15 +148,15 @@
                 </div>
 				</div>
             </div>
-        </div>		
+        </div>
 		</div>
 	</section>
 	<!-- /Section: about -->
-	
+
 
 	<!-- Section: services -->
     <section id="service" class="home-section text-center bg-gray">
-		
+
 		<div class="heading-about">
 			<div class="container">
 			<div class="row">
@@ -231,13 +231,13 @@
                 </div>
 				</div>
             </div>
-        </div>		
+        </div>
 		</div>
 	</section>
 	<!-- /Section: services -->
-	
 
-	
+
+
 
 	<!-- Section: contact -->
     <section id="contact" class="home-section text-center">
@@ -294,7 +294,7 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group">	
+                        <div class="form-group">
                         	<label for="asunto">
                                 Asunto</label>
                             <input type="text" name="asunto" class="form-control" placeholder="Ingrese asunto" required="required" />
@@ -311,38 +311,13 @@
                             Enviar mensaje</button>
                     </div>
                 </div>
-                
-
-
-                    <?php
-                    	session_start();
-
-                    	if (isset($_SESSION['env'])) {
-							$env = $_SESSION['env'];
-						} else {
-							$env = "nada";
-						} 
-						if ($env == 'yes')  {
-							echo '<br><div class="alert alert-success" role="alert">
-									  <p> Mensaje enviado correctamente. </p>
-							      </div>';
-							session_destroy();
-						}
-						if ($env == 'no')  {
-							echo '<br><div class="alert alert-danger" role="alert">
-								  	  <p>Error al enviar el mensaje.</p>
-								  </div>';
-							session_destroy();
-						}
-
-                    ?>
             </div>
         </div>
-		
+
 		<div class="col-lg-4">
 			<div class="widget-contact">
 				<h5>Oficinas</h5>
-				
+
 				<address>
 				  <strong>Universidad Tecnológica Nacional</strong><br>
 				  Falcon 1332<br>
@@ -353,19 +328,19 @@
 				<address>
 				  <strong>Email</strong><br>
 				  <a href="mailto:contacto@piranimarcos.esy.es">contacto@piranimarcos.esy.es</a>
-				</address>	
+				</address>
 				<address>
 				  <strong>Redes sociales</strong><br>
                        	<ul class="company-social">
                             <li class="social-facebook"><a href="https://www.facebook.com/Marcos2523" target="_blank"><i class="fa fa-facebook"></i></a></li>
                             <li class="social-twitter"><a href="https://twitter.com/ChinoPirani" target="_blank"><i class="fa fa-twitter"></i></a></li>
                             <li class="social-google"><a href="https://www.github.com/piranimarcos" target="_blank"><i class="fa fa-github"></i></a></li>
-                        </ul>	
-				</address>					
-			
-			</div>	
+                        </ul>
+				</address>
+
+			</div>
 		</div>
-    </div>	
+    </div>
 
 		</div>
 	</section>
@@ -382,21 +357,21 @@
 						</a>
 					</div>
 					</div>
-					<p>&copy;Copyright 2015 - Marcos Pirani Full-Stack Developer </p>
-                    <!-- 
-                        All links in the footer should remain intact. 
+					<p>&copy;Copyright 2016 - Marcos Pirani Full-Stack Developer </p>
+                    <!--
+                        All links in the footer should remain intact.
                         Licenseing information is available at: http://bootstraptaste.com/license/
                         You can buy this theme without footer links online at: http://bootstraptaste.com/buy/?theme=Squadfree
                     -->
 				</div>
-			</div>	
+			</div>
 		</div>
 	</footer>
 
     <!-- Core JavaScript Files -->
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.easing.min.js"></script>	
+    <script src="js/jquery.easing.min.js"></script>
 	<script src="js/jquery.scrollTo.js"></script>
 	<script src="js/wow.min.js"></script>
     <!-- Custom Theme JavaScript -->
