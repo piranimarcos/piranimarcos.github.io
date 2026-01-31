@@ -774,6 +774,134 @@ body {
     animation: fadeIn 0.3s ease;
 }
 
+/* Cotización Card */
+.cotizacion-card {
+    text-align: center;
+}
+
+.cotizacion-valor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.cotizacion-valor #cotizacion-actual {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--positive);
+}
+
+.cotizacion-fecha {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
+.cotizacion-manual {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.cotizacion-manual input {
+    width: 120px;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+/* Destinos Card Dashboard */
+.destinos-card {
+    grid-column: span 2;
+}
+
+.destino-resumen-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--bg-input);
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.destino-resumen-item .destino-icono {
+    font-size: 1.3rem;
+}
+
+.destino-resumen-item .destino-nombre {
+    flex: 1;
+    font-weight: 500;
+}
+
+.destino-resumen-item .destino-total {
+    font-weight: 600;
+    color: var(--positive);
+}
+
+.destino-resumen-item .destino-meta {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.destino-resumen-item .progress-container.mini {
+    width: 80px;
+    height: 8px;
+    margin: 0;
+}
+
+/* Destino Item (en sección Metas) */
+.destino-item {
+    padding: 15px;
+    background-color: var(--bg-input);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.destino-item .destino-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.destino-item .destino-titulo {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.destino-item .destino-progreso {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+/* Tag de destino en ingresos */
+.tag.destino-tag {
+    background-color: var(--positive);
+}
+
+/* Badge de moneda */
+.moneda-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 5px;
+}
+
+.moneda-badge.usd {
+    background-color: #22c55e;
+    color: white;
+}
+
 /* Utility */
 .positive { color: var(--positive); }
 .negative { color: var(--negative); }

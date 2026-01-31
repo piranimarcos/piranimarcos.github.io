@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Dinero - Contabilidad Personal</title>
     <link rel="stylesheet" href="css/styles.css">
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
 </head>
 <body>
     <div class="app-container">
@@ -58,6 +64,24 @@
                         </div>
                         <p class="progress-text" id="meta-text">Sin meta definida</p>
                     </div>
+                    <div class="card cotizacion-card">
+                        <h3>Cotización Dólar Blue</h3>
+                        <div class="cotizacion-valor">
+                            <span id="cotizacion-actual">$0</span>
+                            <button id="btn-refresh-cotizacion" class="btn btn-small btn-secondary" title="Actualizar">🔄</button>
+                        </div>
+                        <p class="cotizacion-fecha" id="cotizacion-fecha">Sin datos</p>
+                        <div class="cotizacion-manual">
+                            <input type="number" id="cotizacion-manual-input" placeholder="Valor manual">
+                            <button id="btn-cotizacion-manual" class="btn btn-small btn-secondary">Usar manual</button>
+                        </div>
+                    </div>
+                    <div class="card destinos-card">
+                        <h3>Destinos de Ahorro</h3>
+                        <div id="dashboard-destinos">
+                            <p class="empty-message">Sin destinos</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Alertas de Recurrentes -->
@@ -102,9 +126,15 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="ingreso-descripcion">Descripción</label>
-                                <input type="text" id="ingreso-descripcion" placeholder="Ej: Sueldo mensual">
+                                <label for="ingreso-destino">Destino de Ahorro</label>
+                                <select id="ingreso-destino">
+                                    <option value="">Sin destino</option>
+                                </select>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ingreso-descripcion">Descripción</label>
+                            <input type="text" id="ingreso-descripcion" placeholder="Ej: Sueldo mensual">
                         </div>
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">Guardar</button>
@@ -263,6 +293,22 @@
                     </div>
                 </div>
 
+                <!-- Destinos de Ahorro -->
+                <div class="card">
+                    <h3>Destinos de Ahorro</h3>
+                    <form id="form-destino" class="form form-inline">
+                        <input type="hidden" id="destino-id">
+                        <input type="text" id="destino-icono" placeholder="Emoji" maxlength="2" style="max-width: 60px;">
+                        <input type="text" id="destino-nombre" placeholder="Nombre del destino" required>
+                        <input type="number" id="destino-objetivo" placeholder="Meta (opcional)" min="0">
+                        <button type="submit" id="btn-submit-destino" class="btn btn-primary">Agregar</button>
+                        <button type="button" id="btn-cancelar-destino" class="btn btn-secondary" hidden>Cancelar</button>
+                    </form>
+                    <div class="list" id="lista-destinos" style="margin-top: 15px;">
+                        <p class="empty-message">Sin destinos de ahorro</p>
+                    </div>
+                </div>
+
                 <div class="card">
                     <h3>Mis Metas</h3>
                     <div class="list" id="lista-metas">
@@ -282,6 +328,10 @@
                             <option value="efectivo">💵 Efectivo</option>
                             <option value="banco">🏦 Banco</option>
                             <option value="billetera">📱 Billetera Virtual</option>
+                        </select>
+                        <select id="cuenta-moneda">
+                            <option value="ARS">ARS $</option>
+                            <option value="USD">USD US$</option>
                         </select>
                         <input type="number" id="cuenta-saldo-inicial" placeholder="Saldo inicial" value="0">
                         <button type="submit" id="btn-submit-cuenta" class="btn btn-primary">Agregar</button>
@@ -414,5 +464,10 @@
     <script src="js/storage.js"></script>
     <script src="js/charts.js"></script>
     <script src="js/app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
 </body>
 </html>

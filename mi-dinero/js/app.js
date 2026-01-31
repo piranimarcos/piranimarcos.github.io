@@ -80,6 +80,7 @@ const App = {
         this.refreshCuentas();
         this.refreshReportes();
         this.refreshCategorias();
+        this.refreshCotizacionDisplay();
     },
 
     // ==================== FORMULARIOS ====================
@@ -114,6 +115,17 @@ const App = {
             e.preventDefault();
             this.handleObjetivoSubmit();
         });
+
+        // Destino
+        document.getElementById('form-destino').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleDestinoSubmit();
+        });
+        document.getElementById('btn-cancelar-destino').addEventListener('click', () => this.resetDestinoForm());
+
+        // Cotización
+        document.getElementById('btn-refresh-cotizacion').addEventListener('click', () => this.refreshCotizacionAPI());
+        document.getElementById('btn-cotizacion-manual').addEventListener('click', () => this.setCotizacionManual());
 
         // Cuenta
         document.getElementById('form-cuenta').addEventListener('submit', (e) => {
@@ -210,6 +222,7 @@ const App = {
         const categorias = Storage.getCategorias();
         const cuentas = Storage.getCuentas();
         const meses = Storage.getMesesConDatos();
+        const destinos = Storage.getDestinos();
 
         // Categorías
         const catOptions = categorias.map(c => `<option value="${c.id}">${this.escapeHtml(c.nombre)}</option>`).join('');
@@ -220,13 +233,20 @@ const App = {
         document.getElementById('objetivo-categoria').innerHTML = '<option value="">Categoría...</option>' + catOptions;
 
         // Cuentas
-        const cuentaOptions = cuentas.map(c => `<option value="${c.id}">${this.escapeHtml(c.nombre)}</option>`).join('');
+        const cuentaOptions = cuentas.map(c => {
+            const monedaLabel = c.moneda === 'USD' ? ' (USD)' : '';
+            return `<option value="${c.id}">${this.escapeHtml(c.nombre)}${monedaLabel}</option>`;
+        }).join('');
 
         document.getElementById('ingreso-cuenta').innerHTML = '<option value="">Seleccionar...</option>' + cuentaOptions;
         document.getElementById('gasto-cuenta').innerHTML = '<option value="">Seleccionar...</option>' + cuentaOptions;
         document.getElementById('filtro-cuenta').innerHTML = '<option value="">Todas las cuentas</option>' + cuentaOptions;
         document.getElementById('transfer-origen').innerHTML = '<option value="">Seleccionar...</option>' + cuentaOptions;
         document.getElementById('transfer-destino').innerHTML = '<option value="">Seleccionar...</option>' + cuentaOptions;
+
+        // Destinos
+        const destinoOptions = destinos.map(d => `<option value="${d.id}">${d.icono} ${this.escapeHtml(d.nombre)}</option>`).join('');
+        document.getElementById('ingreso-destino').innerHTML = '<option value="">Sin destino</option>' + destinoOptions;
 
         // Meses para reportes
         const mesOptions = meses.map(m => `<option value="${m}">${this.formatMes(m)}</option>`).join('');
@@ -237,22 +257,32 @@ const App = {
     // ==================== DASHBOARD ====================
 
     refreshDashboard() {
-        const balance = Storage.getBalanceTotal();
+        const balanceData = Storage.getBalanceTotalEnARS();
         const ingresosMes = Storage.getTotalIngresosMes();
         const gastosMes = Storage.getTotalGastosMes();
         const metas = Storage.getMetas();
         const cuentas = Storage.getCuentas();
 
-        // Balance
+        // Balance total en ARS (incluyendo conversión de USD)
         const balanceEl = document.getElementById('balance-total');
-        balanceEl.textContent = this.formatMoney(balance);
-        balanceEl.classList.toggle('negative', balance < 0);
+        balanceEl.textContent = this.formatMoney(balanceData.totalEnARS);
+        balanceEl.classList.toggle('negative', balanceData.totalEnARS < 0);
 
-        // Balance por cuenta
-        const balancePorCuenta = cuentas.map(c =>
-            `${c.nombre}: ${this.formatMoney(Storage.getSaldoCuenta(c.id))}`
-        ).join(' | ');
-        document.getElementById('balance-por-cuenta').textContent = balancePorCuenta;
+        // Balance por cuenta con indicador de moneda
+        const balancePorCuenta = cuentas.map(c => {
+            const saldoData = Storage.getSaldoCuentaConMoneda(c.id);
+            const formato = saldoData.moneda === 'USD'
+                ? this.formatMoneyUSD(saldoData.saldo)
+                : this.formatMoney(saldoData.saldo);
+            return `${c.nombre}: ${formato}`;
+        }).join(' | ');
+
+        // Agregar resumen USD si hay cuentas en dólares
+        let resumenExtra = '';
+        if (balanceData.totalUSD > 0) {
+            resumenExtra = ` | Total USD: ${this.formatMoneyUSD(balanceData.totalUSD)}`;
+        }
+        document.getElementById('balance-por-cuenta').textContent = balancePorCuenta + resumenExtra;
 
         // Ingresos y gastos del mes
         document.getElementById('ingresos-mes').textContent = this.formatMoney(ingresosMes);
@@ -276,9 +306,47 @@ const App = {
         this.refreshAlertasRecurrentes();
         this.refreshAlertasPresupuesto();
 
+        // Destinos en dashboard
+        this.refreshDashboardDestinos();
+
         // Gráfico
         const gastosPorCategoria = Storage.getGastosPorCategoria();
         Charts.drawGastosPorCategoria('chart-gastos', gastosPorCategoria);
+    },
+
+    refreshDashboardDestinos() {
+        const destinos = Storage.getDestinos();
+        const container = document.getElementById('dashboard-destinos');
+
+        if (destinos.length === 0) {
+            container.innerHTML = '<p class="empty-message">Sin destinos</p>';
+            return;
+        }
+
+        container.innerHTML = destinos.map(destino => {
+            const total = Storage.getTotalPorDestino(destino.id);
+            let progressHtml = '';
+
+            if (destino.montoObjetivo > 0) {
+                const progreso = Math.min((total / destino.montoObjetivo) * 100, 100);
+                progressHtml = `
+                    <div class="progress-container mini">
+                        <div class="progress-bar" style="width: ${progreso}%"></div>
+                    </div>
+                    <span class="destino-meta">${this.formatMoney(total)} / ${this.formatMoney(destino.montoObjetivo)}</span>
+                `;
+            } else {
+                progressHtml = `<span class="destino-total">${this.formatMoney(total)}</span>`;
+            }
+
+            return `
+                <div class="destino-resumen-item">
+                    <span class="destino-icono">${destino.icono}</span>
+                    <span class="destino-nombre">${this.escapeHtml(destino.nombre)}</span>
+                    ${progressHtml}
+                </div>
+            `;
+        }).join('');
     },
 
     refreshAlertasRecurrentes() {
@@ -376,11 +444,13 @@ const App = {
 
     handleIngresoSubmit() {
         const id = document.getElementById('ingreso-id').value;
+        const destinoValue = document.getElementById('ingreso-destino').value;
         const data = {
             fecha: document.getElementById('ingreso-fecha').value,
             monto: parseFloat(document.getElementById('ingreso-monto').value),
             cuentaId: parseInt(document.getElementById('ingreso-cuenta').value),
-            descripcion: document.getElementById('ingreso-descripcion').value || 'Ingreso'
+            descripcion: document.getElementById('ingreso-descripcion').value || 'Ingreso',
+            destinoId: destinoValue ? parseInt(destinoValue) : null
         };
 
         if (id) {
@@ -409,6 +479,7 @@ const App = {
             document.getElementById('ingreso-fecha').value = ingreso.fecha;
             document.getElementById('ingreso-monto').value = ingreso.monto;
             document.getElementById('ingreso-cuenta').value = ingreso.cuentaId || '';
+            document.getElementById('ingreso-destino').value = ingreso.destinoId || '';
             document.getElementById('ingreso-descripcion').value = ingreso.descripcion;
             document.getElementById('btn-cancelar-ingreso').hidden = false;
         }
@@ -452,13 +523,19 @@ const App = {
             return;
         }
 
+        const destinos = Storage.getDestinos();
+
         lista.innerHTML = ingresos.map(ingreso => {
             const cuenta = cuentas.find(c => c.id === ingreso.cuentaId);
+            const destino = ingreso.destinoId ? destinos.find(d => d.id === ingreso.destinoId) : null;
+            const destinoTag = destino ? `<span class="tag destino-tag">${destino.icono} ${destino.nombre}</span>` : '';
+
             return `
                 <div class="list-item">
                     <div class="list-item-info">
                         <div class="description">${this.escapeHtml(ingreso.descripcion)}</div>
                         <div class="details">${this.formatDate(ingreso.fecha)}${cuenta ? ' • ' + cuenta.nombre : ''}</div>
+                        ${destinoTag ? `<div class="tags">${destinoTag}</div>` : ''}
                     </div>
                     <div class="list-item-amount positive">${this.formatMoney(ingreso.monto)}</div>
                     <div class="list-item-actions">
@@ -749,6 +826,155 @@ const App = {
                 </div>
             `;
         }).join('');
+
+        // Refrescar destinos
+        this.refreshDestinos();
+    },
+
+    // ==================== DESTINOS ====================
+
+    handleDestinoSubmit() {
+        const id = document.getElementById('destino-id').value;
+        const data = {
+            nombre: document.getElementById('destino-nombre').value,
+            icono: document.getElementById('destino-icono').value || '📌',
+            montoObjetivo: parseFloat(document.getElementById('destino-objetivo').value) || 0
+        };
+
+        if (id) {
+            Storage.updateDestino(parseInt(id), data);
+        } else {
+            Storage.addDestino(data);
+        }
+
+        this.resetDestinoForm();
+        this.populateSelects();
+        this.refreshDestinos();
+        this.refreshDashboard();
+    },
+
+    resetDestinoForm() {
+        document.getElementById('form-destino').reset();
+        document.getElementById('destino-id').value = '';
+        document.getElementById('btn-submit-destino').textContent = 'Agregar';
+        document.getElementById('btn-cancelar-destino').hidden = true;
+    },
+
+    editDestino(id) {
+        const destino = Storage.getDestinos().find(d => d.id === id);
+        if (destino) {
+            document.getElementById('destino-id').value = destino.id;
+            document.getElementById('destino-nombre').value = destino.nombre;
+            document.getElementById('destino-icono').value = destino.icono;
+            document.getElementById('destino-objetivo').value = destino.montoObjetivo || '';
+            document.getElementById('btn-submit-destino').textContent = 'Editar';
+            document.getElementById('btn-cancelar-destino').hidden = false;
+        }
+    },
+
+    deleteDestino(id) {
+        const ingresos = Storage.getIngresos().filter(i => i.destinoId === id);
+        let mensaje = '¿Eliminar este destino?';
+        if (ingresos.length > 0) {
+            mensaje += ` Hay ${ingresos.length} ingreso(s) asociados (no se eliminarán).`;
+        }
+
+        this.showModal(mensaje, () => {
+            Storage.deleteDestino(id);
+            this.populateSelects();
+            this.refreshDestinos();
+            this.refreshDashboard();
+        });
+    },
+
+    refreshDestinos() {
+        const destinos = Storage.getDestinos();
+        const lista = document.getElementById('lista-destinos');
+
+        if (destinos.length === 0) {
+            lista.innerHTML = '<p class="empty-message">Sin destinos de ahorro</p>';
+            return;
+        }
+
+        lista.innerHTML = destinos.map(destino => {
+            const total = Storage.getTotalPorDestino(destino.id);
+            let progressHtml = '';
+
+            if (destino.montoObjetivo > 0) {
+                const progreso = Math.min((total / destino.montoObjetivo) * 100, 100);
+                progressHtml = `
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: ${progreso}%"></div>
+                    </div>
+                    <div class="destino-progreso">${this.formatMoney(total)} / ${this.formatMoney(destino.montoObjetivo)} (${Math.round(progreso)}%)</div>
+                `;
+            } else {
+                progressHtml = `<div class="destino-progreso">Acumulado: ${this.formatMoney(total)}</div>`;
+            }
+
+            return `
+                <div class="destino-item">
+                    <div class="destino-header">
+                        <span class="destino-titulo">${destino.icono} ${this.escapeHtml(destino.nombre)}</span>
+                        <div class="list-item-actions">
+                            <button class="btn btn-secondary btn-small" onclick="App.editDestino(${destino.id})">✏️</button>
+                            <button class="btn btn-danger btn-small" onclick="App.deleteDestino(${destino.id})">🗑️</button>
+                        </div>
+                    </div>
+                    ${progressHtml}
+                </div>
+            `;
+        }).join('');
+    },
+
+    // ==================== COTIZACIÓN ====================
+
+    refreshCotizacionDisplay() {
+        const cotizacion = Storage.getCotizacion();
+        const valorActual = Storage.getCotizacionActual();
+
+        document.getElementById('cotizacion-actual').textContent = this.formatMoney(valorActual);
+
+        if (cotizacion.fechaAPI && !cotizacion.usarManual) {
+            const fecha = new Date(cotizacion.fechaAPI);
+            document.getElementById('cotizacion-fecha').textContent =
+                `Actualizado: ${fecha.toLocaleDateString('es-AR')} ${fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}`;
+        } else {
+            document.getElementById('cotizacion-fecha').textContent = 'Valor manual';
+        }
+    },
+
+    async refreshCotizacionAPI() {
+        const btn = document.getElementById('btn-refresh-cotizacion');
+        btn.disabled = true;
+        btn.textContent = '⏳';
+
+        const valor = await Storage.fetchCotizacionAPI();
+
+        if (valor) {
+            this.refreshCotizacionDisplay();
+            this.refreshDashboard();
+        } else {
+            alert('No se pudo obtener la cotización. Usa el valor manual.');
+        }
+
+        btn.disabled = false;
+        btn.textContent = '🔄';
+    },
+
+    setCotizacionManual() {
+        const input = document.getElementById('cotizacion-manual-input');
+        const valor = parseFloat(input.value);
+
+        if (!valor || valor <= 0) {
+            alert('Ingresa un valor válido');
+            return;
+        }
+
+        Storage.setValorManual(valor);
+        input.value = '';
+        this.refreshCotizacionDisplay();
+        this.refreshDashboard();
     },
 
     // ==================== CUENTAS ====================
@@ -758,6 +984,7 @@ const App = {
         const data = {
             nombre: document.getElementById('cuenta-nombre').value,
             tipo: document.getElementById('cuenta-tipo').value,
+            moneda: document.getElementById('cuenta-moneda').value,
             saldoInicial: parseFloat(document.getElementById('cuenta-saldo-inicial').value) || 0
         };
 
@@ -786,6 +1013,7 @@ const App = {
             document.getElementById('cuenta-id').value = cuenta.id;
             document.getElementById('cuenta-nombre').value = cuenta.nombre;
             document.getElementById('cuenta-tipo').value = cuenta.tipo;
+            document.getElementById('cuenta-moneda').value = cuenta.moneda || 'ARS';
             document.getElementById('cuenta-saldo-inicial').value = cuenta.saldoInicial;
             document.getElementById('btn-submit-cuenta').textContent = 'Editar';
             document.getElementById('btn-cancelar-cuenta').hidden = false;
@@ -832,14 +1060,19 @@ const App = {
         }
 
         lista.innerHTML = cuentas.map(cuenta => {
-            const saldo = Storage.getSaldoCuenta(cuenta.id);
+            const saldoData = Storage.getSaldoCuentaConMoneda(cuenta.id);
+            const saldoFormateado = saldoData.moneda === 'USD'
+                ? this.formatMoneyUSD(saldoData.saldo)
+                : this.formatMoney(saldoData.saldo);
+            const monedaBadge = cuenta.moneda === 'USD' ? '<span class="moneda-badge usd">USD</span>' : '';
+
             return `
                 <div class="cuenta-item">
                     <div class="cuenta-info">
                         <span class="cuenta-icon">${iconos[cuenta.tipo] || '💰'}</span>
-                        <span class="cuenta-nombre">${this.escapeHtml(cuenta.nombre)}</span>
+                        <span class="cuenta-nombre">${this.escapeHtml(cuenta.nombre)} ${monedaBadge}</span>
                     </div>
-                    <span class="cuenta-saldo ${saldo >= 0 ? 'positive' : 'negative'}">${this.formatMoney(saldo)}</span>
+                    <span class="cuenta-saldo ${saldoData.saldo >= 0 ? 'positive' : 'negative'}">${saldoFormateado}</span>
                     <div class="list-item-actions">
                         <button class="btn btn-secondary btn-small" onclick="App.editCuenta(${cuenta.id})">✏️</button>
                         <button class="btn btn-danger btn-small" onclick="App.deleteCuenta(${cuenta.id})">🗑️</button>
@@ -1089,6 +1322,15 @@ const App = {
         return new Intl.NumberFormat('es-AR', {
             style: 'currency',
             currency: 'ARS',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(amount);
+    },
+
+    formatMoneyUSD(amount) {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
             minimumFractionDigits: 0,
             maximumFractionDigits: 0
         }).format(amount);

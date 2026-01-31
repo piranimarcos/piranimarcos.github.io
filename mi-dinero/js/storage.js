@@ -12,7 +12,9 @@ const Storage = {
         TRANSFERENCIAS: 'midinero_transferencias',
         PRESUPUESTOS: 'midinero_presupuestos',
         OBJETIVOS: 'midinero_objetivos',
-        THEME: 'midinero_theme'
+        THEME: 'midinero_theme',
+        DESTINOS: 'midinero_destinos',
+        COTIZACION: 'midinero_cotizacion'
     },
 
     // Categorías por defecto
@@ -31,9 +33,25 @@ const Storage = {
 
     // Cuentas por defecto
     DEFAULT_CUENTAS: [
-        { id: 1, nombre: 'Efectivo', tipo: 'efectivo', saldoInicial: 0 },
-        { id: 2, nombre: 'Banco', tipo: 'banco', saldoInicial: 0 }
+        { id: 1, nombre: 'Efectivo', tipo: 'efectivo', moneda: 'ARS', saldoInicial: 0 },
+        { id: 2, nombre: 'Banco', tipo: 'banco', moneda: 'ARS', saldoInicial: 0 }
     ],
+
+    // Destinos por defecto
+    DEFAULT_DESTINOS: [
+        { id: 1, nombre: 'Colchón de Imprevistos', icono: '🛡️', montoObjetivo: 0 },
+        { id: 2, nombre: 'Ahorro Jubilación', icono: '👴', montoObjetivo: 0 },
+        { id: 3, nombre: 'Dinero Líquido', icono: '💵', montoObjetivo: 0 },
+        { id: 4, nombre: 'Fondo Cambio Auto', icono: '🚗', montoObjetivo: 0 }
+    ],
+
+    // Cotización por defecto
+    DEFAULT_COTIZACION: {
+        valorManual: 1200,
+        valorAPI: 0,
+        fechaAPI: null,
+        usarManual: true
+    },
 
     /**
      * Inicializa el storage con datos por defecto si está vacío
@@ -62,6 +80,28 @@ const Storage = {
         }
         if (!localStorage.getItem(this.KEYS.OBJETIVOS)) {
             this.setObjetivos([]);
+        }
+        if (!localStorage.getItem(this.KEYS.DESTINOS)) {
+            this.setDestinos(this.DEFAULT_DESTINOS);
+        }
+        if (!localStorage.getItem(this.KEYS.COTIZACION)) {
+            this.setCotizacion(this.DEFAULT_COTIZACION);
+        }
+        // Migrar cuentas existentes para agregar moneda si no la tienen
+        this.migrateCuentasMoneda();
+    },
+
+    migrateCuentasMoneda() {
+        const cuentas = this.getCuentas();
+        let needsUpdate = false;
+        cuentas.forEach(cuenta => {
+            if (!cuenta.moneda) {
+                cuenta.moneda = 'ARS';
+                needsUpdate = true;
+            }
+        });
+        if (needsUpdate) {
+            this.setCuentas(cuentas);
         }
     },
 
@@ -374,11 +414,132 @@ const Storage = {
         this.setObjetivos(filtered);
     },
 
+    // ==================== DESTINOS ====================
+
+    getDestinos() {
+        const data = localStorage.getItem(this.KEYS.DESTINOS);
+        return data ? JSON.parse(data) : [];
+    },
+
+    setDestinos(destinos) {
+        localStorage.setItem(this.KEYS.DESTINOS, JSON.stringify(destinos));
+    },
+
+    addDestino(destino) {
+        const destinos = this.getDestinos();
+        destino.id = Date.now();
+        destinos.push(destino);
+        this.setDestinos(destinos);
+        return destino;
+    },
+
+    updateDestino(id, data) {
+        const destinos = this.getDestinos();
+        const index = destinos.findIndex(d => d.id === id);
+        if (index !== -1) {
+            destinos[index] = { ...destinos[index], ...data };
+            this.setDestinos(destinos);
+            return destinos[index];
+        }
+        return null;
+    },
+
+    deleteDestino(id) {
+        const destinos = this.getDestinos();
+        const filtered = destinos.filter(d => d.id !== id);
+        this.setDestinos(filtered);
+    },
+
+    getTotalPorDestino(destinoId) {
+        const ingresos = this.getIngresos();
+        return ingresos
+            .filter(i => i.destinoId === destinoId)
+            .reduce((sum, i) => sum + parseFloat(i.monto), 0);
+    },
+
+    // ==================== COTIZACIÓN ====================
+
+    getCotizacion() {
+        const data = localStorage.getItem(this.KEYS.COTIZACION);
+        return data ? JSON.parse(data) : this.DEFAULT_COTIZACION;
+    },
+
+    setCotizacion(cotizacion) {
+        localStorage.setItem(this.KEYS.COTIZACION, JSON.stringify(cotizacion));
+    },
+
+    getCotizacionActual() {
+        const cot = this.getCotizacion();
+        if (cot.usarManual || !cot.valorAPI) {
+            return cot.valorManual;
+        }
+        return cot.valorAPI;
+    },
+
+    async fetchCotizacionAPI() {
+        try {
+            const response = await fetch('https://dolarapi.com/v1/dolares/blue');
+            if (!response.ok) throw new Error('Error en API');
+            const data = await response.json();
+
+            const cotizacion = this.getCotizacion();
+            cotizacion.valorAPI = data.venta;
+            cotizacion.fechaAPI = new Date().toISOString();
+            cotizacion.usarManual = false;
+            this.setCotizacion(cotizacion);
+
+            return data.venta;
+        } catch (error) {
+            console.error('Error obteniendo cotización:', error);
+            return null;
+        }
+    },
+
+    setValorManual(valor) {
+        const cotizacion = this.getCotizacion();
+        cotizacion.valorManual = valor;
+        cotizacion.usarManual = true;
+        this.setCotizacion(cotizacion);
+    },
+
+    // ==================== SALDO CON MONEDA ====================
+
+    getSaldoCuentaConMoneda(cuentaId) {
+        const cuenta = this.getCuentas().find(c => c.id === cuentaId);
+        if (!cuenta) return { saldo: 0, moneda: 'ARS' };
+
+        const saldo = this.getSaldoCuenta(cuentaId);
+        return { saldo, moneda: cuenta.moneda || 'ARS' };
+    },
+
+    getBalanceTotalEnARS() {
+        const cuentas = this.getCuentas();
+        const cotizacion = this.getCotizacionActual();
+        let totalARS = 0;
+        let totalUSD = 0;
+
+        cuentas.forEach(cuenta => {
+            const saldo = this.getSaldoCuenta(cuenta.id);
+            if (cuenta.moneda === 'USD') {
+                totalUSD += saldo;
+            } else {
+                totalARS += saldo;
+            }
+        });
+
+        return {
+            totalARS,
+            totalUSD,
+            totalEnARS: totalARS + (totalUSD * cotizacion),
+            cotizacion
+        };
+    },
+
     // ==================== EXPORT / IMPORT ====================
 
     exportData() {
         const data = {
-            version: '2.0',
+            version: '3.0',
             exportDate: new Date().toISOString(),
             ingresos: this.getIngresos(),
             gastos: this.getGastos(),
@@ -387,7 +548,9 @@ const Storage = {
             cuentas: this.getCuentas(),
             transferencias: this.getTransferencias(),
             presupuestos: this.getPresupuestos(),
-            objetivos: this.getObjetivos()
+            objetivos: this.getObjetivos(),
+            destinos: this.getDestinos(),
+            cotizacion: this.getCotizacion()
         };
 
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -426,6 +589,11 @@ const Storage = {
                     if (data.transferencias) this.setTransferencias(data.transferencias);
                     if (data.presupuestos) this.setPresupuestos(data.presupuestos);
                     if (data.objetivos) this.setObjetivos(data.objetivos);
+                    if (data.destinos) this.setDestinos(data.destinos);
+                    if (data.cotizacion) this.setCotizacion(data.cotizacion);
+
+                    // Migrar cuentas para agregar moneda
+                    this.migrateCuentasMoneda();
 
                     resolve(data);
                 } catch (error) {
