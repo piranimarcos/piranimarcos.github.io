@@ -47,7 +47,7 @@ const Storage = {
 
     // Cotización por defecto
     DEFAULT_COTIZACION: {
-        valorManual: 1200,
+        valorManual: 1450,
         valorAPI: 0,
         fechaAPI: null,
         usarManual: true

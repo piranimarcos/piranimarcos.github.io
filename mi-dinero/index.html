@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Dinero - Contabilidad Personal</title>
     <link rel="stylesheet" href="css/styles.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
     <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6366f1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon.svg">
 </head>
 <body>
     <div class="app-container">
@@ -114,7 +116,7 @@
                                 <input type="date" id="ingreso-fecha" required>
                             </div>
                             <div class="form-group">
-                                <label for="ingreso-monto">Monto (ARS)</label>
+                                <label for="ingreso-monto" id="ingreso-monto-label">Monto</label>
                                 <input type="number" id="ingreso-monto" min="0" step="0.01" required>
                             </div>
                         </div>
@@ -168,7 +170,7 @@
                                 <input type="date" id="gasto-fecha" required>
                             </div>
                             <div class="form-group">
-                                <label for="gasto-monto">Monto (ARS)</label>
+                                <label for="gasto-monto" id="gasto-monto-label">Monto</label>
                                 <input type="number" id="gasto-monto" min="0" step="0.01" required>
                             </div>
                         </div>

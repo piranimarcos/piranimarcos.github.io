@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mi-dinero-v1';
+const CACHE_NAME = 'mi-dinero-v2';
 const urlsToCache = [
   '/mi-dinero/',
   '/mi-dinero/index.html',
@@ -6,6 +6,7 @@ const urlsToCache = [
   '/mi-dinero/js/storage.js',
   '/mi-dinero/js/charts.js',
   '/mi-dinero/js/app.js',
+  '/mi-dinero/icons/icon.svg',
   '/mi-dinero/icons/icon-192.png',
   '/mi-dinero/icons/icon-512.png'
 ];

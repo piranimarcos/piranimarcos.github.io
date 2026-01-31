@@ -15,6 +15,30 @@ const App = {
         this.setupThemeToggle();
         this.setDefaultDates();
         this.refreshAll();
+        this.tryAutoUpdateCotizacion();
+    },
+
+    // Intenta actualizar cotización automáticamente si es necesario
+    async tryAutoUpdateCotizacion() {
+        const cotizacion = Storage.getCotizacion();
+        const ahora = new Date();
+
+        // Si nunca se cargó de API o pasó más de 1 hora, intentar actualizar
+        let necesitaActualizar = !cotizacion.fechaAPI;
+
+        if (cotizacion.fechaAPI) {
+            const ultimaActualizacion = new Date(cotizacion.fechaAPI);
+            const horasDesdeUltimaActualizacion = (ahora - ultimaActualizacion) / (1000 * 60 * 60);
+            necesitaActualizar = horasDesdeUltimaActualizacion > 1;
+        }
+
+        if (necesitaActualizar) {
+            const valor = await Storage.fetchCotizacionAPI();
+            if (valor) {
+                this.refreshCotizacionDisplay();
+                this.refreshDashboard();
+            }
+        }
     },
 
     // ==================== THEME ====================
@@ -92,6 +116,9 @@ const App = {
             this.handleIngresoSubmit();
         });
         document.getElementById('btn-cancelar-ingreso').addEventListener('click', () => this.resetIngresoForm());
+        document.getElementById('ingreso-cuenta').addEventListener('change', (e) => {
+            this.updateMontoLabel('ingreso', e.target.value);
+        });
 
         // Gasto
         document.getElementById('form-gasto').addEventListener('submit', (e) => {
@@ -101,6 +128,9 @@ const App = {
         document.getElementById('btn-cancelar-gasto').addEventListener('click', () => this.resetGastoForm());
         document.getElementById('gasto-recurrente').addEventListener('change', (e) => {
             document.getElementById('grupo-frecuencia').hidden = !e.target.checked;
+        });
+        document.getElementById('gasto-cuenta').addEventListener('change', (e) => {
+            this.updateMontoLabel('gasto', e.target.value);
         });
 
         // Meta
@@ -294,9 +324,9 @@ const App = {
         const metaText = document.getElementById('meta-text');
 
         if (metaPrincipal) {
-            const progreso = Math.min((balance / metaPrincipal.monto) * 100, 100);
+            const progreso = Math.min((balanceData.totalEnARS / metaPrincipal.monto) * 100, 100);
             progressBar.style.width = `${Math.max(progreso, 0)}%`;
-            metaText.textContent = `${metaPrincipal.descripcion}: ${this.formatMoney(balance)} / ${this.formatMoney(metaPrincipal.monto)}`;
+            metaText.textContent = `${metaPrincipal.descripcion}: ${this.formatMoney(balanceData.totalEnARS)} / ${this.formatMoney(metaPrincipal.monto)}`;
         } else {
             progressBar.style.width = '0%';
             metaText.textContent = 'Sin meta definida';
@@ -1351,6 +1381,23 @@ const App = {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    },
+
+    updateMontoLabel(tipo, cuentaId) {
+        const label = document.getElementById(`${tipo}-monto-label`);
+        if (!label) return;
+
+        if (!cuentaId) {
+            label.textContent = 'Monto';
+            return;
+        }
+
+        const cuenta = Storage.getCuentas().find(c => c.id === parseInt(cuentaId));
+        if (cuenta && cuenta.moneda === 'USD') {
+            label.textContent = 'Monto (USD)';
+        } else {
+            label.textContent = 'Monto (ARS)';
+        }
     }
 };
 

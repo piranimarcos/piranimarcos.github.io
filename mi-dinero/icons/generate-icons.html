@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Iconos PWA - Mi Dinero</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #eaeaea;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 { margin-bottom: 30px; }
+        .icons { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; }
+        .icon-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        canvas {
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        button {
+            background: #e94560;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 20px;
+        }
+        button:hover { background: #ff6b6b; }
+        p { color: #a0a0a0; max-width: 500px; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>Generador de Iconos PWA</h1>
+    <p>Haz clic en el botón para descargar los iconos. Luego guárdalos en esta misma carpeta (icons/).</p>
+
+    <div class="icons">
+        <div class="icon-container">
+            <canvas id="icon-192" width="192" height="192"></canvas>
+            <span>192x192</span>
+        </div>
+        <div class="icon-container">
+            <canvas id="icon-512" width="512" height="512"></canvas>
+            <span>512x512</span>
+        </div>
+    </div>
+
+    <button onclick="downloadIcons()">Descargar Iconos</button>
+
+    <script>
+        function drawIcon(canvas) {
+            const ctx = canvas.getContext('2d');
+            const size = canvas.width;
+            const center = size / 2;
+
+            // Fondo con gradiente
+            const gradient = ctx.createRadialGradient(center, center, 0, center, center, size/2);
+            gradient.addColorStop(0, '#16213e');
+            gradient.addColorStop(1, '#1a1a2e');
+
+            // Dibujar fondo redondeado
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, size * 0.2);
+            ctx.fill();
+
+            // Círculo central
+            ctx.fillStyle = '#e94560';
+            ctx.beginPath();
+            ctx.arc(center, center, size * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Símbolo de peso/dinero
+            ctx.fillStyle = '#ffffff';
+            ctx.font = `bold ${size * 0.45}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('$', center, center + size * 0.02);
+
+            // Anillo decorativo
+            ctx.strokeStyle = '#4ecca3';
+            ctx.lineWidth = size * 0.02;
+            ctx.beginPath();
+            ctx.arc(center, center, size * 0.42, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        function downloadIcon(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function downloadIcons() {
+            downloadIcon(document.getElementById('icon-192'), 'icon-192.png');
+            setTimeout(() => {
+                downloadIcon(document.getElementById('icon-512'), 'icon-512.png');
+            }, 500);
+        }
+
+        // Dibujar iconos al cargar
+        drawIcon(document.getElementById('icon-192'));
+        drawIcon(document.getElementById('icon-512'));
+    </script>
+</body>
+</html>
