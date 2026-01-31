@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial - Mi Dinero</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .tutorial-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .tutorial-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .tutorial-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .tutorial-header p {
+            color: var(--text-secondary);
+        }
+        .tutorial-section {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        .tutorial-section h2 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tutorial-section h3 {
+            color: var(--text-primary);
+            margin: 15px 0 10px 0;
+            font-size: 1rem;
+        }
+        .tutorial-section p, .tutorial-section li {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+        .tutorial-section ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        .tutorial-section li {
+            margin-bottom: 8px;
+        }
+        .tip {
+            background-color: var(--bg-input);
+            border-left: 4px solid var(--positive);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip strong {
+            color: var(--positive);
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+        .shortcut {
+            background-color: var(--bg-input);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="tutorial-container">
+        <a href="index.html" class="btn btn-secondary back-btn">← Volver a Mi Dinero</a>
+
+        <div class="tutorial-header">
+            <h1>📖 Tutorial de Mi Dinero</h1>
+            <p>Guía rápida para usar el sistema de contabilidad personal</p>
+        </div>
+
+        <!-- Primeros Pasos -->
+        <div class="tutorial-section">
+            <h2>🚀 Primeros Pasos</h2>
+            <p>Mi Dinero es un sistema de contabilidad personal que funciona completamente en tu navegador. Tus datos se guardan localmente en el dispositivo.</p>
+
+            <h3>Para comenzar:</h3>
+            <ul>
+                <li><strong>Crear cuentas:</strong> Ve a la pestaña "Cuentas" y agrega tus fuentes de dinero (efectivo, banco, billetera virtual)</li>
+                <li><strong>Registrar ingresos:</strong> En "Ingresos", registra tu sueldo u otros ingresos</li>
+                <li><strong>Registrar gastos:</strong> En "Gastos", registra cada gasto indicando categoría y cuenta</li>
+            </ul>
+
+            <div class="tip">
+                <strong>Tip:</strong> Podés importar datos de ejemplo usando el botón "Importar" con el archivo <code>data/ejemplo.json</code>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="tutorial-section">
+            <h2>📊 Dashboard</h2>
+            <p>El Dashboard te muestra un resumen de tu situación financiera:</p>
+            <ul>
+                <li><strong>Balance Total:</strong> La suma de todas tus cuentas</li>
+                <li><strong>Ingresos/Gastos del Mes:</strong> Movimientos del mes actual</li>
+                <li><strong>Meta Principal:</strong> Progreso hacia tu meta de ahorro prioritaria</li>
+                <li><strong>Alertas:</strong> Gastos recurrentes próximos y presupuestos cerca del límite</li>
+                <li><strong>Gráfico:</strong> Distribución de gastos por categoría</li>
+            </ul>
+        </div>
+
+        <!-- Gastos -->
+        <div class="tutorial-section">
+            <h2>🛒 Gastos</h2>
+            <p>Al registrar un gasto podés incluir:</p>
+            <ul>
+                <li><strong>Categoría:</strong> Para clasificar el gasto (Comida, Transporte, etc.)</li>
+                <li><strong>Cuenta:</strong> De qué cuenta sale el dinero</li>
+                <li><strong>Etiquetas:</strong> Tags personalizados separados por coma (ej: "vacaciones, urgente")</li>
+                <li><strong>Recurrente:</strong> Marcar si es un gasto que se repite (semanal, mensual, anual)</li>
+            </ul>
+
+            <h3>Filtros disponibles:</h3>
+            <ul>
+                <li>Buscar por descripción</li>
+                <li>Filtrar por categoría, cuenta, fechas, montos y etiquetas</li>
+            </ul>
+        </div>
+
+        <!-- Metas -->
+        <div class="tutorial-section">
+            <h2>🎯 Metas de Ahorro</h2>
+            <p>Podés crear múltiples metas con diferentes prioridades:</p>
+            <ul>
+                <li><strong>Prioridad Alta:</strong> Se muestra en el Dashboard</li>
+                <li><strong>Prioridad Media/Baja:</strong> Metas secundarias</li>
+            </ul>
+            <p>El progreso se calcula automáticamente según tu balance total.</p>
+
+            <h3>Objetivos de Reducción</h3>
+            <p>También podés definir objetivos para reducir gastos en categorías específicas (ej: "Reducir Entretenimiento un 20%").</p>
+        </div>
+
+        <!-- Cuentas -->
+        <div class="tutorial-section">
+            <h2>🏦 Cuentas</h2>
+            <p>Administra diferentes fuentes de dinero:</p>
+            <ul>
+                <li><strong>Tipos:</strong> Efectivo, Banco o Billetera Virtual</li>
+                <li><strong>Saldo inicial:</strong> El dinero que ya tenés al crear la cuenta</li>
+                <li><strong>Transferencias:</strong> Mover dinero entre cuentas sin afectar el balance total</li>
+            </ul>
+        </div>
+
+        <!-- Categorías y Presupuestos -->
+        <div class="tutorial-section">
+            <h2>📁 Categorías y Presupuestos</h2>
+
+            <h3>Categorías</h3>
+            <p>Vienen 10 categorías predefinidas pero podés agregar, editar o eliminar las que quieras.</p>
+
+            <h3>Presupuestos</h3>
+            <p>Definí un límite mensual para cada categoría. Cuando llegues al 80% del presupuesto, aparecerá una alerta en el Dashboard.</p>
+        </div>
+
+        <!-- Reportes -->
+        <div class="tutorial-section">
+            <h2>📈 Reportes</h2>
+            <ul>
+                <li><strong>Comparativo Mensual:</strong> Compará ingresos y gastos entre dos meses</li>
+                <li><strong>Evolución del Balance:</strong> Gráfico histórico de tus finanzas</li>
+                <li><strong>Categorías con Mayor Crecimiento:</strong> Qué categorías aumentaron más</li>
+                <li><strong>Resumen por Etiquetas:</strong> Cuánto gastaste en cada etiqueta</li>
+            </ul>
+        </div>
+
+        <!-- Exportar/Importar -->
+        <div class="tutorial-section">
+            <h2>💾 Exportar e Importar</h2>
+            <ul>
+                <li><strong>Exportar:</strong> Descarga todos tus datos como archivo JSON (backup)</li>
+                <li><strong>Importar:</strong> Carga datos desde un archivo JSON</li>
+            </ul>
+
+            <div class="tip">
+                <strong>Importante:</strong> Los datos se guardan en tu navegador (localStorage). Si borrás los datos del navegador, perdés la información. Hacé backups regularmente con el botón Exportar.
+            </div>
+        </div>
+
+        <!-- Extras -->
+        <div class="tutorial-section">
+            <h2>⚙️ Extras</h2>
+            <ul>
+                <li><strong>Tema:</strong> Usá el botón ☀️/🌙 para cambiar entre modo claro y oscuro</li>
+                <li><strong>Responsive:</strong> Funciona en celulares y tablets</li>
+                <li><strong>Offline:</strong> No necesita conexión a internet</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="index.html" class="btn btn-primary">Empezar a usar Mi Dinero</a>
+        </div>
+    </div>
+</body>
+</html>

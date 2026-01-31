@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Dinero - Contabilidad Personal</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1>💰 Mi Dinero</h1>
+            <div class="header-actions">
+                <a href="tutorial.html" class="btn btn-icon" title="Ayuda">❓</a>
+                <button id="btn-theme" class="btn btn-icon" title="Cambiar tema">🌙</button>
+                <button id="btn-export" class="btn btn-secondary">⬇ Exportar</button>
+                <label class="btn btn-secondary">
+                    ⬆ Importar
+                    <input type="file" id="btn-import" accept=".json" hidden>
+                </label>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tab active" data-tab="dashboard">📊 Dashboard</button>
+            <button class="tab" data-tab="ingresos">💵 Ingresos</button>
+            <button class="tab" data-tab="gastos">🛒 Gastos</button>
+            <button class="tab" data-tab="metas">🎯 Metas</button>
+            <button class="tab" data-tab="cuentas">🏦 Cuentas</button>
+            <button class="tab" data-tab="reportes">📈 Reportes</button>
+            <button class="tab" data-tab="categorias">📁 Categorías</button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="dashboard-grid">
+                    <div class="card balance-card">
+                        <h3>Balance Total</h3>
+                        <p class="balance-amount" id="balance-total">$0</p>
+                        <p class="balance-por-cuenta" id="balance-por-cuenta"></p>
+                    </div>
+                    <div class="card">
+                        <h3>Ingresos del Mes</h3>
+                        <p class="amount positive" id="ingresos-mes">$0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Gastos del Mes</h3>
+                        <p class="amount negative" id="gastos-mes">$0</p>
+                    </div>
+                    <div class="card meta-progress-card">
+                        <h3>Meta Principal</h3>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="meta-progress"></div>
+                        </div>
+                        <p class="progress-text" id="meta-text">Sin meta definida</p>
+                    </div>
+                </div>
+
+                <!-- Alertas de Recurrentes -->
+                <div id="alertas-recurrentes" class="card alertas-card" hidden>
+                    <h3>⚠️ Gastos Recurrentes Pendientes</h3>
+                    <div class="list" id="lista-alertas"></div>
+                </div>
+
+                <!-- Alertas de Presupuesto -->
+                <div id="alertas-presupuesto" class="card alertas-card" hidden>
+                    <h3>💸 Alertas de Presupuesto</h3>
+                    <div class="list" id="lista-alertas-presupuesto"></div>
+                </div>
+
+                <div class="card chart-card">
+                    <h3>Gastos por Categoría (Este Mes)</h3>
+                    <canvas id="chart-gastos"></canvas>
+                </div>
+            </section>
+
+            <!-- Ingresos Section -->
+            <section id="ingresos" class="section">
+                <div class="card">
+                    <h3>Registrar Ingreso</h3>
+                    <form id="form-ingreso" class="form">
+                        <input type="hidden" id="ingreso-id">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ingreso-fecha">Fecha</label>
+                                <input type="date" id="ingreso-fecha" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ingreso-monto">Monto (ARS)</label>
+                                <input type="number" id="ingreso-monto" min="0" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ingreso-cuenta">Cuenta</label>
+                                <select id="ingreso-cuenta" required>
+                                    <option value="">Seleccionar...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ingreso-descripcion">Descripción</label>
+                                <input type="text" id="ingreso-descripcion" placeholder="Ej: Sueldo mensual">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="button" id="btn-cancelar-ingreso" class="btn btn-secondary" hidden>Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Historial de Ingresos</h3>
+                    <div class="filters">
+                        <input type="text" id="buscar-ingreso" placeholder="🔍 Buscar...">
+                        <input type="date" id="ingreso-desde" placeholder="Desde">
+                        <input type="date" id="ingreso-hasta" placeholder="Hasta">
+                    </div>
+                    <p class="total-label">Total filtrado: <span id="total-ingresos-filtrado">$0</span></p>
+                    <div class="list" id="lista-ingresos">
+                        <p class="empty-message">No hay ingresos registrados</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gastos Section -->
+            <section id="gastos" class="section">
+                <div class="card">
+                    <h3>Registrar Gasto</h3>
+                    <form id="form-gasto" class="form">
+                        <input type="hidden" id="gasto-id">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="gasto-fecha">Fecha</label>
+                                <input type="date" id="gasto-fecha" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gasto-monto">Monto (ARS)</label>
+                                <input type="number" id="gasto-monto" min="0" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="gasto-categoria">Categoría</label>
+                                <select id="gasto-categoria" required>
+                                    <option value="">Seleccionar...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="gasto-cuenta">Cuenta</label>
+                                <select id="gasto-cuenta" required>
+                                    <option value="">Seleccionar...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="gasto-descripcion">Descripción</label>
+                            <input type="text" id="gasto-descripcion" placeholder="Ej: Supermercado">
+                        </div>
+                        <div class="form-group">
+                            <label for="gasto-tags">Etiquetas (separadas por coma)</label>
+                            <input type="text" id="gasto-tags" placeholder="Ej: vacaciones, urgente">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="gasto-recurrente">
+                                    <input type="checkbox" id="gasto-recurrente">
+                                    Gasto recurrente
+                                </label>
+                            </div>
+                            <div class="form-group" id="grupo-frecuencia" hidden>
+                                <label for="gasto-frecuencia">Frecuencia</label>
+                                <select id="gasto-frecuencia">
+                                    <option value="semanal">Semanal</option>
+                                    <option value="mensual" selected>Mensual</option>
+                                    <option value="anual">Anual</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="button" id="btn-cancelar-gasto" class="btn btn-secondary" hidden>Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Historial de Gastos</h3>
+                    <div class="filters">
+                        <input type="text" id="buscar-gasto" placeholder="🔍 Buscar...">
+                        <select id="filtro-categoria">
+                            <option value="">Todas las categorías</option>
+                        </select>
+                        <select id="filtro-cuenta">
+                            <option value="">Todas las cuentas</option>
+                        </select>
+                    </div>
+                    <div class="filters">
+                        <input type="date" id="gasto-desde">
+                        <input type="date" id="gasto-hasta">
+                        <input type="number" id="gasto-min" placeholder="Monto mín">
+                        <input type="number" id="gasto-max" placeholder="Monto máx">
+                    </div>
+                    <div class="filters">
+                        <input type="text" id="filtro-tag" placeholder="Filtrar por etiqueta...">
+                    </div>
+                    <p class="total-label">Total filtrado: <span id="total-gastos-filtrado">$0</span></p>
+                    <div class="list" id="lista-gastos">
+                        <p class="empty-message">No hay gastos registrados</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Metas Section -->
+            <section id="metas" class="section">
+                <div class="card">
+                    <h3>Nueva Meta de Ahorro</h3>
+                    <form id="form-meta" class="form">
+                        <input type="hidden" id="meta-id">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="meta-monto">Monto Objetivo (ARS)</label>
+                                <input type="number" id="meta-monto" min="0" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="meta-fecha">Fecha Límite</label>
+                                <input type="date" id="meta-fecha" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="meta-descripcion">Descripción</label>
+                            <input type="text" id="meta-descripcion" placeholder="Ej: Vacaciones de verano" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="meta-prioridad">Prioridad</label>
+                            <select id="meta-prioridad">
+                                <option value="1">Alta (recibe más del ahorro)</option>
+                                <option value="2" selected>Media</option>
+                                <option value="3">Baja</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" id="btn-submit-meta" class="btn btn-primary">Agregar Meta</button>
+                            <button type="button" id="btn-cancelar-meta" class="btn btn-secondary" hidden>Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Objetivos de Reducción -->
+                <div class="card">
+                    <h3>Objetivos de Reducción</h3>
+                    <form id="form-objetivo" class="form form-inline">
+                        <select id="objetivo-categoria" required>
+                            <option value="">Categoría...</option>
+                        </select>
+                        <input type="number" id="objetivo-porcentaje" placeholder="% reducción" min="1" max="100" required>
+                        <button type="submit" class="btn btn-primary">Agregar</button>
+                    </form>
+                    <div class="list" id="lista-objetivos" style="margin-top: 15px;">
+                        <p class="empty-message">Sin objetivos de reducción</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Mis Metas</h3>
+                    <div class="list" id="lista-metas">
+                        <p class="empty-message">No hay metas definidas</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cuentas Section -->
+            <section id="cuentas" class="section">
+                <div class="card">
+                    <h3>Nueva Cuenta</h3>
+                    <form id="form-cuenta" class="form form-inline">
+                        <input type="hidden" id="cuenta-id">
+                        <input type="text" id="cuenta-nombre" placeholder="Nombre de cuenta" required>
+                        <select id="cuenta-tipo">
+                            <option value="efectivo">💵 Efectivo</option>
+                            <option value="banco">🏦 Banco</option>
+                            <option value="billetera">📱 Billetera Virtual</option>
+                        </select>
+                        <input type="number" id="cuenta-saldo-inicial" placeholder="Saldo inicial" value="0">
+                        <button type="submit" id="btn-submit-cuenta" class="btn btn-primary">Agregar</button>
+                        <button type="button" id="btn-cancelar-cuenta" class="btn btn-secondary" hidden>Cancelar</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Transferir entre Cuentas</h3>
+                    <form id="form-transferencia" class="form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="transfer-origen">Desde</label>
+                                <select id="transfer-origen" required>
+                                    <option value="">Seleccionar...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="transfer-destino">Hacia</label>
+                                <select id="transfer-destino" required>
+                                    <option value="">Seleccionar...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="transfer-monto">Monto</label>
+                                <input type="number" id="transfer-monto" min="0" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="transfer-fecha">Fecha</label>
+                                <input type="date" id="transfer-fecha" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Transferir</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Mis Cuentas</h3>
+                    <div class="list" id="lista-cuentas">
+                        <p class="empty-message">No hay cuentas</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reportes Section -->
+            <section id="reportes" class="section">
+                <div class="card">
+                    <h3>Comparativo Mensual</h3>
+                    <div class="form-row" style="margin-bottom: 15px;">
+                        <select id="reporte-mes-1">
+                            <option value="">Mes 1...</option>
+                        </select>
+                        <select id="reporte-mes-2">
+                            <option value="">Mes 2...</option>
+                        </select>
+                        <button id="btn-comparar" class="btn btn-primary">Comparar</button>
+                    </div>
+                    <div id="comparativo-resultado"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Evolución del Balance</h3>
+                    <canvas id="chart-evolucion"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>Categorías con Mayor Crecimiento</h3>
+                    <div id="categorias-crecimiento">
+                        <p class="empty-message">Se necesitan al menos 2 meses de datos</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Resumen por Etiquetas</h3>
+                    <div id="resumen-tags">
+                        <p class="empty-message">No hay gastos con etiquetas</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categorías Section -->
+            <section id="categorias" class="section">
+                <div class="card">
+                    <h3>Nueva Categoría</h3>
+                    <form id="form-categoria" class="form form-inline">
+                        <input type="hidden" id="categoria-id">
+                        <input type="text" id="categoria-nombre" placeholder="Nombre de categoría" required>
+                        <button type="submit" id="btn-submit-categoria" class="btn btn-primary">Agregar</button>
+                        <button type="button" id="btn-cancelar-categoria" class="btn btn-secondary" hidden>Cancelar</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Presupuesto Mensual por Categoría</h3>
+                    <form id="form-presupuesto" class="form form-inline">
+                        <select id="presupuesto-categoria" required>
+                            <option value="">Categoría...</option>
+                        </select>
+                        <input type="number" id="presupuesto-monto" placeholder="Límite mensual" min="0" required>
+                        <button type="submit" class="btn btn-primary">Definir</button>
+                    </form>
+                    <div class="list" id="lista-presupuestos" style="margin-top: 15px;">
+                        <p class="empty-message">Sin presupuestos definidos</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Categorías Existentes</h3>
+                    <div class="list" id="lista-categorias">
+                        <p class="empty-message">No hay categorías</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal de Confirmación -->
+    <div id="modal-confirm" class="modal" hidden>
+        <div class="modal-content">
+            <p id="modal-message"></p>
+            <div class="modal-actions">
+                <button id="modal-confirm-btn" class="btn btn-danger">Eliminar</button>
+                <button id="modal-cancel-btn" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

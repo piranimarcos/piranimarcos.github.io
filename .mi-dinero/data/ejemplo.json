@@ -1,0 +1,203 @@
+{
+  "version": "2.0",
+  "exportDate": "2026-01-31T12:00:00.000Z",
+  "ingresos": [
+    {
+      "id": 1706700000001,
+      "fecha": "2026-01-05",
+      "monto": 850000,
+      "cuentaId": 2,
+      "descripcion": "Sueldo mensual"
+    },
+    {
+      "id": 1706700000002,
+      "fecha": "2026-01-15",
+      "monto": 120000,
+      "cuentaId": 3,
+      "descripcion": "Freelance diseño web"
+    },
+    {
+      "id": 1706700000003,
+      "fecha": "2025-12-05",
+      "monto": 850000,
+      "cuentaId": 2,
+      "descripcion": "Sueldo mensual"
+    }
+  ],
+  "gastos": [
+    {
+      "id": 1706700000010,
+      "fecha": "2026-01-06",
+      "monto": 45000,
+      "categoriaId": 1,
+      "cuentaId": 1,
+      "descripcion": "Supermercado semanal",
+      "tags": ["esenciales"],
+      "recurrente": false
+    },
+    {
+      "id": 1706700000011,
+      "fecha": "2026-01-08",
+      "monto": 15000,
+      "categoriaId": 2,
+      "cuentaId": 3,
+      "descripcion": "Carga SUBE",
+      "tags": ["transporte"],
+      "recurrente": true,
+      "frecuencia": "semanal"
+    },
+    {
+      "id": 1706700000012,
+      "fecha": "2026-01-10",
+      "monto": 85000,
+      "categoriaId": 3,
+      "cuentaId": 2,
+      "descripcion": "Factura de luz",
+      "tags": ["servicios", "hogar"],
+      "recurrente": true,
+      "frecuencia": "mensual"
+    },
+    {
+      "id": 1706700000013,
+      "fecha": "2026-01-12",
+      "monto": 25000,
+      "categoriaId": 4,
+      "cuentaId": 1,
+      "descripcion": "Cine y pochoclos",
+      "tags": ["salida", "fin-de-semana"],
+      "recurrente": false
+    },
+    {
+      "id": 1706700000014,
+      "fecha": "2026-01-14",
+      "monto": 18000,
+      "categoriaId": 9,
+      "cuentaId": 2,
+      "descripcion": "Netflix + Spotify",
+      "tags": ["suscripciones"],
+      "recurrente": true,
+      "frecuencia": "mensual"
+    },
+    {
+      "id": 1706700000015,
+      "fecha": "2026-01-18",
+      "monto": 55000,
+      "categoriaId": 1,
+      "cuentaId": 1,
+      "descripcion": "Supermercado semanal",
+      "tags": ["esenciales"],
+      "recurrente": false
+    },
+    {
+      "id": 1706700000016,
+      "fecha": "2026-01-20",
+      "monto": 35000,
+      "categoriaId": 5,
+      "cuentaId": 2,
+      "descripcion": "Farmacia",
+      "tags": ["salud"],
+      "recurrente": false
+    },
+    {
+      "id": 1706700000017,
+      "fecha": "2026-01-22",
+      "monto": 120000,
+      "categoriaId": 7,
+      "cuentaId": 2,
+      "descripcion": "Zapatillas nuevas",
+      "tags": ["ropa", "necesario"],
+      "recurrente": false
+    },
+    {
+      "id": 1706700000018,
+      "fecha": "2026-01-25",
+      "monto": 42000,
+      "categoriaId": 3,
+      "cuentaId": 2,
+      "descripcion": "Internet",
+      "tags": ["servicios", "hogar"],
+      "recurrente": true,
+      "frecuencia": "mensual"
+    },
+    {
+      "id": 1706700000019,
+      "fecha": "2026-01-28",
+      "monto": 60000,
+      "categoriaId": 1,
+      "cuentaId": 1,
+      "descripcion": "Supermercado semanal",
+      "tags": ["esenciales"],
+      "recurrente": false
+    },
+    {
+      "id": 1706700000020,
+      "fecha": "2025-12-10",
+      "monto": 80000,
+      "categoriaId": 3,
+      "cuentaId": 2,
+      "descripcion": "Factura de luz",
+      "tags": ["servicios"],
+      "recurrente": true,
+      "frecuencia": "mensual"
+    },
+    {
+      "id": 1706700000021,
+      "fecha": "2025-12-15",
+      "monto": 150000,
+      "categoriaId": 1,
+      "cuentaId": 1,
+      "descripcion": "Supermercado mensual",
+      "tags": ["esenciales"],
+      "recurrente": false
+    }
+  ],
+  "categorias": [
+    { "id": 1, "nombre": "Comida" },
+    { "id": 2, "nombre": "Transporte" },
+    { "id": 3, "nombre": "Servicios" },
+    { "id": 4, "nombre": "Entretenimiento" },
+    { "id": 5, "nombre": "Salud" },
+    { "id": 6, "nombre": "Educación" },
+    { "id": 7, "nombre": "Ropa" },
+    { "id": 8, "nombre": "Hogar" },
+    { "id": 9, "nombre": "Suscripciones" },
+    { "id": 10, "nombre": "Otros" }
+  ],
+  "metas": [
+    {
+      "id": 1706700000100,
+      "monto": 500000,
+      "fecha": "2026-06-30",
+      "descripcion": "Vacaciones de invierno",
+      "prioridad": 1
+    },
+    {
+      "id": 1706700000101,
+      "monto": 1500000,
+      "fecha": "2026-12-31",
+      "descripcion": "Fondo de emergencia",
+      "prioridad": 2
+    }
+  ],
+  "cuentas": [
+    { "id": 1, "nombre": "Efectivo", "tipo": "efectivo", "saldoInicial": 50000 },
+    { "id": 2, "nombre": "Banco Galicia", "tipo": "banco", "saldoInicial": 200000 },
+    { "id": 3, "nombre": "Mercado Pago", "tipo": "billetera", "saldoInicial": 0 }
+  ],
+  "transferencias": [
+    {
+      "id": 1706700000200,
+      "origenId": 2,
+      "destinoId": 1,
+      "monto": 100000,
+      "fecha": "2026-01-07"
+    }
+  ],
+  "presupuestos": [
+    { "id": 1706700000300, "categoriaId": 1, "monto": 200000 },
+    { "id": 1706700000301, "categoriaId": 4, "monto": 50000 }
+  ],
+  "objetivos": [
+    { "id": 1706700000400, "categoriaId": 4, "porcentaje": 20, "mesInicio": "2026-01" }
+  ]
+}
