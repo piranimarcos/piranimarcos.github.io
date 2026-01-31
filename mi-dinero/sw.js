@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mi-dinero-v2';
+const CACHE_NAME = 'mi-dinero-v4';
 const urlsToCache = [
   '/mi-dinero/',
   '/mi-dinero/index.html',

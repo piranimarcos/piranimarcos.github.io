@@ -88,6 +88,7 @@ const App = {
             case 'dashboard': this.refreshDashboard(); break;
             case 'ingresos': this.refreshIngresos(); break;
             case 'gastos': this.refreshGastos(); break;
+            case 'destinos': this.refreshDestinos(); break;
             case 'metas': this.refreshMetas(); break;
             case 'cuentas': this.refreshCuentas(); break;
             case 'reportes': this.refreshReportes(); break;
@@ -100,6 +101,7 @@ const App = {
         this.refreshDashboard();
         this.refreshIngresos();
         this.refreshGastos();
+        this.refreshDestinos();
         this.refreshMetas();
         this.refreshCuentas();
         this.refreshReportes();
@@ -856,19 +858,19 @@ const App = {
                 </div>
             `;
         }).join('');
-
-        // Refrescar destinos
-        this.refreshDestinos();
     },
 
     // ==================== DESTINOS ====================
 
     handleDestinoSubmit() {
         const id = document.getElementById('destino-id').value;
+        const descripcionEl = document.getElementById('destino-descripcion');
+        const iconoSelect = document.getElementById('destino-icono');
         const data = {
             nombre: document.getElementById('destino-nombre').value,
-            icono: document.getElementById('destino-icono').value || '📌',
-            montoObjetivo: parseFloat(document.getElementById('destino-objetivo').value) || 0
+            icono: iconoSelect.value,
+            montoObjetivo: parseFloat(document.getElementById('destino-objetivo').value) || 0,
+            descripcion: descripcionEl ? descripcionEl.value : ''
         };
 
         if (id) {
@@ -886,7 +888,8 @@ const App = {
     resetDestinoForm() {
         document.getElementById('form-destino').reset();
         document.getElementById('destino-id').value = '';
-        document.getElementById('btn-submit-destino').textContent = 'Agregar';
+        document.getElementById('destino-icono').selectedIndex = 0;
+        document.getElementById('btn-submit-destino').textContent = 'Agregar Destino';
         document.getElementById('btn-cancelar-destino').hidden = true;
     },
 
@@ -895,10 +898,24 @@ const App = {
         if (destino) {
             document.getElementById('destino-id').value = destino.id;
             document.getElementById('destino-nombre').value = destino.nombre;
-            document.getElementById('destino-icono').value = destino.icono;
+
+            // Seleccionar el icono en el select, o usar el primero si no existe
+            const iconoSelect = document.getElementById('destino-icono');
+            const iconoOption = Array.from(iconoSelect.options).find(opt => opt.value === destino.icono);
+            if (iconoOption) {
+                iconoSelect.value = destino.icono;
+            } else {
+                iconoSelect.value = iconoSelect.options[0].value;
+            }
+
             document.getElementById('destino-objetivo').value = destino.montoObjetivo || '';
-            document.getElementById('btn-submit-destino').textContent = 'Editar';
+            const descripcionEl = document.getElementById('destino-descripcion');
+            if (descripcionEl) descripcionEl.value = destino.descripcion || '';
+            document.getElementById('btn-submit-destino').textContent = 'Guardar Cambios';
             document.getElementById('btn-cancelar-destino').hidden = false;
+
+            // Scroll al formulario
+            document.getElementById('form-destino').scrollIntoView({ behavior: 'smooth' });
         }
     },
 
@@ -906,7 +923,7 @@ const App = {
         const ingresos = Storage.getIngresos().filter(i => i.destinoId === id);
         let mensaje = '¿Eliminar este destino?';
         if (ingresos.length > 0) {
-            mensaje += ` Hay ${ingresos.length} ingreso(s) asociados (no se eliminarán).`;
+            mensaje += ` Hay ${ingresos.length} ingreso(s) asociados (no se eliminarán, pero perderán su destino asignado).`;
         }
 
         this.showModal(mensaje, () => {
@@ -922,39 +939,100 @@ const App = {
         const lista = document.getElementById('lista-destinos');
 
         if (destinos.length === 0) {
-            lista.innerHTML = '<p class="empty-message">Sin destinos de ahorro</p>';
+            lista.innerHTML = '<p class="empty-message">Sin destinos de ahorro. Crea tu primer destino arriba.</p>';
+        } else {
+            lista.innerHTML = destinos.map(destino => {
+                const total = Storage.getTotalPorDestino(destino.id);
+                const ingresosCount = Storage.getIngresos().filter(i => i.destinoId === destino.id).length;
+                let progressHtml = '';
+
+                if (destino.montoObjetivo > 0) {
+                    const progreso = Math.min((total / destino.montoObjetivo) * 100, 100);
+                    const completado = progreso >= 100;
+                    progressHtml = `
+                        <div class="progress-container">
+                            <div class="progress-bar ${completado ? 'completed' : ''}" style="width: ${progreso}%"></div>
+                        </div>
+                        <div class="destino-progreso">
+                            ${this.formatMoney(total)} / ${this.formatMoney(destino.montoObjetivo)}
+                            <span class="${completado ? 'positive' : ''}">(${Math.round(progreso)}%)</span>
+                            ${completado ? ' ✓' : ''}
+                        </div>
+                    `;
+                } else {
+                    progressHtml = `<div class="destino-progreso">Acumulado: <strong>${this.formatMoney(total)}</strong></div>`;
+                }
+
+                const descripcionHtml = destino.descripcion
+                    ? `<div class="destino-descripcion">${this.escapeHtml(destino.descripcion)}</div>`
+                    : '';
+
+                return `
+                    <div class="destino-item">
+                        <div class="destino-header">
+                            <div class="destino-titulo-container">
+                                <span class="destino-titulo">${destino.icono} ${this.escapeHtml(destino.nombre)}</span>
+                                <span class="destino-ingresos-count">${ingresosCount} ingreso(s)</span>
+                            </div>
+                            <div class="list-item-actions">
+                                <button class="btn btn-secondary btn-small" onclick="App.editDestino(${destino.id})" title="Editar">✏️</button>
+                                <button class="btn btn-danger btn-small" onclick="App.deleteDestino(${destino.id})" title="Eliminar">🗑️</button>
+                            </div>
+                        </div>
+                        ${descripcionHtml}
+                        ${progressHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Actualizar resumen de destinos
+        this.refreshResumenDestinos();
+    },
+
+    refreshResumenDestinos() {
+        const destinos = Storage.getDestinos();
+        const container = document.getElementById('resumen-destinos');
+
+        if (!container) return;
+
+        if (destinos.length === 0) {
+            container.innerHTML = '<p class="empty-message">Sin destinos configurados</p>';
             return;
         }
 
-        lista.innerHTML = destinos.map(destino => {
+        let totalGeneral = 0;
+        const resumenItems = destinos.map(destino => {
             const total = Storage.getTotalPorDestino(destino.id);
-            let progressHtml = '';
+            totalGeneral += total;
+            const porcentajeDelTotal = totalGeneral > 0 ? (total / totalGeneral * 100) : 0;
 
-            if (destino.montoObjetivo > 0) {
-                const progreso = Math.min((total / destino.montoObjetivo) * 100, 100);
-                progressHtml = `
-                    <div class="progress-container">
-                        <div class="progress-bar" style="width: ${progreso}%"></div>
-                    </div>
-                    <div class="destino-progreso">${this.formatMoney(total)} / ${this.formatMoney(destino.montoObjetivo)} (${Math.round(progreso)}%)</div>
-                `;
-            } else {
-                progressHtml = `<div class="destino-progreso">Acumulado: ${this.formatMoney(total)}</div>`;
-            }
+            return { destino, total };
+        });
 
+        // Recalcular porcentajes con el total correcto
+        const html = resumenItems.map(({ destino, total }) => {
+            const porcentaje = totalGeneral > 0 ? (total / totalGeneral * 100) : 0;
             return `
-                <div class="destino-item">
-                    <div class="destino-header">
-                        <span class="destino-titulo">${destino.icono} ${this.escapeHtml(destino.nombre)}</span>
-                        <div class="list-item-actions">
-                            <button class="btn btn-secondary btn-small" onclick="App.editDestino(${destino.id})">✏️</button>
-                            <button class="btn btn-danger btn-small" onclick="App.deleteDestino(${destino.id})">🗑️</button>
-                        </div>
+                <div class="resumen-destino-item">
+                    <div class="resumen-destino-info">
+                        <span class="resumen-destino-icono">${destino.icono}</span>
+                        <span class="resumen-destino-nombre">${this.escapeHtml(destino.nombre)}</span>
                     </div>
-                    ${progressHtml}
+                    <div class="resumen-destino-datos">
+                        <span class="resumen-destino-monto">${this.formatMoney(total)}</span>
+                        <span class="resumen-destino-porcentaje">(${porcentaje.toFixed(1)}%)</span>
+                    </div>
                 </div>
             `;
         }).join('');
+
+        container.innerHTML = `
+            ${html}
+            <div class="resumen-destino-total">
+                <strong>Total en Destinos:</strong> ${this.formatMoney(totalGeneral)}
+            </div>
+        `;
     },
 
     // ==================== COTIZACIÓN ====================

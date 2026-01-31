@@ -39,10 +39,10 @@ const Storage = {
 
     // Destinos por defecto
     DEFAULT_DESTINOS: [
-        { id: 1, nombre: 'Colchón de Imprevistos', icono: '🛡️', montoObjetivo: 0 },
-        { id: 2, nombre: 'Ahorro Jubilación', icono: '👴', montoObjetivo: 0 },
-        { id: 3, nombre: 'Dinero Líquido', icono: '💵', montoObjetivo: 0 },
-        { id: 4, nombre: 'Fondo Cambio Auto', icono: '🚗', montoObjetivo: 0 }
+        { id: 1, nombre: 'Colchón de Imprevistos', icono: '🛡️', montoObjetivo: 0, descripcion: 'Para emergencias y gastos inesperados' },
+        { id: 2, nombre: 'Ahorro Jubilación', icono: '👴', montoObjetivo: 0, descripcion: 'Ahorro a largo plazo para el retiro' },
+        { id: 3, nombre: 'Dinero Líquido', icono: '💵', montoObjetivo: 0, descripcion: 'Efectivo disponible para uso inmediato' },
+        { id: 4, nombre: 'Fondo Cambio Auto', icono: '🚗', montoObjetivo: 0, descripcion: 'Ahorro para cambiar el vehículo' }
     ],
 
     // Cotización por defecto

@@ -35,7 +35,8 @@
             <button class="tab active" data-tab="dashboard">📊 Dashboard</button>
             <button class="tab" data-tab="ingresos">💵 Ingresos</button>
             <button class="tab" data-tab="gastos">🛒 Gastos</button>
-            <button class="tab" data-tab="metas">🎯 Metas</button>
+            <button class="tab" data-tab="destinos">🎯 Destinos</button>
+            <button class="tab" data-tab="metas">📌 Metas</button>
             <button class="tab" data-tab="cuentas">🏦 Cuentas</button>
             <button class="tab" data-tab="reportes">📈 Reportes</button>
             <button class="tab" data-tab="categorias">📁 Categorías</button>
@@ -245,6 +246,76 @@
                 </div>
             </section>
 
+            <!-- Destinos Section -->
+            <section id="destinos" class="section">
+                <div class="card">
+                    <h3>Configurar Destinos de Ahorro</h3>
+                    <p class="help-text">Los destinos son categorías donde asignas tus ingresos para organizar tu ahorro (ej: Fondo de emergencia, Vacaciones, etc.)</p>
+                    <form id="form-destino" class="form">
+                        <input type="hidden" id="destino-id">
+                        <div class="form-row">
+                            <div class="form-group" style="max-width: 120px;">
+                                <label for="destino-icono">Icono</label>
+                                <select id="destino-icono" class="emoji-select">
+                                    <option value="📌">📌 Pin</option>
+                                    <option value="🛡️">🛡️ Emergencia</option>
+                                    <option value="🏠">🏠 Casa</option>
+                                    <option value="🚗">🚗 Auto</option>
+                                    <option value="✈️">✈️ Viaje</option>
+                                    <option value="🎓">🎓 Educación</option>
+                                    <option value="💻">💻 Tecnología</option>
+                                    <option value="👴">👴 Jubilación</option>
+                                    <option value="💵">💵 Efectivo</option>
+                                    <option value="💰">💰 Ahorro</option>
+                                    <option value="🎁">🎁 Regalos</option>
+                                    <option value="🏥">🏥 Salud</option>
+                                    <option value="👶">👶 Familia</option>
+                                    <option value="🎉">🎉 Eventos</option>
+                                    <option value="📱">📱 Celular</option>
+                                    <option value="🏋️">🏋️ Gym</option>
+                                    <option value="🐕">🐕 Mascota</option>
+                                    <option value="💍">💍 Boda</option>
+                                    <option value="🎸">🎸 Hobby</option>
+                                    <option value="⭐">⭐ Otro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="destino-nombre">Nombre del Destino</label>
+                                <input type="text" id="destino-nombre" placeholder="Ej: Fondo de Emergencia" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="destino-objetivo">Meta de Ahorro (opcional)</label>
+                                <input type="number" id="destino-objetivo" placeholder="Monto objetivo" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="destino-descripcion">Descripción (opcional)</label>
+                                <input type="text" id="destino-descripcion" placeholder="Ej: Para imprevistos">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" id="btn-submit-destino" class="btn btn-primary">Agregar Destino</button>
+                            <button type="button" id="btn-cancelar-destino" class="btn btn-secondary" hidden>Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Mis Destinos de Ahorro</h3>
+                    <div class="list" id="lista-destinos">
+                        <p class="empty-message">Sin destinos de ahorro</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Resumen de Ahorro por Destino</h3>
+                    <div id="resumen-destinos">
+                        <p class="empty-message">Sin destinos configurados</p>
+                    </div>
+                </div>
+            </section>
+
             <!-- Metas Section -->
             <section id="metas" class="section">
                 <div class="card">
@@ -292,22 +363,6 @@
                     </form>
                     <div class="list" id="lista-objetivos" style="margin-top: 15px;">
                         <p class="empty-message">Sin objetivos de reducción</p>
-                    </div>
-                </div>
-
-                <!-- Destinos de Ahorro -->
-                <div class="card">
-                    <h3>Destinos de Ahorro</h3>
-                    <form id="form-destino" class="form form-inline">
-                        <input type="hidden" id="destino-id">
-                        <input type="text" id="destino-icono" placeholder="Emoji" maxlength="2" style="max-width: 60px;">
-                        <input type="text" id="destino-nombre" placeholder="Nombre del destino" required>
-                        <input type="number" id="destino-objetivo" placeholder="Meta (opcional)" min="0">
-                        <button type="submit" id="btn-submit-destino" class="btn btn-primary">Agregar</button>
-                        <button type="button" id="btn-cancelar-destino" class="btn btn-secondary" hidden>Cancelar</button>
-                    </form>
-                    <div class="list" id="lista-destinos" style="margin-top: 15px;">
-                        <p class="empty-message">Sin destinos de ahorro</p>
                     </div>
                 </div>
 
