@@ -155,9 +155,54 @@
             <p>Administra diferentes fuentes de dinero:</p>
             <ul>
                 <li><strong>Tipos:</strong> Efectivo, Banco o Billetera Virtual</li>
+                <li><strong>Moneda:</strong> Cada cuenta puede estar en Pesos (ARS) o Dólares (USD)</li>
                 <li><strong>Saldo inicial:</strong> El dinero que ya tenés al crear la cuenta</li>
                 <li><strong>Transferencias:</strong> Mover dinero entre cuentas sin afectar el balance total</li>
             </ul>
+
+            <div class="tip">
+                <strong>Tip:</strong> Las cuentas en USD se identifican con una etiqueta "USD" y sus montos se muestran en dólares. El balance total convierte todo a pesos usando la cotización actual.
+            </div>
+        </div>
+
+        <!-- Cotización del Dólar -->
+        <div class="tutorial-section">
+            <h2>💵 Cotización del Dólar</h2>
+            <p>El sistema maneja automáticamente la conversión de dólares a pesos:</p>
+            <ul>
+                <li><strong>Actualización Automática:</strong> Al abrir la app, se obtiene la cotización del dólar blue desde una API externa (dolarapi.com)</li>
+                <li><strong>Actualización cada hora:</strong> Si pasó más de 1 hora desde la última consulta, se actualiza automáticamente</li>
+                <li><strong>Valor Manual:</strong> Si no tenés conexión o preferís usar otra cotización, podés ingresar un valor manual</li>
+                <li><strong>Botón Refrescar:</strong> Usá el botón 🔄 para forzar una actualización desde la API</li>
+            </ul>
+
+            <div class="tip">
+                <strong>Nota:</strong> La cotización se muestra en la sección de Cuentas. El balance total del Dashboard usa esta cotización para sumar las cuentas en USD.
+            </div>
+        </div>
+
+        <!-- Destinos de Ahorro -->
+        <div class="tutorial-section">
+            <h2>🎯 Destinos de Ahorro</h2>
+            <p>Los destinos te permiten organizar para qué estás ahorrando cada ingreso:</p>
+            <ul>
+                <li><strong>Crear Destinos:</strong> Ve a la pestaña "Destinos" y creá tus propios destinos de ahorro</li>
+                <li><strong>Icono:</strong> Elegí un emoji que represente el destino</li>
+                <li><strong>Monto Objetivo:</strong> Opcionalmente, definí cuánto querés ahorrar para ese destino</li>
+                <li><strong>Asignar Ingresos:</strong> Al registrar un ingreso, podés asignarlo a un destino específico</li>
+            </ul>
+
+            <h3>Destinos por defecto</h3>
+            <ul>
+                <li>🛡️ <strong>Colchón de Imprevistos:</strong> Para emergencias y gastos inesperados</li>
+                <li>👴 <strong>Ahorro Jubilación:</strong> Ahorro a largo plazo para el retiro</li>
+                <li>💵 <strong>Dinero Líquido:</strong> Efectivo disponible para uso inmediato</li>
+                <li>🚗 <strong>Fondo Cambio Auto:</strong> Ahorro para cambiar el vehículo</li>
+            </ul>
+
+            <div class="tip">
+                <strong>Tip:</strong> Los destinos con monto objetivo muestran una barra de progreso tanto en la lista como en el Dashboard. Podés editar o eliminar los destinos que vienen por defecto.
+            </div>
         </div>
 
         <!-- Categorías y Presupuestos -->
