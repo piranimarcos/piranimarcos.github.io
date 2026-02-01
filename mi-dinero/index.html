@@ -36,6 +36,7 @@
             <button class="tab" data-tab="ingresos">💵 Ingresos</button>
             <button class="tab" data-tab="gastos">🛒 Gastos</button>
             <button class="tab" data-tab="destinos">🎯 Destinos</button>
+            <button class="tab" data-tab="deudas">💳 Deudas</button>
             <button class="tab" data-tab="metas">📌 Metas</button>
             <button class="tab" data-tab="cuentas">🏦 Cuentas</button>
             <button class="tab" data-tab="reportes">📈 Reportes</button>
@@ -48,8 +49,9 @@
             <section id="dashboard" class="section active">
                 <div class="dashboard-grid">
                     <div class="card balance-card">
-                        <h3>Balance Total</h3>
-                        <p class="balance-amount" id="balance-total">$0</p>
+                        <h3>Balance Disponible</h3>
+                        <p class="balance-amount" id="balance-disponible">$0</p>
+                        <p class="balance-detalle" id="balance-detalle"></p>
                         <p class="balance-por-cuenta" id="balance-por-cuenta"></p>
                     </div>
                     <div class="card">
@@ -83,6 +85,12 @@
                         <h3>Destinos de Ahorro</h3>
                         <div id="dashboard-destinos">
                             <p class="empty-message">Sin destinos</p>
+                        </div>
+                    </div>
+                    <div class="card deudas-card">
+                        <h3>Deudas Pendientes</h3>
+                        <div id="dashboard-deudas">
+                            <p class="empty-message">Sin deudas</p>
                         </div>
                     </div>
                 </div>
@@ -290,8 +298,24 @@
                                 <input type="number" id="destino-objetivo" placeholder="Monto objetivo" min="0">
                             </div>
                             <div class="form-group">
+                                <label for="destino-moneda">Moneda</label>
+                                <select id="destino-moneda">
+                                    <option value="ARS">ARS $</option>
+                                    <option value="USD">USD US$</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
                                 <label for="destino-descripcion">Descripción (opcional)</label>
                                 <input type="text" id="destino-descripcion" placeholder="Ej: Para imprevistos">
+                            </div>
+                            <div class="form-group">
+                                <label for="destino-excluir">
+                                    <input type="checkbox" id="destino-excluir">
+                                    Excluir del balance disponible
+                                </label>
+                                <small class="help-text">El ahorro en este destino no se contará como dinero disponible</small>
                             </div>
                         </div>
                         <div class="form-actions">
@@ -312,6 +336,107 @@
                     <h3>Resumen de Ahorro por Destino</h3>
                     <div id="resumen-destinos">
                         <p class="empty-message">Sin destinos configurados</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Deudas Section -->
+            <section id="deudas" class="section">
+                <div class="card">
+                    <h3>Registrar Deuda</h3>
+                    <p class="help-text">Registra deudas de tarjetas de crédito, préstamos, o dinero que debas a terceros.</p>
+                    <form id="form-deuda" class="form">
+                        <input type="hidden" id="deuda-id">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="deuda-nombre">Nombre</label>
+                                <input type="text" id="deuda-nombre" placeholder="Ej: Visa, Préstamo auto" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="deuda-tipo">Tipo</label>
+                                <select id="deuda-tipo">
+                                    <option value="tarjeta">💳 Tarjeta de Crédito</option>
+                                    <option value="prestamo">🏦 Préstamo Bancario</option>
+                                    <option value="personal">👤 Deuda Personal</option>
+                                    <option value="otro">📋 Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="deuda-monto">Monto Total</label>
+                                <input type="number" id="deuda-monto" min="0" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="deuda-moneda">Moneda</label>
+                                <select id="deuda-moneda">
+                                    <option value="ARS">ARS $</option>
+                                    <option value="USD">USD US$</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="deuda-fecha">Fecha de Inicio</label>
+                                <input type="date" id="deuda-fecha">
+                            </div>
+                            <div class="form-group">
+                                <label for="deuda-vencimiento">Fecha de Vencimiento (opcional)</label>
+                                <input type="date" id="deuda-vencimiento">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="deuda-descripcion">Descripción (opcional)</label>
+                            <input type="text" id="deuda-descripcion" placeholder="Ej: Compra de electrodoméstico">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" id="btn-submit-deuda" class="btn btn-primary">Agregar Deuda</button>
+                            <button type="button" id="btn-cancelar-deuda" class="btn btn-secondary" hidden>Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Registrar Pago de Deuda</h3>
+                    <form id="form-pago-deuda" class="form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pago-deuda-select">Deuda</label>
+                                <select id="pago-deuda-select" required>
+                                    <option value="">Seleccionar deuda...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pago-deuda-monto">Monto del Pago</label>
+                                <input type="number" id="pago-deuda-monto" min="0" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pago-deuda-fecha">Fecha</label>
+                                <input type="date" id="pago-deuda-fecha" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pago-deuda-cuenta">Desde Cuenta (opcional)</label>
+                                <select id="pago-deuda-cuenta">
+                                    <option value="">Solo registrar pago</option>
+                                </select>
+                                <small class="help-text">Si seleccionas cuenta, se descuenta como gasto</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pago-deuda-descripcion">Descripción (opcional)</label>
+                            <input type="text" id="pago-deuda-descripcion" placeholder="Ej: Pago mínimo">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Registrar Pago</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Mis Deudas</h3>
+                    <div id="resumen-deudas" class="deudas-resumen"></div>
+                    <div class="list" id="lista-deudas">
+                        <p class="empty-message">Sin deudas registradas</p>
                     </div>
                 </div>
             </section>

@@ -1011,3 +1011,202 @@ body {
 .positive { color: var(--positive); }
 .negative { color: var(--negative); }
 .warning { color: var(--warning); }
+
+/* Balance detalle */
+.balance-detalle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+/* Tag mini para destinos excluidos */
+.tag-mini {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+.tag-mini.excluido {
+    background-color: var(--warning);
+    color: #1a1a2e;
+}
+
+/* Conversion text */
+.conversion {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-left: 5px;
+}
+
+/* Resumen destinos excluidos */
+.resumen-destino-excluido {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: var(--bg-input);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: var(--warning);
+    border-left: 3px solid var(--warning);
+}
+
+/* ==================== DEUDAS ==================== */
+
+.deudas-card {
+    grid-column: span 2;
+}
+
+.deuda-resumen-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--bg-input);
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.deuda-resumen-item .deuda-icono {
+    font-size: 1.3rem;
+}
+
+.deuda-resumen-item .deuda-nombre {
+    flex: 1;
+    font-weight: 500;
+}
+
+.deuda-resumen-item .deuda-saldo {
+    font-weight: 600;
+}
+
+.deuda-resumen-item .progress-container.mini {
+    width: 60px;
+    height: 8px;
+    margin: 0;
+}
+
+.deuda-total {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: var(--bg-card);
+    border-radius: 8px;
+    text-align: right;
+    font-weight: 600;
+    color: var(--negative);
+    border: 1px solid var(--negative);
+}
+
+/* Deuda Item (sección Deudas) */
+.deuda-item {
+    padding: 15px;
+    background-color: var(--bg-input);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--negative);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.deuda-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.deuda-item.completado {
+    border-left-color: var(--positive);
+    opacity: 0.8;
+}
+
+.deuda-item .deuda-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.deuda-item .deuda-titulo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.deuda-item .deuda-icono {
+    font-size: 1.5rem;
+}
+
+.deuda-item .deuda-titulo {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.deuda-item .deuda-vencimiento {
+    font-size: 0.75rem;
+    color: var(--warning);
+    background-color: var(--bg-card);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.deuda-item .deuda-descripcion {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.deuda-item .deuda-progreso {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+.deuda-item .deuda-pagos {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid var(--bg-card);
+}
+
+.deuda-item .deuda-pagos strong {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 8px;
+}
+
+.deuda-item .pago-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    background-color: var(--bg-card);
+    border-radius: 6px;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+}
+
+/* Resumen total de deudas */
+.deuda-total-resumen {
+    padding: 15px;
+    background-color: var(--bg-input);
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    border: 2px solid var(--negative);
+}
+
+.deudas-resumen {
+    margin-bottom: 15px;
+}
+
+/* Form help text pequeño */
+.form-group small.help-text {
+    font-size: 0.75rem;
+    padding: 5px;
+    margin-top: 3px;
+    background: transparent;
+    border: none;
+}

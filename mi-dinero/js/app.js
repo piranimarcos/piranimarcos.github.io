@@ -89,6 +89,7 @@ const App = {
             case 'ingresos': this.refreshIngresos(); break;
             case 'gastos': this.refreshGastos(); break;
             case 'destinos': this.refreshDestinos(); break;
+            case 'deudas': this.refreshDeudas(); break;
             case 'metas': this.refreshMetas(); break;
             case 'cuentas': this.refreshCuentas(); break;
             case 'reportes': this.refreshReportes(); break;
@@ -102,6 +103,7 @@ const App = {
         this.refreshIngresos();
         this.refreshGastos();
         this.refreshDestinos();
+        this.refreshDeudas();
         this.refreshMetas();
         this.refreshCuentas();
         this.refreshReportes();
@@ -185,6 +187,19 @@ const App = {
             this.handlePresupuestoSubmit();
         });
 
+        // Deuda
+        document.getElementById('form-deuda').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleDeudaSubmit();
+        });
+        document.getElementById('btn-cancelar-deuda').addEventListener('click', () => this.resetDeudaForm());
+
+        // Pago de Deuda
+        document.getElementById('form-pago-deuda').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handlePagoDeudaSubmit();
+        });
+
         // Filtros
         ['buscar-ingreso', 'ingreso-desde', 'ingreso-hasta'].forEach(id => {
             document.getElementById(id).addEventListener('input', () => this.refreshIngresos());
@@ -203,6 +218,8 @@ const App = {
         document.getElementById('ingreso-fecha').value = today;
         document.getElementById('gasto-fecha').value = today;
         document.getElementById('transfer-fecha').value = today;
+        document.getElementById('deuda-fecha').value = today;
+        document.getElementById('pago-deuda-fecha').value = today;
     },
 
     // ==================== MODAL ====================
@@ -284,21 +301,41 @@ const App = {
         const mesOptions = meses.map(m => `<option value="${m}">${this.formatMes(m)}</option>`).join('');
         document.getElementById('reporte-mes-1').innerHTML = '<option value="">Mes 1...</option>' + mesOptions;
         document.getElementById('reporte-mes-2').innerHTML = '<option value="">Mes 2...</option>' + mesOptions;
+
+        // Deudas para pagos
+        const deudas = Storage.getDeudas();
+        const deudasOptions = deudas.map(d => {
+            const saldo = Storage.getSaldoDeuda(d.id);
+            const monedaLabel = d.moneda === 'USD' ? 'US$' : '$';
+            return `<option value="${d.id}">${this.escapeHtml(d.nombre)} (${monedaLabel}${saldo.toLocaleString()})</option>`;
+        }).join('');
+        document.getElementById('pago-deuda-select').innerHTML = '<option value="">Seleccionar deuda...</option>' + deudasOptions;
+
+        // Cuenta para pago de deuda
+        document.getElementById('pago-deuda-cuenta').innerHTML = '<option value="">Sin registrar en cuenta</option>' + cuentaOptions;
     },
 
     // ==================== DASHBOARD ====================
 
     refreshDashboard() {
-        const balanceData = Storage.getBalanceTotalEnARS();
+        const balanceData = Storage.getBalanceDisponibleEnARS();
         const ingresosMes = Storage.getTotalIngresosMes();
         const gastosMes = Storage.getTotalGastosMes();
         const metas = Storage.getMetas();
         const cuentas = Storage.getCuentas();
 
-        // Balance total en ARS (incluyendo conversión de USD)
-        const balanceEl = document.getElementById('balance-total');
-        balanceEl.textContent = this.formatMoney(balanceData.totalEnARS);
-        balanceEl.classList.toggle('negative', balanceData.totalEnARS < 0);
+        // Balance disponible en ARS (excluyendo destinos marcados)
+        const balanceEl = document.getElementById('balance-disponible');
+        balanceEl.textContent = this.formatMoney(balanceData.disponible);
+        balanceEl.classList.toggle('negative', balanceData.disponible < 0);
+
+        // Detalle de balance
+        const detalleEl = document.getElementById('balance-detalle');
+        if (balanceData.enDestinosExcluidos > 0) {
+            detalleEl.innerHTML = `Total: ${this.formatMoney(balanceData.totalEnARS)} | En ahorro: ${this.formatMoney(balanceData.enDestinosExcluidos)}`;
+        } else {
+            detalleEl.textContent = '';
+        }
 
         // Balance por cuenta con indicador de moneda
         const balancePorCuenta = cuentas.map(c => {
@@ -341,9 +378,53 @@ const App = {
         // Destinos en dashboard
         this.refreshDashboardDestinos();
 
+        // Deudas en dashboard
+        this.refreshDashboardDeudas();
+
         // Gráfico
         const gastosPorCategoria = Storage.getGastosPorCategoria();
         Charts.drawGastosPorCategoria('chart-gastos', gastosPorCategoria);
+    },
+
+    refreshDashboardDeudas() {
+        const deudas = Storage.getDeudas();
+        const container = document.getElementById('dashboard-deudas');
+
+        if (deudas.length === 0) {
+            container.innerHTML = '<p class="empty-message">Sin deudas</p>';
+            return;
+        }
+
+        const totalDeudas = Storage.getTotalDeudasEnARS();
+        let html = '';
+
+        deudas.forEach(deuda => {
+            const saldo = Storage.getSaldoDeuda(deuda.id);
+            const totalPagado = Storage.getTotalPagadoDeuda(deuda.id);
+            const progreso = deuda.montoTotal > 0 ? (totalPagado / deuda.montoTotal) * 100 : 0;
+            const monedaLabel = deuda.moneda === 'USD' ? this.formatMoneyUSD(saldo) : this.formatMoney(saldo);
+            const iconos = { tarjeta: '💳', prestamo: '🏦', personal: '👤', otro: '📋' };
+
+            if (saldo > 0) {
+                html += `
+                    <div class="deuda-resumen-item">
+                        <span class="deuda-icono">${iconos[deuda.tipo] || '📋'}</span>
+                        <span class="deuda-nombre">${this.escapeHtml(deuda.nombre)}</span>
+                        <div class="progress-container mini">
+                            <div class="progress-bar" style="width: ${progreso}%"></div>
+                        </div>
+                        <span class="deuda-saldo negative">${monedaLabel}</span>
+                    </div>
+                `;
+            }
+        });
+
+        if (html === '') {
+            container.innerHTML = '<p class="empty-message positive">Sin deudas pendientes</p>';
+        } else {
+            html += `<div class="deuda-total">Total: ${this.formatMoney(totalDeudas.totalEnARS)}</div>`;
+            container.innerHTML = html;
+        }
     },
 
     refreshDashboardDestinos() {
@@ -357,6 +438,8 @@ const App = {
 
         container.innerHTML = destinos.map(destino => {
             const total = Storage.getTotalPorDestino(destino.id);
+            const formatFn = destino.moneda === 'USD' ? this.formatMoneyUSD.bind(this) : this.formatMoney.bind(this);
+            const excluirTag = destino.excluirDelBalance ? '<span class="tag-mini excluido">Reservado</span>' : '';
             let progressHtml = '';
 
             if (destino.montoObjetivo > 0) {
@@ -365,16 +448,16 @@ const App = {
                     <div class="progress-container mini">
                         <div class="progress-bar" style="width: ${progreso}%"></div>
                     </div>
-                    <span class="destino-meta">${this.formatMoney(total)} / ${this.formatMoney(destino.montoObjetivo)}</span>
+                    <span class="destino-meta">${formatFn(total)} / ${formatFn(destino.montoObjetivo)}</span>
                 `;
             } else {
-                progressHtml = `<span class="destino-total">${this.formatMoney(total)}</span>`;
+                progressHtml = `<span class="destino-total">${formatFn(total)}</span>`;
             }
 
             return `
                 <div class="destino-resumen-item">
                     <span class="destino-icono">${destino.icono}</span>
-                    <span class="destino-nombre">${this.escapeHtml(destino.nombre)}</span>
+                    <span class="destino-nombre">${this.escapeHtml(destino.nombre)} ${excluirTag}</span>
                     ${progressHtml}
                 </div>
             `;
@@ -870,6 +953,8 @@ const App = {
             nombre: document.getElementById('destino-nombre').value,
             icono: iconoSelect.value,
             montoObjetivo: parseFloat(document.getElementById('destino-objetivo').value) || 0,
+            moneda: document.getElementById('destino-moneda').value,
+            excluirDelBalance: document.getElementById('destino-excluir').checked,
             descripcion: descripcionEl ? descripcionEl.value : ''
         };
 
@@ -889,6 +974,8 @@ const App = {
         document.getElementById('form-destino').reset();
         document.getElementById('destino-id').value = '';
         document.getElementById('destino-icono').selectedIndex = 0;
+        document.getElementById('destino-moneda').value = 'ARS';
+        document.getElementById('destino-excluir').checked = false;
         document.getElementById('btn-submit-destino').textContent = 'Agregar Destino';
         document.getElementById('btn-cancelar-destino').hidden = true;
     },
@@ -909,6 +996,8 @@ const App = {
             }
 
             document.getElementById('destino-objetivo').value = destino.montoObjetivo || '';
+            document.getElementById('destino-moneda').value = destino.moneda || 'ARS';
+            document.getElementById('destino-excluir').checked = destino.excluirDelBalance || false;
             const descripcionEl = document.getElementById('destino-descripcion');
             if (descripcionEl) descripcionEl.value = destino.descripcion || '';
             document.getElementById('btn-submit-destino').textContent = 'Guardar Cambios';
@@ -944,6 +1033,9 @@ const App = {
             lista.innerHTML = destinos.map(destino => {
                 const total = Storage.getTotalPorDestino(destino.id);
                 const ingresosCount = Storage.getIngresos().filter(i => i.destinoId === destino.id).length;
+                const formatFn = destino.moneda === 'USD' ? this.formatMoneyUSD.bind(this) : this.formatMoney.bind(this);
+                const monedaBadge = destino.moneda === 'USD' ? '<span class="moneda-badge usd">USD</span>' : '';
+                const excluirBadge = destino.excluirDelBalance ? '<span class="tag-mini excluido">Reservado</span>' : '';
                 let progressHtml = '';
 
                 if (destino.montoObjetivo > 0) {
@@ -954,13 +1046,13 @@ const App = {
                             <div class="progress-bar ${completado ? 'completed' : ''}" style="width: ${progreso}%"></div>
                         </div>
                         <div class="destino-progreso">
-                            ${this.formatMoney(total)} / ${this.formatMoney(destino.montoObjetivo)}
+                            ${formatFn(total)} / ${formatFn(destino.montoObjetivo)}
                             <span class="${completado ? 'positive' : ''}">(${Math.round(progreso)}%)</span>
                             ${completado ? ' ✓' : ''}
                         </div>
                     `;
                 } else {
-                    progressHtml = `<div class="destino-progreso">Acumulado: <strong>${this.formatMoney(total)}</strong></div>`;
+                    progressHtml = `<div class="destino-progreso">Acumulado: <strong>${formatFn(total)}</strong></div>`;
                 }
 
                 const descripcionHtml = destino.descripcion
@@ -971,7 +1063,7 @@ const App = {
                     <div class="destino-item">
                         <div class="destino-header">
                             <div class="destino-titulo-container">
-                                <span class="destino-titulo">${destino.icono} ${this.escapeHtml(destino.nombre)}</span>
+                                <span class="destino-titulo">${destino.icono} ${this.escapeHtml(destino.nombre)} ${monedaBadge} ${excluirBadge}</span>
                                 <span class="destino-ingresos-count">${ingresosCount} ingreso(s)</span>
                             </div>
                             <div class="list-item-actions">
@@ -1001,38 +1093,230 @@ const App = {
             return;
         }
 
-        let totalGeneral = 0;
+        let totalGeneralARS = 0;
         const resumenItems = destinos.map(destino => {
             const total = Storage.getTotalPorDestino(destino.id);
-            totalGeneral += total;
-            const porcentajeDelTotal = totalGeneral > 0 ? (total / totalGeneral * 100) : 0;
-
-            return { destino, total };
+            const totalEnARS = Storage.getTotalPorDestinoEnARS(destino.id);
+            totalGeneralARS += totalEnARS;
+            return { destino, total, totalEnARS };
         });
 
         // Recalcular porcentajes con el total correcto
-        const html = resumenItems.map(({ destino, total }) => {
-            const porcentaje = totalGeneral > 0 ? (total / totalGeneral * 100) : 0;
+        const html = resumenItems.map(({ destino, total, totalEnARS }) => {
+            const porcentaje = totalGeneralARS > 0 ? (totalEnARS / totalGeneralARS * 100) : 0;
+            const formatFn = destino.moneda === 'USD' ? this.formatMoneyUSD.bind(this) : this.formatMoney.bind(this);
+            const conversionHtml = destino.moneda === 'USD' && total > 0
+                ? `<span class="conversion">(${this.formatMoney(totalEnARS)})</span>`
+                : '';
+            const excluirTag = destino.excluirDelBalance ? '<span class="tag-mini excluido">Reservado</span>' : '';
+
             return `
                 <div class="resumen-destino-item">
                     <div class="resumen-destino-info">
                         <span class="resumen-destino-icono">${destino.icono}</span>
-                        <span class="resumen-destino-nombre">${this.escapeHtml(destino.nombre)}</span>
+                        <span class="resumen-destino-nombre">${this.escapeHtml(destino.nombre)} ${excluirTag}</span>
                     </div>
                     <div class="resumen-destino-datos">
-                        <span class="resumen-destino-monto">${this.formatMoney(total)}</span>
+                        <span class="resumen-destino-monto">${formatFn(total)} ${conversionHtml}</span>
                         <span class="resumen-destino-porcentaje">(${porcentaje.toFixed(1)}%)</span>
                     </div>
                 </div>
             `;
         }).join('');
 
+        const totalExcluido = Storage.getTotalEnDestinosExcluidos();
+        const excluirInfo = totalExcluido > 0
+            ? `<div class="resumen-destino-excluido">Reservado (excluido del balance disponible): ${this.formatMoney(totalExcluido)}</div>`
+            : '';
+
         container.innerHTML = `
             ${html}
             <div class="resumen-destino-total">
-                <strong>Total en Destinos:</strong> ${this.formatMoney(totalGeneral)}
+                <strong>Total en Destinos:</strong> ${this.formatMoney(totalGeneralARS)}
             </div>
+            ${excluirInfo}
         `;
+    },
+
+    // ==================== DEUDAS ====================
+
+    handleDeudaSubmit() {
+        const id = document.getElementById('deuda-id').value;
+        const data = {
+            nombre: document.getElementById('deuda-nombre').value,
+            tipo: document.getElementById('deuda-tipo').value,
+            montoTotal: parseFloat(document.getElementById('deuda-monto').value),
+            moneda: document.getElementById('deuda-moneda').value,
+            fechaCreacion: document.getElementById('deuda-fecha').value,
+            fechaVencimiento: document.getElementById('deuda-vencimiento').value || null,
+            descripcion: document.getElementById('deuda-descripcion').value || ''
+        };
+
+        if (id) {
+            Storage.updateDeuda(parseInt(id), data);
+        } else {
+            Storage.addDeuda(data);
+        }
+
+        this.resetDeudaForm();
+        this.populateSelects();
+        this.refreshDeudas();
+        this.refreshDashboard();
+    },
+
+    resetDeudaForm() {
+        document.getElementById('form-deuda').reset();
+        document.getElementById('deuda-id').value = '';
+        document.getElementById('deuda-fecha').value = new Date().toISOString().split('T')[0];
+        document.getElementById('btn-submit-deuda').textContent = 'Agregar Deuda';
+        document.getElementById('btn-cancelar-deuda').hidden = true;
+    },
+
+    editDeuda(id) {
+        const deuda = Storage.getDeudas().find(d => d.id === id);
+        if (deuda) {
+            document.getElementById('deuda-id').value = deuda.id;
+            document.getElementById('deuda-nombre').value = deuda.nombre;
+            document.getElementById('deuda-tipo').value = deuda.tipo;
+            document.getElementById('deuda-monto').value = deuda.montoTotal;
+            document.getElementById('deuda-moneda').value = deuda.moneda || 'ARS';
+            document.getElementById('deuda-fecha').value = deuda.fechaCreacion || '';
+            document.getElementById('deuda-vencimiento').value = deuda.fechaVencimiento || '';
+            document.getElementById('deuda-descripcion').value = deuda.descripcion || '';
+            document.getElementById('btn-submit-deuda').textContent = 'Guardar Cambios';
+            document.getElementById('btn-cancelar-deuda').hidden = false;
+
+            document.getElementById('form-deuda').scrollIntoView({ behavior: 'smooth' });
+        }
+    },
+
+    deleteDeuda(id) {
+        const pagos = Storage.getPagosPorDeuda(id);
+        let mensaje = '¿Eliminar esta deuda?';
+        if (pagos.length > 0) {
+            mensaje += ` Se eliminarán también ${pagos.length} pago(s) asociados.`;
+        }
+
+        this.showModal(mensaje, () => {
+            Storage.deleteDeuda(id);
+            this.populateSelects();
+            this.refreshDeudas();
+            this.refreshDashboard();
+        });
+    },
+
+    handlePagoDeudaSubmit() {
+        const deudaId = parseInt(document.getElementById('pago-deuda-select').value);
+        const cuentaValue = document.getElementById('pago-deuda-cuenta').value;
+
+        const data = {
+            deudaId,
+            monto: parseFloat(document.getElementById('pago-deuda-monto').value),
+            fecha: document.getElementById('pago-deuda-fecha').value,
+            cuentaId: cuentaValue ? parseInt(cuentaValue) : null,
+            descripcion: document.getElementById('pago-deuda-descripcion').value || ''
+        };
+
+        // Registrar gasto solo si seleccionó una cuenta
+        const registrarGasto = !!cuentaValue;
+        Storage.addPagoDeuda(data, registrarGasto);
+
+        document.getElementById('form-pago-deuda').reset();
+        document.getElementById('pago-deuda-fecha').value = new Date().toISOString().split('T')[0];
+        this.populateSelects();
+        this.refreshDeudas();
+        this.refreshDashboard();
+        this.refreshGastos();
+        this.refreshCuentas();
+    },
+
+    deletePagoDeuda(id) {
+        this.showModal('¿Eliminar este pago?', () => {
+            Storage.deletePagoDeuda(id);
+            this.populateSelects();
+            this.refreshDeudas();
+            this.refreshDashboard();
+        });
+    },
+
+    refreshDeudas() {
+        const deudas = Storage.getDeudas();
+        const lista = document.getElementById('lista-deudas');
+        const resumen = document.getElementById('resumen-deudas');
+        const iconos = { tarjeta: '💳', prestamo: '🏦', personal: '👤', otro: '📋' };
+
+        // Resumen total
+        const totalDeudas = Storage.getTotalDeudasEnARS();
+        if (totalDeudas.totalEnARS > 0) {
+            let resumenHtml = `<div class="deuda-total-resumen">Total de Deudas: <span class="negative">${this.formatMoney(totalDeudas.totalEnARS)}</span>`;
+            if (totalDeudas.totalUSD > 0) {
+                resumenHtml += ` | USD: ${this.formatMoneyUSD(totalDeudas.totalUSD)}`;
+            }
+            resumenHtml += '</div>';
+            resumen.innerHTML = resumenHtml;
+        } else {
+            resumen.innerHTML = '';
+        }
+
+        if (deudas.length === 0) {
+            lista.innerHTML = '<p class="empty-message">Sin deudas registradas</p>';
+            return;
+        }
+
+        lista.innerHTML = deudas.map(deuda => {
+            const saldo = Storage.getSaldoDeuda(deuda.id);
+            const totalPagado = Storage.getTotalPagadoDeuda(deuda.id);
+            const progreso = deuda.montoTotal > 0 ? (totalPagado / deuda.montoTotal) * 100 : 0;
+            const completado = saldo <= 0;
+            const formatFn = deuda.moneda === 'USD' ? this.formatMoneyUSD.bind(this) : this.formatMoney.bind(this);
+            const monedaBadge = deuda.moneda === 'USD' ? '<span class="moneda-badge usd">USD</span>' : '';
+
+            const pagos = Storage.getPagosPorDeuda(deuda.id);
+            let pagosHtml = '';
+            if (pagos.length > 0) {
+                pagosHtml = `
+                    <div class="deuda-pagos">
+                        <strong>Últimos pagos:</strong>
+                        ${pagos.slice(-3).reverse().map(p => `
+                            <div class="pago-item">
+                                <span>${this.formatDate(p.fecha)}: ${formatFn(p.monto)}</span>
+                                <button class="btn btn-danger btn-small" onclick="App.deletePagoDeuda(${p.id})">🗑️</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            const vencimientoHtml = deuda.fechaVencimiento
+                ? `<span class="deuda-vencimiento">Vence: ${this.formatDate(deuda.fechaVencimiento)}</span>`
+                : '';
+
+            return `
+                <div class="deuda-item ${completado ? 'completado' : ''}">
+                    <div class="deuda-header">
+                        <div class="deuda-titulo-container">
+                            <span class="deuda-icono">${iconos[deuda.tipo] || '📋'}</span>
+                            <span class="deuda-titulo">${this.escapeHtml(deuda.nombre)} ${monedaBadge}</span>
+                            ${vencimientoHtml}
+                        </div>
+                        <div class="list-item-actions">
+                            <button class="btn btn-secondary btn-small" onclick="App.editDeuda(${deuda.id})" title="Editar">✏️</button>
+                            <button class="btn btn-danger btn-small" onclick="App.deleteDeuda(${deuda.id})" title="Eliminar">🗑️</button>
+                        </div>
+                    </div>
+                    ${deuda.descripcion ? `<div class="deuda-descripcion">${this.escapeHtml(deuda.descripcion)}</div>` : ''}
+                    <div class="progress-container">
+                        <div class="progress-bar ${completado ? 'completed' : ''}" style="width: ${progreso}%"></div>
+                    </div>
+                    <div class="deuda-progreso">
+                        Pagado: ${formatFn(totalPagado)} / ${formatFn(deuda.montoTotal)}
+                        <span class="${completado ? 'positive' : 'negative'}">(${Math.round(progreso)}%)</span>
+                        ${completado ? ' ✓ Saldada' : ` - Resta: ${formatFn(saldo)}`}
+                    </div>
+                    ${pagosHtml}
+                </div>
+            `;
+        }).join('');
     },
 
     // ==================== COTIZACIÓN ====================

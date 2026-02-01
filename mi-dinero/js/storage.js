@@ -14,7 +14,9 @@ const Storage = {
         OBJETIVOS: 'midinero_objetivos',
         THEME: 'midinero_theme',
         DESTINOS: 'midinero_destinos',
-        COTIZACION: 'midinero_cotizacion'
+        COTIZACION: 'midinero_cotizacion',
+        DEUDAS: 'midinero_deudas',
+        PAGOS_DEUDA: 'midinero_pagos_deuda'
     },
 
     // Categorías por defecto
@@ -39,10 +41,10 @@ const Storage = {
 
     // Destinos por defecto
     DEFAULT_DESTINOS: [
-        { id: 1, nombre: 'Colchón de Imprevistos', icono: '🛡️', montoObjetivo: 0, descripcion: 'Para emergencias y gastos inesperados' },
-        { id: 2, nombre: 'Ahorro Jubilación', icono: '👴', montoObjetivo: 0, descripcion: 'Ahorro a largo plazo para el retiro' },
-        { id: 3, nombre: 'Dinero Líquido', icono: '💵', montoObjetivo: 0, descripcion: 'Efectivo disponible para uso inmediato' },
-        { id: 4, nombre: 'Fondo Cambio Auto', icono: '🚗', montoObjetivo: 0, descripcion: 'Ahorro para cambiar el vehículo' }
+        { id: 1, nombre: 'Colchón de Imprevistos', icono: '🛡️', montoObjetivo: 0, moneda: 'ARS', excluirDelBalance: true, descripcion: 'Para emergencias y gastos inesperados' },
+        { id: 2, nombre: 'Ahorro Jubilación', icono: '👴', montoObjetivo: 0, moneda: 'ARS', excluirDelBalance: true, descripcion: 'Ahorro a largo plazo para el retiro' },
+        { id: 3, nombre: 'Dinero Líquido', icono: '💵', montoObjetivo: 0, moneda: 'ARS', excluirDelBalance: false, descripcion: 'Efectivo disponible para uso inmediato' },
+        { id: 4, nombre: 'Fondo Cambio Auto', icono: '🚗', montoObjetivo: 0, moneda: 'USD', excluirDelBalance: true, descripcion: 'Ahorro para cambiar el vehículo' }
     ],
 
     // Cotización por defecto
@@ -87,8 +89,16 @@ const Storage = {
         if (!localStorage.getItem(this.KEYS.COTIZACION)) {
             this.setCotizacion(this.DEFAULT_COTIZACION);
         }
+        if (!localStorage.getItem(this.KEYS.DEUDAS)) {
+            this.setDeudas([]);
+        }
+        if (!localStorage.getItem(this.KEYS.PAGOS_DEUDA)) {
+            this.setPagosDeuda([]);
+        }
         // Migrar cuentas existentes para agregar moneda si no la tienen
         this.migrateCuentasMoneda();
+        // Migrar destinos existentes para agregar moneda y excluirDelBalance
+        this.migrateDestinosMoneda();
     },
 
     migrateCuentasMoneda() {
@@ -102,6 +112,24 @@ const Storage = {
         });
         if (needsUpdate) {
             this.setCuentas(cuentas);
+        }
+    },
+
+    migrateDestinosMoneda() {
+        const destinos = this.getDestinos();
+        let needsUpdate = false;
+        destinos.forEach(destino => {
+            if (!destino.moneda) {
+                destino.moneda = 'ARS';
+                needsUpdate = true;
+            }
+            if (destino.excluirDelBalance === undefined) {
+                destino.excluirDelBalance = false;
+                needsUpdate = true;
+            }
+        });
+        if (needsUpdate) {
+            this.setDestinos(destinos);
         }
     },
 
@@ -457,6 +485,39 @@ const Storage = {
             .reduce((sum, i) => sum + parseFloat(i.monto), 0);
     },
 
+    getTotalPorDestinoEnARS(destinoId) {
+        const destino = this.getDestinos().find(d => d.id === destinoId);
+        if (!destino) return 0;
+
+        const total = this.getTotalPorDestino(destinoId);
+        if (destino.moneda === 'USD') {
+            return total * this.getCotizacionActual();
+        }
+        return total;
+    },
+
+    getTotalEnDestinosExcluidos() {
+        const destinos = this.getDestinos().filter(d => d.excluirDelBalance);
+        let totalARS = 0;
+
+        destinos.forEach(destino => {
+            totalARS += this.getTotalPorDestinoEnARS(destino.id);
+        });
+
+        return totalARS;
+    },
+
+    getBalanceDisponibleEnARS() {
+        const balanceTotal = this.getBalanceTotalEnARS();
+        const destinosExcluidos = this.getTotalEnDestinosExcluidos();
+
+        return {
+            ...balanceTotal,
+            disponible: balanceTotal.totalEnARS - destinosExcluidos,
+            enDestinosExcluidos: destinosExcluidos
+        };
+    },
+
     // ==================== COTIZACIÓN ====================
 
     getCotizacion() {
@@ -502,6 +563,128 @@ const Storage = {
         this.setCotizacion(cotizacion);
     },
 
+    // ==================== DEUDAS ====================
+
+    getDeudas() {
+        const data = localStorage.getItem(this.KEYS.DEUDAS);
+        return data ? JSON.parse(data) : [];
+    },
+
+    setDeudas(deudas) {
+        localStorage.setItem(this.KEYS.DEUDAS, JSON.stringify(deudas));
+    },
+
+    addDeuda(deuda) {
+        const deudas = this.getDeudas();
+        deuda.id = Date.now();
+        deuda.fechaCreacion = deuda.fechaCreacion || new Date().toISOString().split('T')[0];
+        deudas.push(deuda);
+        this.setDeudas(deudas);
+        return deuda;
+    },
+
+    updateDeuda(id, data) {
+        const deudas = this.getDeudas();
+        const index = deudas.findIndex(d => d.id === id);
+        if (index !== -1) {
+            deudas[index] = { ...deudas[index], ...data };
+            this.setDeudas(deudas);
+            return deudas[index];
+        }
+        return null;
+    },
+
+    deleteDeuda(id) {
+        const deudas = this.getDeudas();
+        const filtered = deudas.filter(d => d.id !== id);
+        this.setDeudas(filtered);
+        // También eliminar pagos asociados
+        const pagos = this.getPagosDeuda().filter(p => p.deudaId !== id);
+        this.setPagosDeuda(pagos);
+    },
+
+    // ==================== PAGOS DE DEUDA ====================
+
+    getPagosDeuda() {
+        const data = localStorage.getItem(this.KEYS.PAGOS_DEUDA);
+        return data ? JSON.parse(data) : [];
+    },
+
+    setPagosDeuda(pagos) {
+        localStorage.setItem(this.KEYS.PAGOS_DEUDA, JSON.stringify(pagos));
+    },
+
+    addPagoDeuda(pago, registrarGasto = false) {
+        const pagos = this.getPagosDeuda();
+        pago.id = Date.now();
+        pagos.push(pago);
+        this.setPagosDeuda(pagos);
+
+        // Opcionalmente registrar como gasto si hay cuenta asociada
+        if (registrarGasto && pago.cuentaId) {
+            const deuda = this.getDeudas().find(d => d.id === pago.deudaId);
+            this.addGasto({
+                fecha: pago.fecha,
+                monto: pago.monto,
+                categoriaId: 10, // Otros
+                cuentaId: pago.cuentaId,
+                descripcion: `Pago deuda: ${deuda ? deuda.nombre : 'Deuda'}`,
+                tags: ['deuda', 'pago'],
+                recurrente: false
+            });
+        }
+
+        return pago;
+    },
+
+    deletePagoDeuda(id) {
+        const pagos = this.getPagosDeuda();
+        const filtered = pagos.filter(p => p.id !== id);
+        this.setPagosDeuda(filtered);
+    },
+
+    getPagosPorDeuda(deudaId) {
+        return this.getPagosDeuda().filter(p => p.deudaId === deudaId);
+    },
+
+    getSaldoDeuda(deudaId) {
+        const deuda = this.getDeudas().find(d => d.id === deudaId);
+        if (!deuda) return 0;
+
+        const totalPagado = this.getPagosPorDeuda(deudaId)
+            .reduce((sum, p) => sum + parseFloat(p.monto), 0);
+
+        return parseFloat(deuda.montoTotal) - totalPagado;
+    },
+
+    getTotalPagadoDeuda(deudaId) {
+        return this.getPagosPorDeuda(deudaId)
+            .reduce((sum, p) => sum + parseFloat(p.monto), 0);
+    },
+
+    getTotalDeudasEnARS() {
+        const deudas = this.getDeudas();
+        const cotizacion = this.getCotizacionActual();
+        let totalARS = 0;
+        let totalUSD = 0;
+
+        deudas.forEach(deuda => {
+            const saldo = this.getSaldoDeuda(deuda.id);
+            if (deuda.moneda === 'USD') {
+                totalUSD += saldo;
+            } else {
+                totalARS += saldo;
+            }
+        });
+
+        return {
+            totalARS,
+            totalUSD,
+            totalEnARS: totalARS + (totalUSD * cotizacion),
+            cotizacion
+        };
+    },
+
     // ==================== SALDO CON MONEDA ====================
 
     getSaldoCuentaConMoneda(cuentaId) {
@@ -539,7 +722,7 @@ const Storage = {
 
     exportData() {
         const data = {
-            version: '3.0',
+            version: '4.0',
             exportDate: new Date().toISOString(),
             ingresos: this.getIngresos(),
             gastos: this.getGastos(),
@@ -550,7 +733,9 @@ const Storage = {
             presupuestos: this.getPresupuestos(),
             objetivos: this.getObjetivos(),
             destinos: this.getDestinos(),
-            cotizacion: this.getCotizacion()
+            cotizacion: this.getCotizacion(),
+            deudas: this.getDeudas(),
+            pagosDeuda: this.getPagosDeuda()
         };
 
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -591,9 +776,13 @@ const Storage = {
                     if (data.objetivos) this.setObjetivos(data.objetivos);
                     if (data.destinos) this.setDestinos(data.destinos);
                     if (data.cotizacion) this.setCotizacion(data.cotizacion);
+                    if (data.deudas) this.setDeudas(data.deudas);
+                    if (data.pagosDeuda) this.setPagosDeuda(data.pagosDeuda);
 
                     // Migrar cuentas para agregar moneda
                     this.migrateCuentasMoneda();
+                    // Migrar destinos para agregar moneda y excluirDelBalance
+                    this.migrateDestinosMoneda();
 
                     resolve(data);
                 } catch (error) {

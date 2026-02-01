@@ -109,9 +109,12 @@
             <h2>📊 Dashboard</h2>
             <p>El Dashboard te muestra un resumen de tu situación financiera:</p>
             <ul>
-                <li><strong>Balance Total:</strong> La suma de todas tus cuentas</li>
+                <li><strong>Balance Disponible:</strong> El dinero que realmente podés gastar (excluye ahorro reservado)</li>
+                <li><strong>Balance Total:</strong> La suma de todas tus cuentas incluyendo ahorro</li>
                 <li><strong>Ingresos/Gastos del Mes:</strong> Movimientos del mes actual</li>
                 <li><strong>Meta Principal:</strong> Progreso hacia tu meta de ahorro prioritaria</li>
+                <li><strong>Destinos de Ahorro:</strong> Resumen rápido de tus ahorros por destino</li>
+                <li><strong>Deudas Pendientes:</strong> Resumen de deudas y progreso de pago</li>
                 <li><strong>Alertas:</strong> Gastos recurrentes próximos y presupuestos cerca del límite</li>
                 <li><strong>Gráfico:</strong> Distribución de gastos por categoría</li>
             </ul>
@@ -188,20 +191,64 @@
             <ul>
                 <li><strong>Crear Destinos:</strong> Ve a la pestaña "Destinos" y creá tus propios destinos de ahorro</li>
                 <li><strong>Icono:</strong> Elegí un emoji que represente el destino</li>
+                <li><strong>Moneda:</strong> Cada destino puede estar en Pesos (ARS) o Dólares (USD)</li>
                 <li><strong>Monto Objetivo:</strong> Opcionalmente, definí cuánto querés ahorrar para ese destino</li>
+                <li><strong>Excluir del Balance:</strong> Marcá esta opción para que el ahorro no cuente como dinero disponible</li>
                 <li><strong>Asignar Ingresos:</strong> Al registrar un ingreso, podés asignarlo a un destino específico</li>
             </ul>
 
+            <h3>Balance Disponible vs Balance Total</h3>
+            <p>Los destinos marcados como "Excluir del balance disponible" se consideran ahorro protegido:</p>
+            <ul>
+                <li><strong>Balance Disponible:</strong> El dinero que podés gastar libremente</li>
+                <li><strong>Balance Total:</strong> Todo tu dinero incluyendo el ahorro reservado</li>
+            </ul>
+            <p>Esto te permite ver cuánto tenés realmente disponible sin tocar tus ahorros.</p>
+
             <h3>Destinos por defecto</h3>
             <ul>
-                <li>🛡️ <strong>Colchón de Imprevistos:</strong> Para emergencias y gastos inesperados</li>
-                <li>👴 <strong>Ahorro Jubilación:</strong> Ahorro a largo plazo para el retiro</li>
-                <li>💵 <strong>Dinero Líquido:</strong> Efectivo disponible para uso inmediato</li>
-                <li>🚗 <strong>Fondo Cambio Auto:</strong> Ahorro para cambiar el vehículo</li>
+                <li>🛡️ <strong>Colchón de Imprevistos:</strong> Para emergencias (ARS, excluido del balance)</li>
+                <li>👴 <strong>Ahorro Jubilación:</strong> Ahorro a largo plazo (ARS, excluido del balance)</li>
+                <li>💵 <strong>Dinero Líquido:</strong> Efectivo para uso inmediato (ARS, incluido en balance)</li>
+                <li>🚗 <strong>Fondo Cambio Auto:</strong> Ahorro para el vehículo (USD, excluido del balance)</li>
             </ul>
 
             <div class="tip">
-                <strong>Tip:</strong> Los destinos con monto objetivo muestran una barra de progreso tanto en la lista como en el Dashboard. Podés editar o eliminar los destinos que vienen por defecto.
+                <strong>Tip:</strong> Los destinos en USD muestran automáticamente la conversión a pesos usando la cotización actual. Los destinos con monto objetivo muestran una barra de progreso.
+            </div>
+        </div>
+
+        <!-- Deudas -->
+        <div class="tutorial-section">
+            <h2>💳 Deudas</h2>
+            <p>Registrá y hacé seguimiento de tus deudas para tener control total de tus finanzas:</p>
+
+            <h3>Tipos de deudas</h3>
+            <ul>
+                <li>💳 <strong>Tarjeta de Crédito:</strong> Saldos pendientes de tarjetas</li>
+                <li>🏦 <strong>Préstamo Bancario:</strong> Créditos personales, hipotecarios, etc.</li>
+                <li>👤 <strong>Deuda Personal:</strong> Dinero que le debés a alguien</li>
+                <li>📋 <strong>Otro:</strong> Cualquier otra deuda</li>
+            </ul>
+
+            <h3>Registrar una deuda</h3>
+            <ul>
+                <li><strong>Nombre:</strong> Identificá la deuda (ej: "Visa", "Préstamo auto")</li>
+                <li><strong>Monto Total:</strong> El monto original de la deuda</li>
+                <li><strong>Moneda:</strong> Pesos (ARS) o Dólares (USD)</li>
+                <li><strong>Fecha de Vencimiento:</strong> Opcional, para recordar cuándo vence</li>
+            </ul>
+
+            <h3>Registrar pagos</h3>
+            <p>Cuando hacés un pago parcial o total:</p>
+            <ul>
+                <li>Seleccioná la deuda</li>
+                <li>Ingresá el monto del pago</li>
+                <li>Opcionalmente, seleccioná desde qué cuenta se descuenta (esto registra automáticamente el gasto)</li>
+            </ul>
+
+            <div class="tip">
+                <strong>Tip:</strong> El Dashboard muestra un resumen de tus deudas pendientes. Cuando una deuda está 100% saldada, se marca como completada.
             </div>
         </div>
 
@@ -246,7 +293,9 @@
             <ul>
                 <li><strong>Tema:</strong> Usá el botón ☀️/🌙 para cambiar entre modo claro y oscuro</li>
                 <li><strong>Responsive:</strong> Funciona en celulares y tablets</li>
-                <li><strong>Offline:</strong> No necesita conexión a internet</li>
+                <li><strong>Offline:</strong> Funciona sin conexión (usa cotización manual o la última obtenida)</li>
+                <li><strong>Cotización en vivo:</strong> Con conexión, obtiene automáticamente el dólar blue</li>
+                <li><strong>Multimoneda:</strong> Soporta pesos y dólares en cuentas y destinos</li>
             </ul>
         </div>
 
