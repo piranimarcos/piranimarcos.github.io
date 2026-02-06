@@ -99,6 +99,10 @@ const Storage = {
         this.migrateCuentasMoneda();
         // Migrar destinos existentes para agregar moneda y excluirDelBalance
         this.migrateDestinosMoneda();
+        // Migrar transferencias para campos bidireccionales
+        this.migrateTransferencias();
+        // Migrar gastos para fuente (cuenta o destino)
+        this.migrateGastosFuente();
     },
 
     migrateCuentasMoneda() {
@@ -130,6 +134,50 @@ const Storage = {
         });
         if (needsUpdate) {
             this.setDestinos(destinos);
+        }
+    },
+
+    migrateTransferencias() {
+        const transferencias = this.getTransferencias();
+        let needsUpdate = false;
+        transferencias.forEach(t => {
+            if (t.origenTipo === undefined) {
+                t.origenTipo = 'cuenta';
+                needsUpdate = true;
+            }
+            if (t.destinoTipo === undefined) {
+                t.destinoTipo = 'cuenta';
+                needsUpdate = true;
+            }
+            if (t.descripcion === undefined) {
+                t.descripcion = '';
+                needsUpdate = true;
+            }
+            if (t.tags === undefined) {
+                t.tags = [];
+                needsUpdate = true;
+            }
+        });
+        if (needsUpdate) {
+            this.setTransferencias(transferencias);
+        }
+    },
+
+    migrateGastosFuente() {
+        const gastos = this.getGastos();
+        let needsUpdate = false;
+        gastos.forEach(g => {
+            if (g.fuenteTipo === undefined) {
+                g.fuenteTipo = 'cuenta';
+                needsUpdate = true;
+            }
+            if (g.fuenteId === undefined) {
+                g.fuenteId = g.cuentaId;
+                needsUpdate = true;
+            }
+        });
+        if (needsUpdate) {
+            this.setGastos(gastos);
         }
     },
 
@@ -337,15 +385,15 @@ const Storage = {
             .reduce((sum, i) => sum + parseFloat(i.monto), 0);
 
         const gastos = this.getGastos()
-            .filter(g => g.cuentaId === cuentaId)
+            .filter(g => (g.fuenteTipo || 'cuenta') === 'cuenta' && (g.fuenteId || g.cuentaId) === cuentaId)
             .reduce((sum, g) => sum + parseFloat(g.monto), 0);
 
         const transferencias = this.getTransferencias();
         const transferenciasEntrada = transferencias
-            .filter(t => t.destinoId === cuentaId)
+            .filter(t => (t.destinoTipo || 'cuenta') === 'cuenta' && t.destinoId === cuentaId)
             .reduce((sum, t) => sum + parseFloat(t.monto), 0);
         const transferenciasSalida = transferencias
-            .filter(t => t.origenId === cuentaId)
+            .filter(t => (t.origenTipo || 'cuenta') === 'cuenta' && t.origenId === cuentaId)
             .reduce((sum, t) => sum + parseFloat(t.monto), 0);
 
         return saldoInicial + ingresos - gastos + transferenciasEntrada - transferenciasSalida;
@@ -368,6 +416,23 @@ const Storage = {
         transferencias.push(transferencia);
         this.setTransferencias(transferencias);
         return transferencia;
+    },
+
+    updateTransferencia(id, data) {
+        const transferencias = this.getTransferencias();
+        const index = transferencias.findIndex(t => t.id === id);
+        if (index !== -1) {
+            transferencias[index] = { ...transferencias[index], ...data };
+            this.setTransferencias(transferencias);
+            return transferencias[index];
+        }
+        return null;
+    },
+
+    deleteTransferencia(id) {
+        const transferencias = this.getTransferencias();
+        const filtered = transferencias.filter(t => t.id !== id);
+        this.setTransferencias(filtered);
     },
 
     // ==================== PRESUPUESTOS ====================
@@ -479,10 +544,23 @@ const Storage = {
     },
 
     getTotalPorDestino(destinoId) {
-        const ingresos = this.getIngresos();
-        return ingresos
+        const ingresos = this.getIngresos()
             .filter(i => i.destinoId === destinoId)
             .reduce((sum, i) => sum + parseFloat(i.monto), 0);
+
+        const transferencias = this.getTransferencias();
+        const transferenciasEntrada = transferencias
+            .filter(t => (t.destinoTipo || 'cuenta') === 'destino' && t.destinoId === destinoId)
+            .reduce((sum, t) => sum + parseFloat(t.monto), 0);
+        const transferenciasSalida = transferencias
+            .filter(t => (t.origenTipo || 'cuenta') === 'destino' && t.origenId === destinoId)
+            .reduce((sum, t) => sum + parseFloat(t.monto), 0);
+
+        const gastos = this.getGastos()
+            .filter(g => (g.fuenteTipo) === 'destino' && g.fuenteId === destinoId)
+            .reduce((sum, g) => sum + parseFloat(g.monto), 0);
+
+        return ingresos + transferenciasEntrada - transferenciasSalida - gastos;
     },
 
     getTotalPorDestinoEnARS(destinoId) {
@@ -628,6 +706,8 @@ const Storage = {
                 monto: pago.monto,
                 categoriaId: 10, // Otros
                 cuentaId: pago.cuentaId,
+                fuenteTipo: 'cuenta',
+                fuenteId: pago.cuentaId,
                 descripcion: `Pago deuda: ${deuda ? deuda.nombre : 'Deuda'}`,
                 tags: ['deuda', 'pago'],
                 recurrente: false
@@ -722,7 +802,7 @@ const Storage = {
 
     exportData() {
         const data = {
-            version: '4.0',
+            version: '5.0',
             exportDate: new Date().toISOString(),
             ingresos: this.getIngresos(),
             gastos: this.getGastos(),
@@ -783,6 +863,10 @@ const Storage = {
                     this.migrateCuentasMoneda();
                     // Migrar destinos para agregar moneda y excluirDelBalance
                     this.migrateDestinosMoneda();
+                    // Migrar transferencias para campos bidireccionales
+                    this.migrateTransferencias();
+                    // Migrar gastos para fuente
+                    this.migrateGastosFuente();
 
                     resolve(data);
                 } catch (error) {
@@ -904,6 +988,22 @@ const Storage = {
                 gasto.tags.forEach(tag => {
                     if (!result[tag]) result[tag] = 0;
                     result[tag] += parseFloat(gasto.monto);
+                });
+            }
+        });
+
+        return result;
+    },
+
+    getTransferenciasPorTag() {
+        const transferencias = this.getTransferencias();
+        const result = {};
+
+        transferencias.forEach(t => {
+            if (t.tags && t.tags.length > 0) {
+                t.tags.forEach(tag => {
+                    if (!result[tag]) result[tag] = 0;
+                    result[tag] += parseFloat(t.monto);
                 });
             }
         });

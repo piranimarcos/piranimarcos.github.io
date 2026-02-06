@@ -107,6 +107,30 @@
                     <div class="list" id="lista-alertas-presupuesto"></div>
                 </div>
 
+                <div class="card transferencias-card">
+                    <h3>Historial de Transferencias</h3>
+                    <div class="filters">
+                        <input type="text" id="filtro-transfer-tag" placeholder="Filtrar por etiqueta...">
+                        <select id="filtro-transfer-origen">
+                            <option value="">Todos los origenes</option>
+                        </select>
+                        <select id="filtro-transfer-destino">
+                            <option value="">Todos los destinos</option>
+                        </select>
+                    </div>
+                    <div class="filters">
+                        <input type="date" id="filtro-transfer-desde">
+                        <input type="date" id="filtro-transfer-hasta">
+                    </div>
+                    <p class="total-label">Total filtrado: <span id="total-transferencias-filtrado">$0</span></p>
+                    <div class="list" id="lista-transferencias-historial">
+                        <p class="empty-message">Sin transferencias</p>
+                    </div>
+                    <div class="load-more-container" id="load-more-transferencias-container" hidden>
+                        <button id="btn-load-more-transferencias" class="btn btn-secondary">Cargar mas</button>
+                    </div>
+                </div>
+
                 <div class="card chart-card">
                     <h3>Gastos por Categoría (Este Mes)</h3>
                     <canvas id="chart-gastos"></canvas>
@@ -191,7 +215,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="gasto-cuenta">Cuenta</label>
+                                <label for="gasto-cuenta">Fuente (Cuenta o Destino)</label>
                                 <select id="gasto-cuenta" required>
                                     <option value="">Seleccionar...</option>
                                 </select>
@@ -522,8 +546,9 @@
                 </div>
 
                 <div class="card">
-                    <h3>Transferir entre Cuentas</h3>
+                    <h3>Transferencia</h3>
                     <form id="form-transferencia" class="form">
+                        <input type="hidden" id="transfer-edit-id">
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="transfer-origen">Desde</label>
@@ -548,7 +573,18 @@
                                 <input type="date" id="transfer-fecha" required>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Transferir</button>
+                        <div class="form-group">
+                            <label for="transfer-descripcion">Descripcion (opcional)</label>
+                            <input type="text" id="transfer-descripcion" placeholder="Ej: Ahorro mensual">
+                        </div>
+                        <div class="form-group">
+                            <label for="transfer-tags">Etiquetas (separadas por coma)</label>
+                            <input type="text" id="transfer-tags" placeholder="Ej: ahorro, mensual">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" id="btn-submit-transferencia" class="btn btn-primary">Transferir</button>
+                            <button type="button" id="btn-cancelar-transferencia" class="btn btn-secondary" hidden>Cancelar</button>
+                        </div>
                     </form>
                 </div>
 

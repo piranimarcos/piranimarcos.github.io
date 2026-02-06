@@ -4,6 +4,8 @@
 
 const App = {
     deleteCallback: null,
+    transferenciasDisplayCount: 5,
+    TRANSFERENCIAS_PAGE_SIZE: 5,
 
     init() {
         Storage.init();
@@ -173,6 +175,16 @@ const App = {
             e.preventDefault();
             this.handleTransferenciaSubmit();
         });
+        document.getElementById('btn-cancelar-transferencia').addEventListener('click', () => this.resetTransferenciaForm());
+
+        // Filtros de historial transferencias
+        ['filtro-transfer-tag', 'filtro-transfer-origen', 'filtro-transfer-destino', 'filtro-transfer-desde', 'filtro-transfer-hasta'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                this.transferenciasDisplayCount = this.TRANSFERENCIAS_PAGE_SIZE;
+                this.refreshTransferenciasHistorial();
+            });
+        });
+        document.getElementById('btn-load-more-transferencias').addEventListener('click', () => this.loadMoreTransferencias());
 
         // Categoría
         document.getElementById('form-categoria').addEventListener('submit', (e) => {
@@ -288,10 +300,24 @@ const App = {
         }).join('');
 
         document.getElementById('ingreso-cuenta').innerHTML = '<option value="">Seleccionar...</option>' + cuentaOptions;
-        document.getElementById('gasto-cuenta').innerHTML = '<option value="">Seleccionar...</option>' + cuentaOptions;
-        document.getElementById('filtro-cuenta').innerHTML = '<option value="">Todas las cuentas</option>' + cuentaOptions;
-        document.getElementById('transfer-origen').innerHTML = '<option value="">Seleccionar...</option>' + cuentaOptions;
-        document.getElementById('transfer-destino').innerHTML = '<option value="">Seleccionar...</option>' + cuentaOptions;
+
+        // Gasto y filtro: cuentas + destinos combinados
+        const gastoOptions = this.buildCuentaDestinoOptions(true, 'Seleccionar...');
+        document.getElementById('gasto-cuenta').innerHTML = gastoOptions;
+
+        const filtroFuenteOptions = this.buildCuentaDestinoOptions(true, 'Todas las fuentes');
+        document.getElementById('filtro-cuenta').innerHTML = filtroFuenteOptions;
+
+        // Transfer: cuentas + destinos combinados
+        const transferOptions = this.buildCuentaDestinoOptions(true, 'Seleccionar...');
+        document.getElementById('transfer-origen').innerHTML = transferOptions;
+        document.getElementById('transfer-destino').innerHTML = transferOptions;
+
+        // Filtros del historial de transferencias
+        const filtroTransferOptions = this.buildCuentaDestinoOptions(true, 'Todos los origenes');
+        const filtroTransferDestinoOptions = this.buildCuentaDestinoOptions(true, 'Todos los destinos');
+        document.getElementById('filtro-transfer-origen').innerHTML = filtroTransferOptions;
+        document.getElementById('filtro-transfer-destino').innerHTML = filtroTransferDestinoOptions;
 
         // Destinos
         const destinoOptions = destinos.map(d => `<option value="${d.id}">${d.icono} ${this.escapeHtml(d.nombre)}</option>`).join('');
@@ -669,11 +695,16 @@ const App = {
         const tagsStr = document.getElementById('gasto-tags').value;
         const tags = tagsStr ? tagsStr.split(',').map(t => t.trim().toLowerCase()).filter(t => t) : [];
 
+        const fuenteValue = document.getElementById('gasto-cuenta').value;
+        const fuente = this.parseCompositeValue(fuenteValue);
+
         const data = {
             fecha: document.getElementById('gasto-fecha').value,
             monto: parseFloat(document.getElementById('gasto-monto').value),
             categoriaId: parseInt(document.getElementById('gasto-categoria').value),
-            cuentaId: parseInt(document.getElementById('gasto-cuenta').value),
+            cuentaId: fuente ? fuente.id : parseInt(fuenteValue),
+            fuenteTipo: fuente ? fuente.tipo : 'cuenta',
+            fuenteId: fuente ? fuente.id : parseInt(fuenteValue),
             descripcion: document.getElementById('gasto-descripcion').value || 'Gasto',
             tags,
             recurrente: document.getElementById('gasto-recurrente').checked,
@@ -690,6 +721,7 @@ const App = {
         this.refreshGastos();
         this.refreshDashboard();
         this.refreshCuentas();
+        this.refreshDestinos();
     },
 
     resetGastoForm() {
@@ -707,7 +739,9 @@ const App = {
             document.getElementById('gasto-fecha').value = gasto.fecha;
             document.getElementById('gasto-monto').value = gasto.monto;
             document.getElementById('gasto-categoria').value = gasto.categoriaId;
-            document.getElementById('gasto-cuenta').value = gasto.cuentaId || '';
+            const fuenteTipo = gasto.fuenteTipo || 'cuenta';
+            const fuenteId = gasto.fuenteId || gasto.cuentaId;
+            document.getElementById('gasto-cuenta').value = `${fuenteTipo}-${fuenteId}`;
             document.getElementById('gasto-descripcion').value = gasto.descripcion;
             document.getElementById('gasto-tags').value = (gasto.tags || []).join(', ');
             document.getElementById('gasto-recurrente').checked = gasto.recurrente || false;
@@ -730,11 +764,12 @@ const App = {
         let gastos = Storage.getGastos();
         const categorias = Storage.getCategorias();
         const cuentas = Storage.getCuentas();
+        const destinos = Storage.getDestinos();
 
         // Filtros
         const buscar = document.getElementById('buscar-gasto').value.toLowerCase();
         const filtroCategoria = document.getElementById('filtro-categoria').value;
-        const filtroCuenta = document.getElementById('filtro-cuenta').value;
+        const filtroCuentaValue = document.getElementById('filtro-cuenta').value;
         const desde = document.getElementById('gasto-desde').value;
         const hasta = document.getElementById('gasto-hasta').value;
         const montoMin = document.getElementById('gasto-min').value;
@@ -747,8 +782,11 @@ const App = {
         if (filtroCategoria) {
             gastos = gastos.filter(g => g.categoriaId === parseInt(filtroCategoria));
         }
-        if (filtroCuenta) {
-            gastos = gastos.filter(g => g.cuentaId === parseInt(filtroCuenta));
+        if (filtroCuentaValue) {
+            const filtroFuente = this.parseCompositeValue(filtroCuentaValue);
+            if (filtroFuente) {
+                gastos = gastos.filter(g => (g.fuenteTipo || 'cuenta') === filtroFuente.tipo && (g.fuenteId || g.cuentaId) === filtroFuente.id);
+            }
         }
         if (desde) {
             gastos = gastos.filter(g => g.fecha >= desde);
@@ -779,7 +817,9 @@ const App = {
 
         lista.innerHTML = gastos.map(gasto => {
             const categoria = categorias.find(c => c.id === gasto.categoriaId);
-            const cuenta = cuentas.find(c => c.id === gasto.cuentaId);
+            const fuenteTipo = gasto.fuenteTipo || 'cuenta';
+            const fuenteId = gasto.fuenteId || gasto.cuentaId;
+            const fuenteNombre = this.getEntityName(fuenteTipo, fuenteId, cuentas, destinos);
             const tagsHtml = (gasto.tags || []).map(t => `<span class="tag">${this.escapeHtml(t)}</span>`).join('');
             const recurrenteTag = gasto.recurrente ? `<span class="tag recurrente">🔄 ${gasto.frecuencia}</span>` : '';
 
@@ -787,7 +827,7 @@ const App = {
                 <div class="list-item">
                     <div class="list-item-info">
                         <div class="description">${this.escapeHtml(gasto.descripcion)}</div>
-                        <div class="details">${this.formatDate(gasto.fecha)} • ${categoria ? categoria.nombre : 'Sin categoría'}${cuenta ? ' • ' + cuenta.nombre : ''}</div>
+                        <div class="details">${this.formatDate(gasto.fecha)} • ${categoria ? categoria.nombre : 'Sin categoría'} • ${fuenteNombre}</div>
                         <div class="tags">${tagsHtml}${recurrenteTag}</div>
                     </div>
                     <div class="list-item-amount negative">${this.formatMoney(gasto.monto)}</div>
@@ -1422,22 +1462,116 @@ const App = {
     },
 
     handleTransferenciaSubmit() {
-        const origenId = parseInt(document.getElementById('transfer-origen').value);
-        const destinoId = parseInt(document.getElementById('transfer-destino').value);
+        const editId = document.getElementById('transfer-edit-id').value;
+        const origenValue = document.getElementById('transfer-origen').value;
+        const destinoValue = document.getElementById('transfer-destino').value;
         const monto = parseFloat(document.getElementById('transfer-monto').value);
         const fecha = document.getElementById('transfer-fecha').value;
+        const descripcion = document.getElementById('transfer-descripcion').value || '';
+        const tagsStr = document.getElementById('transfer-tags').value;
+        const tags = tagsStr ? tagsStr.split(',').map(t => t.trim().toLowerCase()).filter(t => t) : [];
 
-        if (origenId === destinoId) {
-            alert('Las cuentas de origen y destino deben ser diferentes');
+        const origen = this.parseCompositeValue(origenValue);
+        const destino = this.parseCompositeValue(destinoValue);
+
+        if (!origen || !destino) {
+            alert('Selecciona origen y destino');
             return;
         }
 
-        Storage.addTransferencia({ origenId, destinoId, monto, fecha });
+        if (origen.tipo === destino.tipo && origen.id === destino.id) {
+            alert('El origen y destino deben ser diferentes');
+            return;
+        }
 
-        document.getElementById('form-transferencia').reset();
-        document.getElementById('transfer-fecha').value = new Date().toISOString().split('T')[0];
+        // Validar moneda cruzada
+        const cuentas = Storage.getCuentas();
+        const destinos = Storage.getDestinos();
+        let monedaOrigen = 'ARS';
+        let monedaDestino = 'ARS';
+
+        if (origen.tipo === 'cuenta') {
+            const c = cuentas.find(c => c.id === origen.id);
+            if (c) monedaOrigen = c.moneda || 'ARS';
+        } else {
+            const d = destinos.find(d => d.id === origen.id);
+            if (d) monedaOrigen = d.moneda || 'ARS';
+        }
+
+        if (destino.tipo === 'cuenta') {
+            const c = cuentas.find(c => c.id === destino.id);
+            if (c) monedaDestino = c.moneda || 'ARS';
+        } else {
+            const d = destinos.find(d => d.id === destino.id);
+            if (d) monedaDestino = d.moneda || 'ARS';
+        }
+
+        if (monedaOrigen !== monedaDestino) {
+            if (!confirm(`Estas transfiriendo entre monedas diferentes (${monedaOrigen} -> ${monedaDestino}). El monto se registrara tal cual en ambos lados. ¿Continuar?`)) {
+                return;
+            }
+        }
+
+        const data = {
+            origenTipo: origen.tipo,
+            origenId: origen.id,
+            destinoTipo: destino.tipo,
+            destinoId: destino.id,
+            monto,
+            fecha,
+            descripcion,
+            tags
+        };
+
+        if (editId) {
+            Storage.updateTransferencia(parseInt(editId), data);
+        } else {
+            Storage.addTransferencia(data);
+        }
+
+        this.resetTransferenciaForm();
         this.refreshCuentas();
         this.refreshDashboard();
+        this.refreshDestinos();
+    },
+
+    resetTransferenciaForm() {
+        document.getElementById('form-transferencia').reset();
+        document.getElementById('transfer-edit-id').value = '';
+        document.getElementById('transfer-fecha').value = new Date().toISOString().split('T')[0];
+        document.getElementById('btn-submit-transferencia').textContent = 'Transferir';
+        document.getElementById('btn-cancelar-transferencia').hidden = true;
+    },
+
+    editTransferencia(id) {
+        const t = Storage.getTransferencias().find(t => t.id === id);
+        if (t) {
+            document.getElementById('transfer-edit-id').value = t.id;
+            document.getElementById('transfer-origen').value = `${t.origenTipo || 'cuenta'}-${t.origenId}`;
+            document.getElementById('transfer-destino').value = `${t.destinoTipo || 'cuenta'}-${t.destinoId}`;
+            document.getElementById('transfer-monto').value = t.monto;
+            document.getElementById('transfer-fecha').value = t.fecha;
+            document.getElementById('transfer-descripcion').value = t.descripcion || '';
+            document.getElementById('transfer-tags').value = (t.tags || []).join(', ');
+            document.getElementById('btn-submit-transferencia').textContent = 'Guardar Cambios';
+            document.getElementById('btn-cancelar-transferencia').hidden = false;
+
+            // Navigate to cuentas tab and scroll to form
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelector('[data-tab="cuentas"]').classList.add('active');
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('cuentas').classList.add('active');
+            document.getElementById('form-transferencia').scrollIntoView({ behavior: 'smooth' });
+        }
+    },
+
+    deleteTransferencia(id) {
+        this.showModal('¿Eliminar esta transferencia?', () => {
+            Storage.deleteTransferencia(id);
+            this.refreshCuentas();
+            this.refreshDashboard();
+            this.refreshDestinos();
+        });
     },
 
     refreshCuentas() {
@@ -1743,6 +1877,51 @@ const App = {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    },
+
+    buildCuentaDestinoOptions(includeEmpty = true, emptyLabel = 'Seleccionar...') {
+        const cuentas = Storage.getCuentas();
+        const destinos = Storage.getDestinos();
+        let html = includeEmpty ? `<option value="">${emptyLabel}</option>` : '';
+
+        if (cuentas.length > 0) {
+            html += '<optgroup label="Cuentas">';
+            cuentas.forEach(c => {
+                const monedaLabel = c.moneda === 'USD' ? ' (USD)' : '';
+                html += `<option value="cuenta-${c.id}">${this.escapeHtml(c.nombre)}${monedaLabel}</option>`;
+            });
+            html += '</optgroup>';
+        }
+
+        if (destinos.length > 0) {
+            html += '<optgroup label="Destinos de Ahorro">';
+            destinos.forEach(d => {
+                const monedaLabel = d.moneda === 'USD' ? ' (USD)' : '';
+                html += `<option value="destino-${d.id}">${d.icono} ${this.escapeHtml(d.nombre)}${monedaLabel}</option>`;
+            });
+            html += '</optgroup>';
+        }
+
+        return html;
+    },
+
+    parseCompositeValue(value) {
+        if (!value || !value.includes('-')) return null;
+        const idx = value.indexOf('-');
+        const tipo = value.substring(0, idx);
+        const id = parseInt(value.substring(idx + 1));
+        return { tipo, id };
+    },
+
+    getEntityName(tipo, id, cuentas, destinos) {
+        if (tipo === 'cuenta') {
+            const cuenta = cuentas.find(c => c.id === id);
+            return cuenta ? cuenta.nombre : 'Cuenta eliminada';
+        } else if (tipo === 'destino') {
+            const destino = destinos.find(d => d.id === id);
+            return destino ? `${destino.icono} ${destino.nombre}` : 'Destino eliminado';
+        }
+        return 'Desconocido';
     },
 
     updateMontoLabel(tipo, cuentaId) {
