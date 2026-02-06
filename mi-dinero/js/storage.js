@@ -103,6 +103,8 @@ const Storage = {
         this.migrateTransferencias();
         // Migrar gastos para fuente (cuenta o destino)
         this.migrateGastosFuente();
+        // Migrar cuentas para agregar excluirDelBalance
+        this.migrateCuentasExcluir();
     },
 
     migrateCuentasMoneda() {
@@ -178,6 +180,20 @@ const Storage = {
         });
         if (needsUpdate) {
             this.setGastos(gastos);
+        }
+    },
+
+    migrateCuentasExcluir() {
+        const cuentas = this.getCuentas();
+        let needsUpdate = false;
+        cuentas.forEach(cuenta => {
+            if (cuenta.excluirDelBalance === undefined) {
+                cuenta.excluirDelBalance = false;
+                needsUpdate = true;
+            }
+        });
+        if (needsUpdate) {
+            this.setCuentas(cuentas);
         }
     },
 
@@ -586,13 +602,48 @@ const Storage = {
     },
 
     getBalanceDisponibleEnARS() {
-        const balanceTotal = this.getBalanceTotalEnARS();
-        const destinosExcluidos = this.getTotalEnDestinosExcluidos();
+        const cuentas = this.getCuentas();
+        const destinos = this.getDestinos();
+        const cotizacion = this.getCotizacionActual();
+
+        let totalARS = 0;
+        let totalUSD = 0;
+        let disponibleARS = 0;
+        let disponibleUSD = 0;
+
+        cuentas.forEach(cuenta => {
+            const saldo = this.getSaldoCuenta(cuenta.id);
+            if (cuenta.moneda === 'USD') {
+                totalUSD += saldo;
+                if (!cuenta.excluirDelBalance) disponibleUSD += saldo;
+            } else {
+                totalARS += saldo;
+                if (!cuenta.excluirDelBalance) disponibleARS += saldo;
+            }
+        });
+
+        destinos.forEach(destino => {
+            const saldo = this.getTotalPorDestino(destino.id);
+            if (destino.moneda === 'USD') {
+                totalUSD += saldo;
+                if (!destino.excluirDelBalance) disponibleUSD += saldo;
+            } else {
+                totalARS += saldo;
+                if (!destino.excluirDelBalance) disponibleARS += saldo;
+            }
+        });
+
+        const totalEnARS = totalARS + (totalUSD * cotizacion);
+        const disponible = disponibleARS + (disponibleUSD * cotizacion);
+        const enAhorro = totalEnARS - disponible;
 
         return {
-            ...balanceTotal,
-            disponible: balanceTotal.totalEnARS - destinosExcluidos,
-            enDestinosExcluidos: destinosExcluidos
+            totalARS,
+            totalUSD,
+            totalEnARS,
+            cotizacion,
+            disponible,
+            enAhorro
         };
     },
 
@@ -777,6 +828,7 @@ const Storage = {
 
     getBalanceTotalEnARS() {
         const cuentas = this.getCuentas();
+        const destinos = this.getDestinos();
         const cotizacion = this.getCotizacionActual();
         let totalARS = 0;
         let totalUSD = 0;
@@ -784,6 +836,15 @@ const Storage = {
         cuentas.forEach(cuenta => {
             const saldo = this.getSaldoCuenta(cuenta.id);
             if (cuenta.moneda === 'USD') {
+                totalUSD += saldo;
+            } else {
+                totalARS += saldo;
+            }
+        });
+
+        destinos.forEach(destino => {
+            const saldo = this.getTotalPorDestino(destino.id);
+            if (destino.moneda === 'USD') {
                 totalUSD += saldo;
             } else {
                 totalARS += saldo;
@@ -867,6 +928,8 @@ const Storage = {
                     this.migrateTransferencias();
                     // Migrar gastos para fuente
                     this.migrateGastosFuente();
+                    // Migrar cuentas para excluirDelBalance
+                    this.migrateCuentasExcluir();
 
                     resolve(data);
                 } catch (error) {

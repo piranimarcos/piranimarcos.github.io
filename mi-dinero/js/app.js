@@ -365,8 +365,8 @@ const App = {
 
         // Detalle de balance
         const detalleEl = document.getElementById('balance-detalle');
-        if (balanceData.enDestinosExcluidos > 0) {
-            detalleEl.innerHTML = `Total: ${this.formatMoney(balanceData.totalEnARS)} | En ahorro: ${this.formatMoney(balanceData.enDestinosExcluidos)}`;
+        if (balanceData.enAhorro > 0) {
+            detalleEl.innerHTML = `Total: ${this.formatMoney(balanceData.totalEnARS)} | En ahorro: ${this.formatMoney(balanceData.enAhorro)}`;
         } else {
             detalleEl.textContent = '';
         }
@@ -1442,7 +1442,8 @@ const App = {
             nombre: document.getElementById('cuenta-nombre').value,
             tipo: document.getElementById('cuenta-tipo').value,
             moneda: document.getElementById('cuenta-moneda').value,
-            saldoInicial: parseFloat(document.getElementById('cuenta-saldo-inicial').value) || 0
+            saldoInicial: parseFloat(document.getElementById('cuenta-saldo-inicial').value) || 0,
+            excluirDelBalance: document.getElementById('cuenta-excluir').checked
         };
 
         if (id) {
@@ -1460,6 +1461,7 @@ const App = {
     resetCuentaForm() {
         document.getElementById('form-cuenta').reset();
         document.getElementById('cuenta-id').value = '';
+        document.getElementById('cuenta-excluir').checked = false;
         document.getElementById('btn-submit-cuenta').textContent = 'Agregar';
         document.getElementById('btn-cancelar-cuenta').hidden = true;
     },
@@ -1472,6 +1474,7 @@ const App = {
             document.getElementById('cuenta-tipo').value = cuenta.tipo;
             document.getElementById('cuenta-moneda').value = cuenta.moneda || 'ARS';
             document.getElementById('cuenta-saldo-inicial').value = cuenta.saldoInicial;
+            document.getElementById('cuenta-excluir').checked = cuenta.excluirDelBalance || false;
             document.getElementById('btn-submit-cuenta').textContent = 'Editar';
             document.getElementById('btn-cancelar-cuenta').hidden = false;
         }
@@ -1616,12 +1619,13 @@ const App = {
                 ? this.formatMoneyUSD(saldoData.saldo)
                 : this.formatMoney(saldoData.saldo);
             const monedaBadge = cuenta.moneda === 'USD' ? '<span class="moneda-badge usd">USD</span>' : '';
+            const excluirTag = cuenta.excluirDelBalance ? '<span class="tag-mini excluido">Reservado</span>' : '';
 
             return `
                 <div class="cuenta-item">
                     <div class="cuenta-info">
                         <span class="cuenta-icon">${iconos[cuenta.tipo] || '💰'}</span>
-                        <span class="cuenta-nombre">${this.escapeHtml(cuenta.nombre)} ${monedaBadge}</span>
+                        <span class="cuenta-nombre">${this.escapeHtml(cuenta.nombre)} ${monedaBadge} ${excluirTag}</span>
                     </div>
                     <span class="cuenta-saldo ${saldoData.saldo >= 0 ? 'positive' : 'negative'}">${saldoFormateado}</span>
                     <div class="list-item-actions">
