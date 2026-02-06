@@ -493,6 +493,10 @@ body {
     background-color: var(--warning);
 }
 
+.tag.transfer-tipo {
+    background-color: var(--secondary);
+}
+
 /* Meta Display */
 .meta-item {
     padding: 15px;

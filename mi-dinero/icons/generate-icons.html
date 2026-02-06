@@ -48,6 +48,10 @@
 
     <div class="icons">
         <div class="icon-container">
+            <div id="svg-preview"></div>
+            <span>SVG</span>
+        </div>
+        <div class="icon-container">
             <canvas id="icon-192" width="192" height="192"></canvas>
             <span>192x192</span>
         </div>
@@ -57,9 +61,44 @@
         </div>
     </div>
 
-    <button onclick="downloadIcons()">Descargar Iconos</button>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+        <button onclick="downloadSVG()">Descargar SVG</button>
+        <button onclick="downloadIcons()">Descargar PNGs</button>
+    </div>
 
     <script>
+        function generateSVG() {
+            return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#16213e"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="102" ry="102" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="179" fill="#e94560"/>
+  <text x="256" y="266" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-weight="bold" font-size="230" fill="#ffffff">$</text>
+  <circle cx="256" cy="256" r="215" fill="none" stroke="#4ecca3" stroke-width="10"/>
+</svg>`;
+        }
+
+        function downloadSVG() {
+            const svg = generateSVG();
+            const blob = new Blob([svg], { type: 'image/svg+xml' });
+            const link = document.createElement('a');
+            link.download = 'icon.svg';
+            link.href = URL.createObjectURL(blob);
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+
+        // Mostrar preview del SVG
+        document.getElementById('svg-preview').innerHTML = generateSVG();
+        document.querySelector('#svg-preview svg').style.width = '192px';
+        document.querySelector('#svg-preview svg').style.height = '192px';
+        document.querySelector('#svg-preview svg').style.borderRadius = '20px';
+        document.querySelector('#svg-preview svg').style.boxShadow = '0 4px 20px rgba(0,0,0,0.5)';
+
         function drawIcon(canvas) {
             const ctx = canvas.getContext('2d');
             const size = canvas.width;

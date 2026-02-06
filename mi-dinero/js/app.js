@@ -401,6 +401,10 @@ const App = {
         this.refreshAlertasRecurrentes();
         this.refreshAlertasPresupuesto();
 
+        // Historial de transferencias en dashboard
+        this.transferenciasDisplayCount = this.TRANSFERENCIAS_PAGE_SIZE;
+        this.refreshTransferenciasHistorial();
+
         // Destinos en dashboard
         this.refreshDashboardDestinos();
 
@@ -1922,6 +1926,95 @@ const App = {
             return destino ? `${destino.icono} ${destino.nombre}` : 'Destino eliminado';
         }
         return 'Desconocido';
+    },
+
+    // ==================== HISTORIAL TRANSFERENCIAS ====================
+
+    refreshTransferenciasHistorial() {
+        let transferencias = Storage.getTransferencias();
+        const cuentas = Storage.getCuentas();
+        const destinos = Storage.getDestinos();
+
+        // Filtros
+        const filtroTag = document.getElementById('filtro-transfer-tag').value.toLowerCase();
+        const filtroOrigenValue = document.getElementById('filtro-transfer-origen').value;
+        const filtroDestinoValue = document.getElementById('filtro-transfer-destino').value;
+        const desde = document.getElementById('filtro-transfer-desde').value;
+        const hasta = document.getElementById('filtro-transfer-hasta').value;
+
+        if (filtroTag) {
+            transferencias = transferencias.filter(t => t.tags && t.tags.some(tag => tag.includes(filtroTag)));
+        }
+        if (filtroOrigenValue) {
+            const filtroOrigen = this.parseCompositeValue(filtroOrigenValue);
+            if (filtroOrigen) {
+                transferencias = transferencias.filter(t => (t.origenTipo || 'cuenta') === filtroOrigen.tipo && t.origenId === filtroOrigen.id);
+            }
+        }
+        if (filtroDestinoValue) {
+            const filtroDestino = this.parseCompositeValue(filtroDestinoValue);
+            if (filtroDestino) {
+                transferencias = transferencias.filter(t => (t.destinoTipo || 'cuenta') === filtroDestino.tipo && t.destinoId === filtroDestino.id);
+            }
+        }
+        if (desde) {
+            transferencias = transferencias.filter(t => t.fecha >= desde);
+        }
+        if (hasta) {
+            transferencias = transferencias.filter(t => t.fecha <= hasta);
+        }
+
+        transferencias = transferencias.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+        // Total filtrado
+        const total = transferencias.reduce((sum, t) => sum + parseFloat(t.monto), 0);
+        document.getElementById('total-transferencias-filtrado').textContent = this.formatMoney(total);
+
+        const lista = document.getElementById('lista-transferencias-historial');
+
+        if (transferencias.length === 0) {
+            lista.innerHTML = '<p class="empty-message">Sin transferencias</p>';
+            document.getElementById('load-more-transferencias-container').hidden = true;
+            return;
+        }
+
+        // Paginación
+        const visibles = transferencias.slice(0, this.transferenciasDisplayCount);
+        const hayMas = transferencias.length > this.transferenciasDisplayCount;
+        document.getElementById('load-more-transferencias-container').hidden = !hayMas;
+
+        lista.innerHTML = visibles.map(t => {
+            const origenTipo = t.origenTipo || 'cuenta';
+            const destinoTipo = t.destinoTipo || 'cuenta';
+            const origenNombre = this.getEntityName(origenTipo, t.origenId, cuentas, destinos);
+            const destinoNombre = this.getEntityName(destinoTipo, t.destinoId, cuentas, destinos);
+            const tagsHtml = (t.tags || []).map(tag => `<span class="tag">${this.escapeHtml(tag)}</span>`).join('');
+            const descripcionHtml = t.descripcion ? `<div class="description">${this.escapeHtml(t.descripcion)}</div>` : '';
+            const tipoLabel = origenTipo === 'destino' && destinoTipo === 'destino' ? 'Entre destinos'
+                : origenTipo === 'cuenta' && destinoTipo === 'cuenta' ? 'Entre cuentas'
+                : origenTipo === 'cuenta' && destinoTipo === 'destino' ? 'A destino'
+                : 'Desde destino';
+
+            return `
+                <div class="list-item">
+                    <div class="list-item-info">
+                        ${descripcionHtml}
+                        <div class="details">${this.formatDate(t.fecha)} • ${origenNombre} → ${destinoNombre}</div>
+                        <div class="tags"><span class="tag transfer-tipo">${tipoLabel}</span>${tagsHtml}</div>
+                    </div>
+                    <div class="list-item-amount">${this.formatMoney(t.monto)}</div>
+                    <div class="list-item-actions">
+                        <button class="btn btn-secondary btn-small" onclick="App.editTransferencia(${t.id})">✏️</button>
+                        <button class="btn btn-danger btn-small" onclick="App.deleteTransferencia(${t.id})">🗑️</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    },
+
+    loadMoreTransferencias() {
+        this.transferenciasDisplayCount += this.TRANSFERENCIAS_PAGE_SIZE;
+        this.refreshTransferenciasHistorial();
     },
 
     updateMontoLabel(tipo, cuentaId) {
