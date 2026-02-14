@@ -407,7 +407,7 @@ const Storage = {
         const transferencias = this.getTransferencias();
         const transferenciasEntrada = transferencias
             .filter(t => (t.destinoTipo || 'cuenta') === 'cuenta' && t.destinoId === cuentaId)
-            .reduce((sum, t) => sum + parseFloat(t.monto), 0);
+            .reduce((sum, t) => sum + parseFloat(t.montoDestino != null ? t.montoDestino : t.monto), 0);
         const transferenciasSalida = transferencias
             .filter(t => (t.origenTipo || 'cuenta') === 'cuenta' && t.origenId === cuentaId)
             .reduce((sum, t) => sum + parseFloat(t.monto), 0);
@@ -567,7 +567,7 @@ const Storage = {
         const transferencias = this.getTransferencias();
         const transferenciasEntrada = transferencias
             .filter(t => (t.destinoTipo || 'cuenta') === 'destino' && t.destinoId === destinoId)
-            .reduce((sum, t) => sum + parseFloat(t.monto), 0);
+            .reduce((sum, t) => sum + parseFloat(t.montoDestino != null ? t.montoDestino : t.monto), 0);
         const transferenciasSalida = transferencias
             .filter(t => (t.origenTipo || 'cuenta') === 'destino' && t.origenId === destinoId)
             .reduce((sum, t) => sum + parseFloat(t.monto), 0);

@@ -561,8 +561,9 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="transfer-monto">Monto</label>
+                                <label for="transfer-monto" id="transfer-monto-label">Monto</label>
                                 <input type="number" id="transfer-monto" min="0" step="0.01" required>
+                                <div id="transfer-conversion-preview" class="conversion-preview" hidden></div>
                             </div>
                             <div class="form-group">
                                 <label for="transfer-fecha">Fecha</label>
@@ -662,6 +663,23 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Modal de Conversión -->
+    <div id="modal-conversion" class="modal" hidden>
+        <div class="modal-content">
+            <p id="modal-conversion-titulo" style="font-weight:bold;margin-bottom:10px;"></p>
+            <p id="modal-conversion-detalle" style="font-size:0.95rem;margin-bottom:12px;"></p>
+            <div class="form-group" style="text-align:left;margin-bottom:16px;">
+                <label for="modal-conversion-cotizacion">Cotización a usar</label>
+                <input type="number" id="modal-conversion-cotizacion" min="0" step="0.01">
+                <div id="modal-conversion-resultado" class="conversion-preview" style="margin-top:6px;"></div>
+            </div>
+            <div class="modal-actions">
+                <button id="modal-conversion-confirmar" class="btn btn-primary">Confirmar</button>
+                <button id="modal-conversion-cancelar" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
     </div>
 
     <!-- Modal de Confirmación -->

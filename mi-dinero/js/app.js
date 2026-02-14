@@ -13,6 +13,7 @@ const App = {
         this.setupNavigation();
         this.setupForms();
         this.setupModal();
+        this.setupConversionModal();
         this.setupExportImport();
         this.setupThemeToggle();
         this.setDefaultDates();
@@ -187,6 +188,11 @@ const App = {
         });
         document.getElementById('btn-cancelar-transferencia').addEventListener('click', () => this.resetTransferenciaForm());
 
+        // Preview de conversión en transferencias
+        document.getElementById('transfer-origen').addEventListener('change', () => this.updateTransferConversionPreview());
+        document.getElementById('transfer-destino').addEventListener('change', () => this.updateTransferConversionPreview());
+        document.getElementById('transfer-monto').addEventListener('input', () => this.updateTransferConversionPreview());
+
         // Filtros de historial transferencias
         ['filtro-transfer-tag', 'filtro-transfer-origen', 'filtro-transfer-destino', 'filtro-transfer-desde', 'filtro-transfer-hasta'].forEach(id => {
             document.getElementById(id).addEventListener('input', () => {
@@ -266,6 +272,122 @@ const App = {
     hideModal() {
         document.getElementById('modal-confirm').hidden = true;
         this.deleteCallback = null;
+    },
+
+    // ==================== MODAL DE CONVERSIÓN ====================
+
+    setupConversionModal() {
+        const inputCot = document.getElementById('modal-conversion-cotizacion');
+        inputCot.addEventListener('input', () => this.actualizarResultadoConversion());
+        document.getElementById('modal-conversion-confirmar').addEventListener('click', () => this.confirmarConversion());
+        document.getElementById('modal-conversion-cancelar').addEventListener('click', () => this.hideConversionModal());
+    },
+
+    showConversionModal(params) {
+        this._conversionParams = params;
+        const { monto, monedaOrigen, monedaDestino } = params;
+        const cotizacion = Storage.getCotizacionActual();
+
+        document.getElementById('modal-conversion-titulo').textContent = `Conversión ${monedaOrigen} → ${monedaDestino}`;
+
+        const montoFmt = monedaOrigen === 'USD' ? this.formatMoneyUSD(monto) : this.formatMoney(monto);
+        document.getElementById('modal-conversion-detalle').textContent = `Monto a transferir: ${montoFmt}`;
+
+        const inputCot = document.getElementById('modal-conversion-cotizacion');
+        inputCot.value = cotizacion;
+
+        this.actualizarResultadoConversion();
+        document.getElementById('modal-conversion').hidden = false;
+        inputCot.focus();
+        inputCot.select();
+    },
+
+    hideConversionModal() {
+        document.getElementById('modal-conversion').hidden = true;
+        this._conversionParams = null;
+    },
+
+    actualizarResultadoConversion() {
+        if (!this._conversionParams) return;
+        const { monto, monedaOrigen, monedaDestino } = this._conversionParams;
+        const cotizacion = parseFloat(document.getElementById('modal-conversion-cotizacion').value);
+        const resultado = document.getElementById('modal-conversion-resultado');
+
+        if (!cotizacion || cotizacion <= 0) {
+            resultado.textContent = 'Ingresa una cotización válida';
+            return;
+        }
+
+        let convertido;
+        if (monedaOrigen === 'ARS' && monedaDestino === 'USD') {
+            convertido = Math.round((monto / cotizacion) * 100) / 100;
+            resultado.textContent = `Resultado: ${this.formatMoneyUSD(convertido)}`;
+        } else {
+            convertido = Math.round(monto * cotizacion * 100) / 100;
+            resultado.textContent = `Resultado: ${this.formatMoney(convertido)}`;
+        }
+    },
+
+    confirmarConversion() {
+        if (!this._conversionParams) return;
+        const { monto, monedaOrigen, monedaDestino, origen, destino, fecha, descripcion, tags, editId } = this._conversionParams;
+        const cotizacion = parseFloat(document.getElementById('modal-conversion-cotizacion').value);
+
+        if (!cotizacion || cotizacion <= 0) {
+            alert('Ingresa una cotización válida');
+            return;
+        }
+
+        let montoDestino;
+        if (monedaOrigen === 'ARS' && monedaDestino === 'USD') {
+            montoDestino = Math.round((monto / cotizacion) * 100) / 100;
+        } else {
+            montoDestino = Math.round(monto * cotizacion * 100) / 100;
+        }
+
+        this.hideConversionModal();
+        this.guardarTransferencia({
+            origen, destino, monto, fecha, descripcion, tags, editId,
+            montoDestino, cotizacionUsada: cotizacion, monedaOrigen, monedaDestino
+        });
+    },
+
+    guardarTransferencia(params) {
+        const { origen, destino, monto, fecha, descripcion, tags, editId,
+                montoDestino, cotizacionUsada, monedaOrigen, monedaDestino } = params;
+
+        let descripcionFinal = descripcion;
+        if (montoDestino != null) {
+            const notaConversion = `${monedaOrigen} → ${monedaDestino} @ ${this.formatMoney(cotizacionUsada)}`;
+            descripcionFinal = descripcion ? `${descripcion} | ${notaConversion}` : notaConversion;
+        }
+
+        const data = {
+            origenTipo: origen.tipo,
+            origenId: origen.id,
+            destinoTipo: destino.tipo,
+            destinoId: destino.id,
+            monto,
+            fecha,
+            descripcion: descripcionFinal,
+            tags
+        };
+
+        if (montoDestino != null) {
+            data.montoDestino = montoDestino;
+            data.cotizacionUsada = cotizacionUsada;
+        }
+
+        if (editId) {
+            Storage.updateTransferencia(parseInt(editId), data);
+        } else {
+            Storage.addTransferencia(data);
+        }
+
+        this.resetTransferenciaForm();
+        this.refreshCuentas();
+        this.refreshDashboard();
+        this.refreshDestinos();
     },
 
     // ==================== EXPORT / IMPORT ====================
@@ -1535,32 +1657,14 @@ const App = {
         }
 
         if (monedaOrigen !== monedaDestino) {
-            if (!confirm(`Estas transfiriendo entre monedas diferentes (${monedaOrigen} -> ${monedaDestino}). El monto se registrara tal cual en ambos lados. ¿Continuar?`)) {
-                return;
-            }
+            // Abrir modal de conversión para que el usuario confirme o ajuste la cotización
+            this.showConversionModal({
+                monto, monedaOrigen, monedaDestino, origen, destino, fecha, descripcion, tags, editId
+            });
+            return;
         }
 
-        const data = {
-            origenTipo: origen.tipo,
-            origenId: origen.id,
-            destinoTipo: destino.tipo,
-            destinoId: destino.id,
-            monto,
-            fecha,
-            descripcion,
-            tags
-        };
-
-        if (editId) {
-            Storage.updateTransferencia(parseInt(editId), data);
-        } else {
-            Storage.addTransferencia(data);
-        }
-
-        this.resetTransferenciaForm();
-        this.refreshCuentas();
-        this.refreshDashboard();
-        this.refreshDestinos();
+        this.guardarTransferencia({ origen, destino, monto, fecha, descripcion, tags, editId });
     },
 
     resetTransferenciaForm() {
@@ -1569,6 +1673,10 @@ const App = {
         document.getElementById('transfer-fecha').value = new Date().toISOString().split('T')[0];
         document.getElementById('btn-submit-transferencia').textContent = 'Transferir';
         document.getElementById('btn-cancelar-transferencia').hidden = true;
+        const preview = document.getElementById('transfer-conversion-preview');
+        if (preview) preview.hidden = true;
+        const montoLabel = document.getElementById('transfer-monto-label');
+        if (montoLabel) montoLabel.textContent = 'Monto';
     },
 
     editTransferencia(id) {
@@ -1583,6 +1691,7 @@ const App = {
             document.getElementById('transfer-tags').value = (t.tags || []).join(', ');
             document.getElementById('btn-submit-transferencia').textContent = 'Guardar Cambios';
             document.getElementById('btn-cancelar-transferencia').hidden = false;
+            this.updateTransferConversionPreview();
 
             // Navigate to cuentas tab and scroll to form
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
@@ -2020,6 +2129,23 @@ const App = {
                 : origenTipo === 'cuenta' && destinoTipo === 'destino' ? 'A destino'
                 : 'Desde destino';
 
+            let montoHtml;
+            if (t.montoDestino != null) {
+                let monedaOrigen = 'ARS';
+                if (origenTipo === 'cuenta') {
+                    const c = cuentas.find(c => c.id === t.origenId);
+                    if (c) monedaOrigen = c.moneda || 'ARS';
+                } else {
+                    const d = destinos.find(d => d.id === t.origenId);
+                    if (d) monedaOrigen = d.moneda || 'ARS';
+                }
+                const fmtOrigen = monedaOrigen === 'USD' ? this.formatMoneyUSD(t.monto) : this.formatMoney(t.monto);
+                const fmtDestino = monedaOrigen === 'USD' ? this.formatMoney(t.montoDestino) : this.formatMoneyUSD(t.montoDestino);
+                montoHtml = `${fmtOrigen} → ${fmtDestino}`;
+            } else {
+                montoHtml = this.formatMoney(t.monto);
+            }
+
             return `
                 <div class="list-item">
                     <div class="list-item-info">
@@ -2027,7 +2153,7 @@ const App = {
                         <div class="details">${this.formatDate(t.fecha)} • ${origenNombre} → ${destinoNombre}</div>
                         <div class="tags"><span class="tag transfer-tipo">${tipoLabel}</span>${tagsHtml}</div>
                     </div>
-                    <div class="list-item-amount">${this.formatMoney(t.monto)}</div>
+                    <div class="list-item-amount">${montoHtml}</div>
                     <div class="list-item-actions">
                         <button class="btn btn-secondary btn-small" onclick="App.editTransferencia(${t.id})">✏️</button>
                         <button class="btn btn-danger btn-small" onclick="App.deleteTransferencia(${t.id})">🗑️</button>
@@ -2040,6 +2166,70 @@ const App = {
     loadMoreTransferencias() {
         this.transferenciasDisplayCount += this.TRANSFERENCIAS_PAGE_SIZE;
         this.refreshTransferenciasHistorial();
+    },
+
+    updateTransferConversionPreview() {
+        const preview = document.getElementById('transfer-conversion-preview');
+        const montoLabel = document.getElementById('transfer-monto-label');
+        if (!preview) return;
+
+        const origenValue = document.getElementById('transfer-origen').value;
+        const destinoValue = document.getElementById('transfer-destino').value;
+        const monto = parseFloat(document.getElementById('transfer-monto').value);
+
+        const origen = this.parseCompositeValue(origenValue);
+        const destino = this.parseCompositeValue(destinoValue);
+
+        if (!origen || !destino || !monto || monto <= 0) {
+            preview.hidden = true;
+            if (montoLabel) montoLabel.textContent = 'Monto';
+            return;
+        }
+
+        const cuentas = Storage.getCuentas();
+        const destinos = Storage.getDestinos();
+        let monedaOrigen = 'ARS';
+        let monedaDestino = 'ARS';
+
+        if (origen.tipo === 'cuenta') {
+            const c = cuentas.find(c => c.id === origen.id);
+            if (c) monedaOrigen = c.moneda || 'ARS';
+        } else {
+            const d = destinos.find(d => d.id === origen.id);
+            if (d) monedaOrigen = d.moneda || 'ARS';
+        }
+
+        if (destino.tipo === 'cuenta') {
+            const c = cuentas.find(c => c.id === destino.id);
+            if (c) monedaDestino = c.moneda || 'ARS';
+        } else {
+            const d = destinos.find(d => d.id === destino.id);
+            if (d) monedaDestino = d.moneda || 'ARS';
+        }
+
+        if (montoLabel) {
+            montoLabel.textContent = monedaOrigen === 'USD' ? 'Monto (USD)' : 'Monto (ARS)';
+        }
+
+        if (monedaOrigen === monedaDestino) {
+            preview.hidden = true;
+            return;
+        }
+
+        const cotizacion = Storage.getCotizacionActual();
+        let convertido;
+        let texto;
+
+        if (monedaOrigen === 'ARS' && monedaDestino === 'USD') {
+            convertido = Math.round((monto / cotizacion) * 100) / 100;
+            texto = `≈ ${this.formatMoneyUSD(convertido)} (cotización: ${this.formatMoney(cotizacion)})`;
+        } else {
+            convertido = Math.round(monto * cotizacion * 100) / 100;
+            texto = `≈ ${this.formatMoney(convertido)} (cotización: ${this.formatMoney(cotizacion)})`;
+        }
+
+        preview.textContent = texto;
+        preview.hidden = false;
     },
 
     updateMontoLabel(tipo, entityId, entityTipo) {
