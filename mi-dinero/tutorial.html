@@ -62,6 +62,16 @@
         .tip strong {
             color: var(--positive);
         }
+        .warning {
+            background-color: var(--bg-input);
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .warning strong {
+            color: var(--accent);
+        }
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -69,12 +79,14 @@
             margin-bottom: 20px;
             text-decoration: none;
         }
-        .shortcut {
+        .flow-diagram {
             background-color: var(--bg-input);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 0.9rem;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1.05rem;
+            line-height: 2;
         }
     </style>
 </head>
@@ -84,206 +96,276 @@
 
         <div class="tutorial-header">
             <h1>📖 Tutorial de Mi Dinero</h1>
-            <p>Guía rápida para usar el sistema de contabilidad personal</p>
+            <p>Guia rapida para usar el sistema de contabilidad personal</p>
+        </div>
+
+        <!-- Cómo funciona -->
+        <div class="tutorial-section">
+            <h2>🧩 Como funciona</h2>
+            <p>Mi Dinero te ayuda a llevar el control de tu plata. Todo funciona en tu navegador, sin necesidad de crear una cuenta ni tener internet.</p>
+            <p>La idea general es simple:</p>
+
+            <div class="flow-diagram">
+                <strong>Ingresos</strong> → entran a una <strong>Cuenta</strong><br>
+                Desde las <strong>Cuentas</strong> podes hacer <strong>Gastos</strong> o <strong>Transferencias</strong><br>
+                Las <strong>Transferencias</strong> mueven plata entre <strong>Cuentas</strong> y <strong>Destinos</strong>
+            </div>
+
+            <ul>
+                <li><strong>Cuentas</strong> = donde esta tu plata (efectivo, banco, Mercado Pago, etc.)</li>
+                <li><strong>Destinos</strong> = para que estas ahorrando (vacaciones, auto, emergencias, etc.)</li>
+                <li><strong>Ingresos</strong> = plata que entra (sueldo, freelance, venta, etc.)</li>
+                <li><strong>Gastos</strong> = plata que sale (compras, servicios, etc.)</li>
+                <li><strong>Transferencias</strong> = mover plata entre cuentas y destinos sin que cambie tu balance total</li>
+            </ul>
         </div>
 
         <!-- Primeros Pasos -->
         <div class="tutorial-section">
             <h2>🚀 Primeros Pasos</h2>
-            <p>Mi Dinero es un sistema de contabilidad personal que funciona completamente en tu navegador. Tus datos se guardan localmente en el dispositivo.</p>
-
-            <h3>Para comenzar:</h3>
+            <p>Para arrancar te conviene seguir este orden:</p>
             <ul>
-                <li><strong>Crear cuentas:</strong> Ve a la pestaña "Cuentas" y agrega tus fuentes de dinero (efectivo, banco, billetera virtual)</li>
-                <li><strong>Registrar ingresos:</strong> En "Ingresos", registra tu sueldo u otros ingresos</li>
-                <li><strong>Registrar gastos:</strong> En "Gastos", registra cada gasto indicando categoría y cuenta</li>
+                <li><strong>1. Crear cuentas:</strong> Agrega tus fuentes de dinero en la pestana "Cuentas" (ej: "Efectivo", "Banco Nacion", "Mercado Pago"). Pone el saldo que tenes hoy como saldo inicial.</li>
+                <li><strong>2. Crear destinos (opcional):</strong> Si queres organizar tus ahorros, crea destinos en la pestana "Destinos" (ej: "Vacaciones", "Fondo de emergencia").</li>
+                <li><strong>3. Registrar ingresos:</strong> Cuando cobres, registralo en "Ingresos" eligiendo a que cuenta entra la plata.</li>
+                <li><strong>4. Registrar gastos:</strong> Cada vez que gastes, registralo en "Gastos" indicando de que cuenta sale.</li>
             </ul>
 
             <div class="tip">
-                <strong>Tip:</strong> Podés importar datos de ejemplo usando el botón "Importar" con el archivo <code>data/ejemplo.json</code>
+                <strong>Tip:</strong> Podes importar datos de ejemplo usando el boton "Importar" con el archivo <code>data/ejemplo.json</code> para ver como queda cargado.
             </div>
-        </div>
-
-        <!-- Dashboard -->
-        <div class="tutorial-section">
-            <h2>📊 Dashboard</h2>
-            <p>El Dashboard te muestra un resumen de tu situación financiera:</p>
-            <ul>
-                <li><strong>Balance Disponible:</strong> El dinero que realmente podés gastar (excluye ahorro reservado)</li>
-                <li><strong>Balance Total:</strong> La suma de todas tus cuentas incluyendo ahorro</li>
-                <li><strong>Ingresos/Gastos del Mes:</strong> Movimientos del mes actual</li>
-                <li><strong>Meta Principal:</strong> Progreso hacia tu meta de ahorro prioritaria</li>
-                <li><strong>Destinos de Ahorro:</strong> Resumen rápido de tus ahorros por destino</li>
-                <li><strong>Deudas Pendientes:</strong> Resumen de deudas y progreso de pago</li>
-                <li><strong>Alertas:</strong> Gastos recurrentes próximos y presupuestos cerca del límite</li>
-                <li><strong>Gráfico:</strong> Distribución de gastos por categoría</li>
-            </ul>
-        </div>
-
-        <!-- Gastos -->
-        <div class="tutorial-section">
-            <h2>🛒 Gastos</h2>
-            <p>Al registrar un gasto podés incluir:</p>
-            <ul>
-                <li><strong>Categoría:</strong> Para clasificar el gasto (Comida, Transporte, etc.)</li>
-                <li><strong>Cuenta:</strong> De qué cuenta sale el dinero</li>
-                <li><strong>Etiquetas:</strong> Tags personalizados separados por coma (ej: "vacaciones, urgente")</li>
-                <li><strong>Recurrente:</strong> Marcar si es un gasto que se repite (semanal, mensual, anual)</li>
-            </ul>
-
-            <h3>Filtros disponibles:</h3>
-            <ul>
-                <li>Buscar por descripción</li>
-                <li>Filtrar por categoría, cuenta, fechas, montos y etiquetas</li>
-            </ul>
-        </div>
-
-        <!-- Metas -->
-        <div class="tutorial-section">
-            <h2>🎯 Metas de Ahorro</h2>
-            <p>Podés crear múltiples metas con diferentes prioridades:</p>
-            <ul>
-                <li><strong>Prioridad Alta:</strong> Se muestra en el Dashboard</li>
-                <li><strong>Prioridad Media/Baja:</strong> Metas secundarias</li>
-            </ul>
-            <p>El progreso se calcula automáticamente según tu balance total.</p>
-
-            <h3>Objetivos de Reducción</h3>
-            <p>También podés definir objetivos para reducir gastos en categorías específicas (ej: "Reducir Entretenimiento un 20%").</p>
         </div>
 
         <!-- Cuentas -->
         <div class="tutorial-section">
             <h2>🏦 Cuentas</h2>
-            <p>Administra diferentes fuentes de dinero:</p>
+            <p>Las cuentas representan donde tenes tu plata fisicamente. Cada cuenta tiene:</p>
             <ul>
-                <li><strong>Tipos:</strong> Efectivo, Banco o Billetera Virtual</li>
-                <li><strong>Moneda:</strong> Cada cuenta puede estar en Pesos (ARS) o Dólares (USD)</li>
-                <li><strong>Saldo inicial:</strong> El dinero que ya tenés al crear la cuenta</li>
-                <li><strong>Transferencias:</strong> Mover dinero entre cuentas sin afectar el balance total</li>
+                <li><strong>Tipo:</strong> Efectivo 💵, Banco 🏦 o Billetera Virtual 📱</li>
+                <li><strong>Moneda:</strong> Pesos (ARS) o Dolares (USD)</li>
+                <li><strong>Saldo Inicial:</strong> Lo que ya tenes al crear la cuenta</li>
+                <li><strong>Excluir del Balance:</strong> Si la marcas, esta cuenta no se muestra en el balance disponible del Dashboard (util para cuentas que no queres considerar)</li>
             </ul>
+            <p>El saldo de cada cuenta se calcula automaticamente: saldo inicial + ingresos - gastos + transferencias que entran - transferencias que salen.</p>
 
             <div class="tip">
-                <strong>Tip:</strong> Las cuentas en USD se identifican con una etiqueta "USD" y sus montos se muestran en dólares. El balance total convierte todo a pesos usando la cotización actual.
-            </div>
-        </div>
-
-        <!-- Cotización del Dólar -->
-        <div class="tutorial-section">
-            <h2>💵 Cotización del Dólar</h2>
-            <p>El sistema maneja automáticamente la conversión de dólares a pesos:</p>
-            <ul>
-                <li><strong>Actualización Automática:</strong> Al abrir la app, se obtiene la cotización del dólar blue desde una API externa (dolarapi.com)</li>
-                <li><strong>Actualización cada hora:</strong> Si pasó más de 1 hora desde la última consulta, se actualiza automáticamente</li>
-                <li><strong>Valor Manual:</strong> Si no tenés conexión o preferís usar otra cotización, podés ingresar un valor manual</li>
-                <li><strong>Botón Refrescar:</strong> Usá el botón 🔄 para forzar una actualización desde la API</li>
-            </ul>
-
-            <div class="tip">
-                <strong>Nota:</strong> La cotización se muestra en la sección de Cuentas. El balance total del Dashboard usa esta cotización para sumar las cuentas en USD.
+                <strong>Tip:</strong> Las cuentas en USD se identifican con una etiqueta "USD" y sus montos se muestran en dolares. En el Dashboard, todo se convierte a pesos usando la cotizacion actual.
             </div>
         </div>
 
         <!-- Destinos de Ahorro -->
         <div class="tutorial-section">
             <h2>🎯 Destinos de Ahorro</h2>
-            <p>Los destinos te permiten organizar para qué estás ahorrando cada ingreso:</p>
+            <p>Los destinos te permiten separar mentalmente tu plata segun para que la estas guardando, sin necesidad de tener cuentas separadas en la realidad.</p>
+
+            <h3>Como funcionan</h3>
             <ul>
-                <li><strong>Crear Destinos:</strong> Ve a la pestaña "Destinos" y creá tus propios destinos de ahorro</li>
-                <li><strong>Icono:</strong> Elegí un emoji que represente el destino</li>
-                <li><strong>Moneda:</strong> Cada destino puede estar en Pesos (ARS) o Dólares (USD)</li>
-                <li><strong>Monto Objetivo:</strong> Opcionalmente, definí cuánto querés ahorrar para ese destino</li>
-                <li><strong>Excluir del Balance:</strong> Marcá esta opción para que el ahorro no cuente como dinero disponible</li>
-                <li><strong>Asignar Ingresos:</strong> Al registrar un ingreso, podés asignarlo a un destino específico</li>
+                <li><strong>Crear un destino:</strong> Elegis un nombre, un icono, la moneda (ARS o USD) y opcionalmente un monto objetivo.</li>
+                <li><strong>Llenarlos:</strong> Hay dos formas de meter plata en un destino:
+                    <ul>
+                        <li>Al cargar un <strong>ingreso</strong>, podes asignarlo directo a un destino.</li>
+                        <li>Hacer una <strong>transferencia</strong> desde una cuenta o desde otro destino.</li>
+                    </ul>
+                </li>
+                <li><strong>Monto Objetivo:</strong> Si lo definiste, vas a ver una barra de progreso que te muestra cuanto te falta.</li>
             </ul>
 
-            <h3>Balance Disponible vs Balance Total</h3>
-            <p>Los destinos marcados como "Excluir del balance disponible" se consideran ahorro protegido:</p>
-            <ul>
-                <li><strong>Balance Disponible:</strong> El dinero que podés gastar libremente</li>
-                <li><strong>Balance Total:</strong> Todo tu dinero incluyendo el ahorro reservado</li>
-            </ul>
-            <p>Esto te permite ver cuánto tenés realmente disponible sin tocar tus ahorros.</p>
+            <h3>Excluir del Balance Disponible</h3>
+            <p>Los destinos marcados como "Excluir del balance" se consideran ahorro protegido. Esto hace que el Dashboard te muestre cuanta plata tenes realmente disponible para gastar, sin contar lo que ya reservaste.</p>
 
-            <h3>Destinos por defecto</h3>
+            <div class="warning">
+                <strong>Importante:</strong> Los destinos no son cuentas. Son una forma de organizar tu ahorro. La plata fisicamente sigue en tus cuentas, pero los destinos te ayudan a saber cuanto tenes separado para cada cosa.
+            </div>
+        </div>
+
+        <!-- Ingresos -->
+        <div class="tutorial-section">
+            <h2>💰 Ingresos</h2>
+            <p>Registra cada vez que te entra plata:</p>
             <ul>
-                <li>🛡️ <strong>Colchón de Imprevistos:</strong> Para emergencias (ARS, excluido del balance)</li>
-                <li>👴 <strong>Ahorro Jubilación:</strong> Ahorro a largo plazo (ARS, excluido del balance)</li>
-                <li>💵 <strong>Dinero Líquido:</strong> Efectivo para uso inmediato (ARS, incluido en balance)</li>
-                <li>🚗 <strong>Fondo Cambio Auto:</strong> Ahorro para el vehículo (USD, excluido del balance)</li>
+                <li><strong>Cuenta:</strong> A que cuenta entra la plata (obligatorio)</li>
+                <li><strong>Destino:</strong> Opcionalmente, podes asignar el ingreso a un destino de ahorro</li>
+                <li><strong>Descripcion:</strong> Para que te acuerdes de donde vino (ej: "Sueldo marzo")</li>
+                <li><strong>Etiquetas:</strong> Tags para filtrar despues (ej: "sueldo", "freelance")</li>
             </ul>
 
             <div class="tip">
-                <strong>Tip:</strong> Los destinos en USD muestran automáticamente la conversión a pesos usando la cotización actual. Los destinos con monto objetivo muestran una barra de progreso.
+                <strong>Tip:</strong> Si asignas un ingreso a un destino, la plata entra a la cuenta Y se suma al destino. Esto te permite saber cuanto de tu plata va para cada objetivo.
             </div>
+        </div>
+
+        <!-- Gastos -->
+        <div class="tutorial-section">
+            <h2>🛒 Gastos</h2>
+            <p>Registra cada gasto indicando:</p>
+            <ul>
+                <li><strong>Categoria:</strong> Para clasificarlo (Comida, Transporte, Servicios, etc.)</li>
+                <li><strong>Fuente:</strong> De que cuenta o destino sale la plata</li>
+                <li><strong>Descripcion y Etiquetas:</strong> Para buscar y filtrar despues</li>
+                <li><strong>Recurrente:</strong> Si es un gasto que se repite (semanal, mensual o anual), marcalo como recurrente para recibir alertas en el Dashboard cuando se acerque la fecha</li>
+            </ul>
+
+            <h3>Filtros</h3>
+            <p>El historial de gastos tiene filtros por descripcion, categoria, cuenta, rango de fechas, montos y etiquetas. Muy util para analizar en que estas gastando.</p>
+        </div>
+
+        <!-- Transferencias -->
+        <div class="tutorial-section">
+            <h2>🔄 Transferencias</h2>
+            <p>Las transferencias mueven plata de un lugar a otro sin afectar tu balance total. Podes transferir entre:</p>
+            <ul>
+                <li><strong>Cuenta → Cuenta:</strong> Ej: pasar plata del banco a Mercado Pago</li>
+                <li><strong>Cuenta → Destino:</strong> Ej: separar plata de tu cuenta para un ahorro especifico</li>
+                <li><strong>Destino → Cuenta:</strong> Ej: sacar plata de un ahorro para usarla</li>
+                <li><strong>Destino → Destino:</strong> Ej: reorganizar entre ahorros</li>
+            </ul>
+
+            <h3>Transferencias entre monedas (ARS ↔ USD)</h3>
+            <p>Si transferis entre una cuenta/destino en pesos y otra en dolares (o viceversa), el sistema:</p>
+            <ul>
+                <li>Detecta que son monedas diferentes</li>
+                <li>Abre un dialogo donde te muestra la cotizacion actual del dolar</li>
+                <li>Te deja <strong>modificar la cotizacion</strong> si en la realidad usaste un valor distinto (ej: dolar calle)</li>
+                <li>Calcula automaticamente cuanto queda en la moneda destino</li>
+                <li>Guarda una observacion automatica indicando que fue una conversion y a que cotizacion (ej: "ARS → USD @ $1.200")</li>
+            </ul>
+
+            <div class="tip">
+                <strong>Tip:</strong> En el historial de transferencias se muestra el monto en ambas monedas cuando fue una conversion (ej: "$1.200.000 → USD 1.000"). Podes filtrar el historial por etiqueta, origen, destino o rango de fechas.
+            </div>
+        </div>
+
+        <!-- Cotización del Dólar -->
+        <div class="tutorial-section">
+            <h2>💵 Cotizacion del Dolar</h2>
+            <p>El sistema necesita saber el valor del dolar para calcular balances cuando tenes cuentas o destinos en USD:</p>
+            <ul>
+                <li><strong>Automatico:</strong> Al abrir la app, obtiene la cotizacion del dolar blue desde internet (dolarapi.com). Se actualiza cada 1 hora.</li>
+                <li><strong>Manual:</strong> Si no tenes conexion o preferis usar otra cotizacion (ej: dolar MEP, dolar cripto), podes cargar un valor manual.</li>
+                <li><strong>Boton 🔄:</strong> Fuerza una actualizacion inmediata desde la API.</li>
+            </ul>
+            <p>La cotizacion se muestra en la seccion de Cuentas y se usa para:</p>
+            <ul>
+                <li>Calcular el balance total del Dashboard (convierte USD a ARS)</li>
+                <li>Mostrar equivalencias en los destinos en dolares</li>
+                <li>Proponer el tipo de cambio en transferencias entre monedas</li>
+            </ul>
         </div>
 
         <!-- Deudas -->
         <div class="tutorial-section">
             <h2>💳 Deudas</h2>
-            <p>Registrá y hacé seguimiento de tus deudas para tener control total de tus finanzas:</p>
+            <p>Registra tus deudas para tener un panorama completo de tus finanzas:</p>
 
             <h3>Tipos de deudas</h3>
             <ul>
-                <li>💳 <strong>Tarjeta de Crédito:</strong> Saldos pendientes de tarjetas</li>
-                <li>🏦 <strong>Préstamo Bancario:</strong> Créditos personales, hipotecarios, etc.</li>
-                <li>👤 <strong>Deuda Personal:</strong> Dinero que le debés a alguien</li>
-                <li>📋 <strong>Otro:</strong> Cualquier otra deuda</li>
+                <li>💳 <strong>Tarjeta de Credito</strong></li>
+                <li>🏦 <strong>Prestamo Bancario</strong></li>
+                <li>👤 <strong>Deuda Personal</strong> (plata que le debes a alguien)</li>
+                <li>📋 <strong>Otro</strong></li>
             </ul>
 
-            <h3>Registrar una deuda</h3>
-            <ul>
-                <li><strong>Nombre:</strong> Identificá la deuda (ej: "Visa", "Préstamo auto")</li>
-                <li><strong>Monto Total:</strong> El monto original de la deuda</li>
-                <li><strong>Moneda:</strong> Pesos (ARS) o Dólares (USD)</li>
-                <li><strong>Fecha de Vencimiento:</strong> Opcional, para recordar cuándo vence</li>
-            </ul>
+            <h3>Como cargar una deuda</h3>
+            <p>Indicar nombre, monto total, moneda (ARS o USD) y opcionalmente fecha de vencimiento.</p>
 
             <h3>Registrar pagos</h3>
-            <p>Cuando hacés un pago parcial o total:</p>
+            <p>Cuando pagas una cuota o parte de la deuda:</p>
             <ul>
-                <li>Seleccioná la deuda</li>
-                <li>Ingresá el monto del pago</li>
-                <li>Opcionalmente, seleccioná desde qué cuenta se descuenta (esto registra automáticamente el gasto)</li>
+                <li>Selecciona la deuda y el monto del pago</li>
+                <li>Opcionalmente elegi desde que cuenta se descuenta (esto registra el gasto automaticamente)</li>
+                <li>Cuando la deuda se salda por completo, se marca como completada</li>
             </ul>
 
             <div class="tip">
-                <strong>Tip:</strong> El Dashboard muestra un resumen de tus deudas pendientes. Cuando una deuda está 100% saldada, se marca como completada.
+                <strong>Tip:</strong> Las deudas pendientes se muestran en el Dashboard. Asi siempre tenes presente cuanto debes.
             </div>
+        </div>
+
+        <!-- Metas -->
+        <div class="tutorial-section">
+            <h2>🏆 Metas de Ahorro</h2>
+            <p>Las metas son objetivos generales de ahorro basados en tu balance total:</p>
+            <ul>
+                <li><strong>Prioridad Alta:</strong> Se muestra destacada en el Dashboard</li>
+                <li><strong>Prioridad Media/Baja:</strong> Metas secundarias</li>
+            </ul>
+            <p>El progreso se calcula automaticamente comparando tu balance total contra el monto de la meta.</p>
+
+            <h3>Metas vs Destinos</h3>
+            <p>No son lo mismo:</p>
+            <ul>
+                <li><strong>Metas:</strong> Un objetivo general (ej: "Llegar a $5.000.000"). Se mide contra todo tu balance.</li>
+                <li><strong>Destinos:</strong> Un ahorro especifico al que le asignas plata concreta (ej: "Vacaciones: $500.000 de $1.000.000").</li>
+            </ul>
         </div>
 
         <!-- Categorías y Presupuestos -->
         <div class="tutorial-section">
-            <h2>📁 Categorías y Presupuestos</h2>
+            <h2>📁 Categorias y Presupuestos</h2>
 
-            <h3>Categorías</h3>
-            <p>Vienen 10 categorías predefinidas pero podés agregar, editar o eliminar las que quieras.</p>
+            <h3>Categorias</h3>
+            <p>Cada gasto se asigna a una categoria (Comida, Transporte, Entretenimiento, etc.). Vienen varias predefinidas pero podes agregar, editar o eliminar las que quieras.</p>
 
             <h3>Presupuestos</h3>
-            <p>Definí un límite mensual para cada categoría. Cuando llegues al 80% del presupuesto, aparecerá una alerta en el Dashboard.</p>
+            <p>Podes definir un limite mensual para cada categoria. Cuando llegas al 80% del presupuesto, aparece una alerta en el Dashboard para que te cuides.</p>
+
+            <h3>Objetivos de Reduccion</h3>
+            <p>Tambien podes definir objetivos para reducir gastos en categorias especificas (ej: "Reducir Entretenimiento un 20% respecto al mes pasado").</p>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="tutorial-section">
+            <h2>📊 Dashboard</h2>
+            <p>Es la pantalla principal. Te muestra un resumen de todo:</p>
+            <ul>
+                <li><strong>Balance Disponible:</strong> Plata que podes gastar (no cuenta el ahorro reservado ni cuentas excluidas)</li>
+                <li><strong>Balance Total:</strong> Toda tu plata sumada, incluyendo ahorros</li>
+                <li><strong>Ingresos/Gastos del Mes:</strong> Movimientos del mes actual</li>
+                <li><strong>Meta Principal:</strong> Progreso de tu meta de ahorro prioritaria</li>
+                <li><strong>Destinos:</strong> Resumen rapido de cuanto tenes en cada destino de ahorro</li>
+                <li><strong>Deudas Pendientes:</strong> Cuanto debes y progreso de pago</li>
+                <li><strong>Alertas:</strong> Gastos recurrentes proximos y presupuestos cerca del limite</li>
+                <li><strong>Grafico:</strong> Distribucion de gastos por categoria</li>
+            </ul>
         </div>
 
         <!-- Reportes -->
         <div class="tutorial-section">
             <h2>📈 Reportes</h2>
+            <p>Para analizar tus finanzas en mas detalle:</p>
             <ul>
-                <li><strong>Comparativo Mensual:</strong> Compará ingresos y gastos entre dos meses</li>
-                <li><strong>Evolución del Balance:</strong> Gráfico histórico de tus finanzas</li>
-                <li><strong>Categorías con Mayor Crecimiento:</strong> Qué categorías aumentaron más</li>
-                <li><strong>Resumen por Etiquetas:</strong> Cuánto gastaste en cada etiqueta</li>
+                <li><strong>Comparativo Mensual:</strong> Compara ingresos y gastos entre dos meses</li>
+                <li><strong>Evolucion del Balance:</strong> Grafico historico de como vienen tus finanzas</li>
+                <li><strong>Categorias con Mayor Crecimiento:</strong> Que categorias aumentaron mas</li>
+                <li><strong>Resumen por Etiquetas:</strong> Cuanto gastaste en cada etiqueta</li>
             </ul>
+        </div>
+
+        <!-- Etiquetas -->
+        <div class="tutorial-section">
+            <h2>🏷️ Etiquetas</h2>
+            <p>Las etiquetas (tags) son palabras clave que podes agregar a ingresos, gastos y transferencias. Sirven para organizar y filtrar de formas que las categorias no cubren.</p>
+            <ul>
+                <li>Se separan por coma (ej: "vacaciones, urgente, cuota 3")</li>
+                <li>Podes filtrar por etiqueta en los historiales</li>
+                <li>En Reportes podes ver un resumen de cuanto gastaste por etiqueta</li>
+            </ul>
+
+            <div class="tip">
+                <strong>Ejemplo:</strong> Si te vas de viaje, podes etiquetar todos los gastos como "viaje-bariloche". Despues filtras por esa etiqueta y ves cuanto te salio el viaje completo.
+            </div>
         </div>
 
         <!-- Exportar/Importar -->
         <div class="tutorial-section">
             <h2>💾 Exportar e Importar</h2>
             <ul>
-                <li><strong>Exportar:</strong> Descarga todos tus datos como archivo JSON (backup)</li>
-                <li><strong>Importar:</strong> Carga datos desde un archivo JSON</li>
+                <li><strong>Exportar:</strong> Descarga todos tus datos como archivo JSON. Esto es tu backup.</li>
+                <li><strong>Importar:</strong> Carga datos desde un archivo JSON (reemplaza los datos actuales).</li>
             </ul>
 
-            <div class="tip">
-                <strong>Importante:</strong> Los datos se guardan en tu navegador (localStorage). Si borrás los datos del navegador, perdés la información. Hacé backups regularmente con el botón Exportar.
+            <div class="warning">
+                <strong>Importante:</strong> Tus datos se guardan en el navegador (localStorage). Si borras los datos del navegador o cambias de dispositivo, perdes la informacion. Hace backups regularmente con el boton Exportar.
             </div>
         </div>
 
@@ -291,11 +373,10 @@
         <div class="tutorial-section">
             <h2>⚙️ Extras</h2>
             <ul>
-                <li><strong>Tema:</strong> Usá el botón ☀️/🌙 para cambiar entre modo claro y oscuro</li>
+                <li><strong>Tema Claro/Oscuro:</strong> Usa el boton ☀️/🌙 en el header para cambiar</li>
                 <li><strong>Responsive:</strong> Funciona en celulares y tablets</li>
-                <li><strong>Offline:</strong> Funciona sin conexión (usa cotización manual o la última obtenida)</li>
-                <li><strong>Cotización en vivo:</strong> Con conexión, obtiene automáticamente el dólar blue</li>
-                <li><strong>Multimoneda:</strong> Soporta pesos y dólares en cuentas y destinos</li>
+                <li><strong>Offline:</strong> Funciona sin conexion a internet (usa la cotizacion manual o la ultima obtenida)</li>
+                <li><strong>Multimoneda:</strong> Cuentas y destinos en Pesos o Dolares con conversion automatica</li>
             </ul>
         </div>
 
