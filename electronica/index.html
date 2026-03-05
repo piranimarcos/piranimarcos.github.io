@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrónica - Calculadoras y Referencias | Marcos Pirani</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --accent: #f97316;
+            --accent-glow: rgba(249, 115, 22, 0.5);
+            --text: #e2e8f0;
+            --text-light: #94a3b8;
+            --text-muted: #64748b;
+            --bg-dark: #0a0a0f;
+            --bg-darker: #050508;
+            --bg-card: #12121a;
+            --border: #1e293b;
+            --border-light: #334155;
+            --gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background: var(--bg-dark);
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Poppins', sans-serif;
+            color: #f8fafc;
+        }
+
+        /* Header */
+        .site-header {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .site-header .brand {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #f8fafc;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .site-header .brand span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--primary); }
+
+        /* Hero */
+        .page-hero {
+            padding: 50px 0 30px;
+            text-align: center;
+        }
+        .page-hero h1 { font-size: 2.5rem; margin-bottom: 12px; }
+        .page-hero h1 .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-hero p { color: var(--text-light); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+        /* Tabs */
+        .nav-tabs {
+            border-bottom: 1px solid var(--border-light);
+            gap: 4px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
+        .nav-tabs .nav-link {
+            color: var(--text-muted);
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 10px 10px 0 0;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        .nav-tabs .nav-link:hover { color: var(--text); border-color: var(--border); }
+        .nav-tabs .nav-link.active {
+            color: #f8fafc;
+            background: var(--bg-card);
+            border-color: var(--border-light) var(--border-light) var(--bg-card);
+        }
+
+        .tab-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-top: none;
+            border-radius: 0 0 16px 16px;
+            padding: 40px 35px;
+        }
+
+        /* Cards */
+        .info-card {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 30px;
+        }
+        .info-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .info-card h3 i {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .info-card p, .info-card li { color: var(--text-light); font-size: 0.95rem; line-height: 1.7; }
+
+        /* Tabla de colores */
+        .color-table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .color-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            min-width: 600px;
+        }
+        .color-table th {
+            background: #0d0d18;
+            color: var(--text-light);
+            padding: 12px 14px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.82rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .color-table td {
+            padding: 10px 14px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+            vertical-align: middle;
+        }
+        .color-table tr:last-child td { border-bottom: none; }
+        .color-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+        /* Color chips */
+        .color-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .color-dot {
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .c-negro    { background: #111; color: #fff; }
+        .c-marron   { background: #6b3a2a; color: #fff; }
+        .c-rojo     { background: #dc2626; color: #fff; }
+        .c-naranja  { background: #ea580c; color: #fff; }
+        .c-amarillo { background: #ca8a04; color: #000; }
+        .c-verde    { background: #16a34a; color: #fff; }
+        .c-azul     { background: #2563eb; color: #fff; }
+        .c-violeta  { background: #7c3aed; color: #fff; }
+        .c-gris     { background: #6b7280; color: #fff; }
+        .c-blanco   { background: #e5e7eb; color: #000; }
+        .c-dorado   { background: #b45309; color: #fff; }
+        .c-plateado { background: #94a3b8; color: #000; }
+
+        .dot-negro    { background: #111111; }
+        .dot-marron   { background: #6b3a2a; }
+        .dot-rojo     { background: #dc2626; }
+        .dot-naranja  { background: #ea580c; }
+        .dot-amarillo { background: #eab308; }
+        .dot-verde    { background: #16a34a; }
+        .dot-azul     { background: #2563eb; }
+        .dot-violeta  { background: #7c3aed; }
+        .dot-gris     { background: #6b7280; }
+        .dot-blanco   { background: #e5e7eb; }
+        .dot-dorado   { background: #d97706; }
+        .dot-plateado { background: #94a3b8; }
+
+        /* Calculadora resistencias */
+        .calc-section {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .calc-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Resistor visual */
+        .resistor-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        .resistor-wire {
+            height: 3px;
+            width: 40px;
+            background: #94a3b8;
+            flex-shrink: 0;
+        }
+        .resistor-body {
+            background: #d4a77a;
+            border-radius: 12px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+            min-width: 160px;
+        }
+        .band {
+            width: 18px;
+            height: 42px;
+            border-radius: 3px;
+            margin: 0 4px;
+            transition: background 0.3s;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.2);
+        }
+        .band-gap { width: 10px; flex-shrink: 0; }
+
+        /* Selectores */
+        .bands-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .toggle-btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid var(--border-light);
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .toggle-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .band-selectors {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .band-select-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .band-select-group label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .band-select-group select {
+            background: #0d0d18;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            color: var(--text);
+            padding: 8px 30px 8px 10px;
+            font-size: 0.85rem;
+            width: 140px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+        }
+        .band-select-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .result-box {
+            background: #0d0d18;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 20px 30px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .result-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* LED Calculator */
+        .led-calc-card {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+        .led-calc-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .formula-box {
+            background: #0d0d18;
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--primary);
+            border-radius: 8px;
+            padding: 12px 18px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #a5b4fc;
+            margin: 12px 0 20px;
+        }
+        .calc-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+        .input-group-custom { display: flex; flex-direction: column; gap: 6px; }
+        .input-group-custom label { font-size: 0.82rem; color: var(--text-muted); font-weight: 500; }
+        .input-group-custom input {
+            background: #0d0d18;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            color: var(--text);
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+            width: 100%;
+        }
+        .input-group-custom input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .calc-btn {
+            background: var(--gradient);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            padding: 11px 28px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .calc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px var(--primary-glow);
+        }
+
+        .led-result {
+            margin-top: 16px;
+            padding: 16px 20px;
+            background: #0d0d18;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            display: none;
+        }
+        .led-result.show { display: block; }
+        .led-result-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .led-result-sub { font-size: 0.83rem; color: var(--text-muted); margin-top: 4px; }
+        .led-warning {
+            margin-top: 8px;
+            font-size: 0.82rem;
+            color: #f97316;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Badges */
+        .badge-tipo {
+            font-size: 0.7rem;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .badge-serie    { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+        .badge-paralelo { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+        .badge-combinado{ background: rgba(139,92,246,0.15); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
+
+        /* Diode params grid */
+        .diode-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+        .diode-param {
+            background: #0d0d18;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        .diode-param .param-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .diode-param .param-value { font-weight: 600; color: var(--text); }
+
+        /* Note */
+        .note {
+            background: rgba(59,130,246,0.08);
+            border: 1px solid rgba(59,130,246,0.2);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 0.88rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .note i { color: var(--primary); margin-top: 2px; flex-shrink: 0; }
+
+        /* Footer */
+        .site-footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+
+        @media (max-width: 576px) {
+            .tab-content { padding: 24px 16px; }
+            .band-selectors { gap: 8px; }
+            .band-select-group select { width: 120px; }
+            .page-hero h1 { font-size: 1.8rem; }
+            .resistor-wire { width: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="../index.html" class="brand">
+                <i class="fas fa-bolt" style="color: #f97316;"></i>
+                Marcos<span>Pirani</span>
+            </a>
+            <a href="../index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Volver al inicio
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <div class="page-hero">
+        <div class="container">
+            <h1><span class="gradient-text"><i class="fas fa-microchip"></i> Electrónica</span></h1>
+            <p>Calculadoras y referencias rápidas para electrónica básica</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container pb-5">
+
+        <ul class="nav nav-tabs mb-0" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#resistencias" type="button" role="tab">
+                    <i class="fas fa-wave-square me-2"></i>Resistencias
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#diodos" type="button" role="tab">
+                    <i class="fas fa-bolt me-2"></i>Diodos y LED
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="mainTabContent">
+
+            <!-- ===== TAB RESISTENCIAS ===== -->
+            <div class="tab-pane fade show active" id="resistencias" role="tabpanel">
+
+                <div class="info-card">
+                    <h3><i class="fas fa-book-open"></i> ¿Qué es una resistencia?</h3>
+                    <p>Una <strong style="color:#f8fafc">resistencia</strong> es un componente electrónico que se opone al paso de la corriente eléctrica. Su valor se mide en <strong style="color:#f8fafc">ohmios (Ω)</strong> y se identifica mediante bandas de colores pintadas sobre su cuerpo.</p>
+                    <p style="margin-top:10px;">Existen resistencias de <strong style="color:#f8fafc">4 bandas</strong> (las más comunes) y de <strong style="color:#f8fafc">5 bandas</strong> (mayor precisión).</p>
+                    <ul style="padding-left: 20px; margin-top: 8px;">
+                        <li><strong style="color:#60a5fa">4 bandas:</strong> 2 dígitos significativos + multiplicador + tolerancia</li>
+                        <li><strong style="color:#a78bfa">5 bandas:</strong> 3 dígitos significativos + multiplicador + tolerancia (precisión 1% o mejor)</li>
+                    </ul>
+                    <div class="note mt-3">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>La banda de <strong>tolerancia</strong> generalmente está más separada del resto, o es dorada/plateada. Leé siempre desde el extremo opuesto a la banda de tolerancia.</span>
+                    </div>
+                </div>
+
+                <!-- Tabla de colores -->
+                <div class="info-card">
+                    <h3><i class="fas fa-palette"></i> Tabla de código de colores</h3>
+                    <div class="color-table-wrap">
+                        <table class="color-table">
+                            <thead>
+                                <tr>
+                                    <th>Color</th>
+                                    <th>Dígito</th>
+                                    <th>Multiplicador</th>
+                                    <th>Tolerancia</th>
+                                    <th style="color:#60a5fa">Rol en 4 bandas</th>
+                                    <th style="color:#a78bfa">Rol en 5 bandas</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="color-chip c-negro"><span class="color-dot dot-negro"></span>Negro</span></td>
+                                    <td>0</td><td>×1 Ω</td><td>—</td>
+                                    <td style="color:#60a5fa">B1/B2 dígito, B3 mult.</td>
+                                    <td style="color:#a78bfa">B1/B2/B3 dígito, B4 mult.</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-chip c-marron"><span class="color-dot dot-marron"></span>Marrón</span></td>
+                                    <td>1</td><td>×10 Ω</td><td>±1%</td>
+                                    <td style="color:#60a5fa">B4: ±1%</td>
+                                    <td style="color:#a78bfa">B5: ±1%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-chip c-rojo"><span class="color-dot dot-rojo"></span>Rojo</span></td>
+                                    <td>2</td><td>×100 Ω</td><td>±2%</td>
+                                    <td style="color:#60a5fa">B4: ±2%</td>
+                                    <td style="color:#a78bfa">B5: ±2%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-chip c-naranja"><span class="color-dot dot-naranja"></span>Naranja</span></td>
+                                    <td>3</td><td>×1 KΩ</td><td>—</td><td>—</td><td>—</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-chip c-amarillo"><span class="color-dot dot-amarillo"></span>Amarillo</span></td>
+                                    <td>4</td><td>×10 KΩ</td><td>—</td><td>—</td><td>—</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-chip c-verde"><span class="color-dot dot-verde"></span>Verde</span></td>
+                                    <td>5</td><td>×100 KΩ</td><td>±0.5%</td><td>—</td>
+                                    <td style="color:#a78bfa">B5: ±0.5%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-chip c-azul"><span class="color-dot dot-azul"></span>Azul</span></td>
+                                    <td>6</td><td>×1 MΩ</td><td>±0.25%</td><td>—</td>
+                                    <td style="color:#a78bfa">B5: ±0.25%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-chip c-violeta"><span class="color-dot dot-violeta"></span>Violeta</span></td>
+                                    <td>7</td><td>×10 MΩ</td><td>±0.1%</td><td>—</td>
+                                    <td style="color:#a78bfa">B5: ±0.1%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-chip c-gris"><span class="color-dot dot-gris"></span>Gris</span></td>
+                                    <td>8</td><td>×100 MΩ</td><td>±0.05%</td><td>—</td>
+                                    <td style="color:#a78bfa">B5: ±0.05%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-chip c-blanco"><span class="color-dot dot-blanco"></span>Blanco</span></td>
+                                    <td>9</td><td>×1 GΩ</td><td>—</td><td>—</td><td>—</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-chip c-dorado"><span class="color-dot dot-dorado"></span>Dorado</span></td>
+                                    <td>—</td><td>×0.1 Ω</td><td>±5%</td>
+                                    <td style="color:#60a5fa">B4: ±5% (más común)</td>
+                                    <td style="color:#a78bfa">B5: ±5%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="color-chip c-plateado"><span class="color-dot dot-plateado"></span>Plateado</span></td>
+                                    <td>—</td><td>×0.01 Ω</td><td>±10%</td>
+                                    <td style="color:#60a5fa">B4: ±10%</td>
+                                    <td style="color:#a78bfa">B5: ±10%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Calculadora interactiva -->
+                <div class="calc-section">
+                    <h3><i class="fas fa-calculator"></i> Calculadora de código de colores</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Seleccioná la cantidad de bandas y los colores para ver el valor de la resistencia.</p>
+
+                    <div class="bands-toggle">
+                        <button class="toggle-btn active" onclick="setBands(4, this)">4 Bandas</button>
+                        <button class="toggle-btn" onclick="setBands(5, this)">5 Bandas</button>
+                    </div>
+
+                    <!-- Visual de resistencia -->
+                    <div class="resistor-visual">
+                        <div class="resistor-wire"></div>
+                        <div class="resistor-body" id="resistorBody">
+                            <div class="band" id="band1" style="background:#6b3a2a;"></div>
+                            <div class="band" id="band2" style="background:#111111;"></div>
+                            <div class="band" id="band3" style="background:#ea580c;"></div>
+                            <div class="band" id="band4" style="background:#ea580c; display:none;"></div>
+                            <div class="band-gap" id="bandGap" style="display:none;"></div>
+                            <div class="band-gap"></div>
+                            <div class="band" id="bandTol" style="background:#d97706;"></div>
+                        </div>
+                        <div class="resistor-wire"></div>
+                    </div>
+
+                    <div class="band-selectors">
+                        <div class="band-select-group">
+                            <label>Banda 1</label>
+                            <select id="sel1" onchange="updateResistor()">
+                                <option value="negro,#111111">Negro (0)</option>
+                                <option value="marron,#6b3a2a" selected>Marrón (1)</option>
+                                <option value="rojo,#dc2626">Rojo (2)</option>
+                                <option value="naranja,#ea580c">Naranja (3)</option>
+                                <option value="amarillo,#eab308">Amarillo (4)</option>
+                                <option value="verde,#16a34a">Verde (5)</option>
+                                <option value="azul,#2563eb">Azul (6)</option>
+                                <option value="violeta,#7c3aed">Violeta (7)</option>
+                                <option value="gris,#6b7280">Gris (8)</option>
+                                <option value="blanco,#e5e7eb">Blanco (9)</option>
+                            </select>
+                        </div>
+                        <div class="band-select-group">
+                            <label>Banda 2</label>
+                            <select id="sel2" onchange="updateResistor()">
+                                <option value="negro,#111111" selected>Negro (0)</option>
+                                <option value="marron,#6b3a2a">Marrón (1)</option>
+                                <option value="rojo,#dc2626">Rojo (2)</option>
+                                <option value="naranja,#ea580c">Naranja (3)</option>
+                                <option value="amarillo,#eab308">Amarillo (4)</option>
+                                <option value="verde,#16a34a">Verde (5)</option>
+                                <option value="azul,#2563eb">Azul (6)</option>
+                                <option value="violeta,#7c3aed">Violeta (7)</option>
+                                <option value="gris,#6b7280">Gris (8)</option>
+                                <option value="blanco,#e5e7eb">Blanco (9)</option>
+                            </select>
+                        </div>
+                        <!-- Banda 3: multiplicador (4 bandas) -->
+                        <div class="band-select-group" id="grp3mult">
+                            <label>Banda 3 (×)</label>
+                            <select id="sel3mult" onchange="updateResistor()">
+                                <option value="negro,#111111">×1 Ω</option>
+                                <option value="marron,#6b3a2a">×10 Ω</option>
+                                <option value="rojo,#dc2626">×100 Ω</option>
+                                <option value="naranja,#ea580c" selected>×1 KΩ</option>
+                                <option value="amarillo,#eab308">×10 KΩ</option>
+                                <option value="verde,#16a34a">×100 KΩ</option>
+                                <option value="azul,#2563eb">×1 MΩ</option>
+                                <option value="violeta,#7c3aed">×10 MΩ</option>
+                                <option value="gris,#6b7280">×100 MΩ</option>
+                                <option value="blanco,#e5e7eb">×1 GΩ</option>
+                                <option value="dorado,#d97706">×0.1 Ω</option>
+                                <option value="plateado,#94a3b8">×0.01 Ω</option>
+                            </select>
+                        </div>
+                        <!-- Banda 3: dígito (5 bandas) -->
+                        <div class="band-select-group" id="grp3dig" style="display:none;">
+                            <label>Banda 3 (dígito)</label>
+                            <select id="sel3dig" onchange="updateResistor()">
+                                <option value="negro,#111111">Negro (0)</option>
+                                <option value="marron,#6b3a2a">Marrón (1)</option>
+                                <option value="rojo,#dc2626">Rojo (2)</option>
+                                <option value="naranja,#ea580c">Naranja (3)</option>
+                                <option value="amarillo,#eab308" selected>Amarillo (4)</option>
+                                <option value="verde,#16a34a">Verde (5)</option>
+                                <option value="azul,#2563eb">Azul (6)</option>
+                                <option value="violeta,#7c3aed">Violeta (7)</option>
+                                <option value="gris,#6b7280">Gris (8)</option>
+                                <option value="blanco,#e5e7eb">Blanco (9)</option>
+                            </select>
+                        </div>
+                        <!-- Banda 4: multiplicador (5 bandas) -->
+                        <div class="band-select-group" id="grp4mult" style="display:none;">
+                            <label>Banda 4 (×)</label>
+                            <select id="sel4mult" onchange="updateResistor()">
+                                <option value="negro,#111111">×1 Ω</option>
+                                <option value="marron,#6b3a2a">×10 Ω</option>
+                                <option value="rojo,#dc2626">×100 Ω</option>
+                                <option value="naranja,#ea580c">×1 KΩ</option>
+                                <option value="amarillo,#eab308" selected>×10 KΩ</option>
+                                <option value="verde,#16a34a">×100 KΩ</option>
+                                <option value="azul,#2563eb">×1 MΩ</option>
+                                <option value="violeta,#7c3aed">×10 MΩ</option>
+                                <option value="gris,#6b7280">×100 MΩ</option>
+                                <option value="blanco,#e5e7eb">×1 GΩ</option>
+                                <option value="dorado,#d97706">×0.1 Ω</option>
+                                <option value="plateado,#94a3b8">×0.01 Ω</option>
+                            </select>
+                        </div>
+                        <div class="band-select-group">
+                            <label>Tolerancia</label>
+                            <select id="selTol" onchange="updateResistor()">
+                                <option value="marron,#6b3a2a">±1% Marrón</option>
+                                <option value="rojo,#dc2626">±2% Rojo</option>
+                                <option value="verde,#16a34a">±0.5% Verde</option>
+                                <option value="azul,#2563eb">±0.25% Azul</option>
+                                <option value="violeta,#7c3aed">±0.1% Violeta</option>
+                                <option value="gris,#6b7280">±0.05% Gris</option>
+                                <option value="dorado,#d97706" selected>±5% Dorado</option>
+                                <option value="plateado,#94a3b8">±10% Plateado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="result-box">
+                        <div class="result-value" id="resistorResult">10 KΩ</div>
+                        <div class="result-label" id="resistorTol">Tolerancia: ±5% → entre 9.5 KΩ y 10.5 KΩ</div>
+                    </div>
+                </div>
+
+                <!-- Cómo leer -->
+                <div class="info-card">
+                    <h3><i class="fas fa-eye"></i> ¿Cómo leer el código de colores?</h3>
+                    <p><strong style="color:#f8fafc">Paso 1:</strong> Identificá la banda de tolerancia (generalmente dorada o plateada, y más separada) y orientá la resistencia con esa banda hacia la derecha.</p>
+                    <p style="margin-top:10px;"><strong style="color:#f8fafc">Paso 2:</strong> Leé las bandas de izquierda a derecha:</p>
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6">
+                            <div style="background:#0d0d18; border:1px solid var(--border); border-radius:10px; padding:16px;">
+                                <p style="color:#60a5fa; font-weight:600; margin-bottom:10px;">4 Bandas</p>
+                                <p style="color:var(--text-light); font-size:0.88rem; margin-bottom:6px;">🔴 Banda 1: 1er dígito</p>
+                                <p style="color:var(--text-light); font-size:0.88rem; margin-bottom:6px;">🔴 Banda 2: 2do dígito</p>
+                                <p style="color:var(--text-light); font-size:0.88rem; margin-bottom:6px;">🔴 Banda 3: Multiplicador</p>
+                                <p style="color:var(--text-light); font-size:0.88rem; margin-bottom:0;">⭐ Banda 4: Tolerancia</p>
+                                <p style="color:var(--text-muted); font-size:0.82rem; margin-top:10px;">Ej: Marrón-Negro-Naranja-Dorado = <strong style="color:#f8fafc">10 KΩ ±5%</strong></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div style="background:#0d0d18; border:1px solid var(--border); border-radius:10px; padding:16px;">
+                                <p style="color:#a78bfa; font-weight:600; margin-bottom:10px;">5 Bandas</p>
+                                <p style="color:var(--text-light); font-size:0.88rem; margin-bottom:6px;">🔴 Banda 1: 1er dígito</p>
+                                <p style="color:var(--text-light); font-size:0.88rem; margin-bottom:6px;">🔴 Banda 2: 2do dígito</p>
+                                <p style="color:var(--text-light); font-size:0.88rem; margin-bottom:6px;">🔴 Banda 3: 3er dígito</p>
+                                <p style="color:var(--text-light); font-size:0.88rem; margin-bottom:6px;">🔴 Banda 4: Multiplicador</p>
+                                <p style="color:var(--text-light); font-size:0.88rem; margin-bottom:0;">⭐ Banda 5: Tolerancia</p>
+                                <p style="color:var(--text-muted); font-size:0.82rem; margin-top:10px;">Ej: Marrón-Verde-Negro-Rojo-Marrón = <strong style="color:#f8fafc">1.5 KΩ ±1%</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /tab resistencias -->
+
+
+            <!-- ===== TAB DIODOS Y LED ===== -->
+            <div class="tab-pane fade" id="diodos" role="tabpanel">
+
+                <div class="info-card">
+                    <h3><i class="fas fa-bolt"></i> El diodo y el LED</h3>
+                    <p>Un <strong style="color:#f8fafc">diodo</strong> es un componente semiconductor que permite el paso de corriente en un solo sentido (del ánodo al cátodo). Tiene una <strong style="color:#f8fafc">caída de tensión directa (V<sub>f</sub>)</strong> característica que depende del material.</p>
+                    <p style="margin-top:10px;">El <strong style="color:#f8fafc">LED</strong> (Light Emitting Diode) es un diodo que emite luz al conducir. Necesita siempre una <strong style="color:#f8fafc">resistencia limitadora de corriente</strong> en serie para no quemarse.</p>
+                    <div class="diode-info-grid">
+                        <div class="diode-param">
+                            <div class="param-label">Silicio (1N4007, etc.)</div>
+                            <div class="param-value">Vf ≈ 0.6 – 0.7 V</div>
+                        </div>
+                        <div class="diode-param">
+                            <div class="param-label">Germanio</div>
+                            <div class="param-value">Vf ≈ 0.2 – 0.3 V</div>
+                        </div>
+                        <div class="diode-param">
+                            <div class="param-label">LED Rojo / Amarillo</div>
+                            <div class="param-value">Vf ≈ 1.8 – 2.2 V</div>
+                        </div>
+                        <div class="diode-param">
+                            <div class="param-label">LED Verde</div>
+                            <div class="param-value">Vf ≈ 2.0 – 2.5 V</div>
+                        </div>
+                        <div class="diode-param">
+                            <div class="param-label">LED Azul / Blanco</div>
+                            <div class="param-value">Vf ≈ 3.0 – 3.5 V</div>
+                        </div>
+                        <div class="diode-param">
+                            <div class="param-label">Corriente típica LED</div>
+                            <div class="param-value">I<sub>led</sub> ≈ 10 – 20 mA</div>
+                        </div>
+                    </div>
+                    <div class="note mt-3">
+                        <i class="fas fa-info-circle"></i>
+                        <span>El <strong>cátodo</strong> del LED es la pata corta y tiene una marca plana en la base del encapsulado. El <strong>ánodo</strong> es la pata larga. La corriente entra por el ánodo (+) y sale por el cátodo (–).</span>
+                    </div>
+                </div>
+
+                <!-- Calculadora Serie -->
+                <div class="led-calc-card">
+                    <h4>
+                        <i class="fas fa-arrow-right" style="color:#60a5fa;"></i>
+                        LEDs en Serie
+                        <span class="badge-tipo badge-serie">SERIE</span>
+                    </h4>
+                    <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:8px;">Varios LEDs encadenados uno detrás del otro. La tensión se reparte, la corriente es la misma para todos.</p>
+                    <div class="formula-box">R = ( V<sub>fuente</sub> − V<sub>led</sub> × N<sub>serie</sub> ) / I<sub>led</sub></div>
+                    <div class="calc-inputs">
+                        <div class="input-group-custom">
+                            <label>V fuente (V)</label>
+                            <input type="number" id="s_vf" value="12" min="0" step="0.1">
+                        </div>
+                        <div class="input-group-custom">
+                            <label>V LED (V)</label>
+                            <input type="number" id="s_vled" value="2.0" min="0" step="0.1">
+                        </div>
+                        <div class="input-group-custom">
+                            <label>Cant. LEDs en serie</label>
+                            <input type="number" id="s_cant" value="3" min="1" step="1">
+                        </div>
+                        <div class="input-group-custom">
+                            <label>I LED (mA)</label>
+                            <input type="number" id="s_iled" value="20" min="1" step="1">
+                        </div>
+                    </div>
+                    <button class="calc-btn" onclick="calcSerie()">
+                        <i class="fas fa-calculator"></i> Calcular
+                    </button>
+                    <div class="led-result" id="res_serie">
+                        <div class="led-result-value" id="res_serie_val"></div>
+                        <div class="led-result-sub" id="res_serie_sub"></div>
+                        <div class="led-warning" id="res_serie_warn" style="display:none;">
+                            <i class="fas fa-triangle-exclamation"></i>
+                            <span id="res_serie_warn_txt"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculadora Paralelo -->
+                <div class="led-calc-card">
+                    <h4>
+                        <i class="fas fa-arrows-left-right" style="color:#34d399;"></i>
+                        LEDs en Paralelo
+                        <span class="badge-tipo badge-paralelo">PARALELO</span>
+                    </h4>
+                    <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:8px;">Varios LEDs conectados en paralelo comparten la misma tensión. La corriente total se multiplica. Se usa un solo resistor para todos.</p>
+                    <div class="formula-box">R = ( V<sub>fuente</sub> − V<sub>led</sub> ) / ( I<sub>led</sub> × N<sub>paralelo</sub> )</div>
+                    <div class="calc-inputs">
+                        <div class="input-group-custom">
+                            <label>V fuente (V)</label>
+                            <input type="number" id="p_vf" value="5" min="0" step="0.1">
+                        </div>
+                        <div class="input-group-custom">
+                            <label>V LED (V)</label>
+                            <input type="number" id="p_vled" value="2.0" min="0" step="0.1">
+                        </div>
+                        <div class="input-group-custom">
+                            <label>Cant. LEDs en paralelo</label>
+                            <input type="number" id="p_cant" value="3" min="1" step="1">
+                        </div>
+                        <div class="input-group-custom">
+                            <label>I LED (mA)</label>
+                            <input type="number" id="p_iled" value="20" min="1" step="1">
+                        </div>
+                    </div>
+                    <button class="calc-btn" onclick="calcParalelo()">
+                        <i class="fas fa-calculator"></i> Calcular
+                    </button>
+                    <div class="led-result" id="res_paralelo">
+                        <div class="led-result-value" id="res_paralelo_val"></div>
+                        <div class="led-result-sub" id="res_paralelo_sub"></div>
+                        <div class="led-warning" id="res_paralelo_warn" style="display:none;">
+                            <i class="fas fa-triangle-exclamation"></i>
+                            <span id="res_paralelo_warn_txt"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculadora Combinada -->
+                <div class="led-calc-card">
+                    <h4>
+                        <i class="fas fa-table-cells" style="color:#a78bfa;"></i>
+                        Combinada: N serie × M paralelo
+                        <span class="badge-tipo badge-combinado">COMBINADO</span>
+                    </h4>
+                    <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:8px;">
+                        Varias <strong style="color:#f8fafc">cadenas en paralelo</strong>, cada una con N LEDs en serie. Un solo resistor para toda la matriz.
+                    </p>
+                    <div class="formula-box">R = ( V<sub>fuente</sub> − V<sub>led</sub> × N<sub>serie</sub> ) / ( I<sub>led</sub> × M<sub>paralelo</sub> )</div>
+                    <div class="calc-inputs">
+                        <div class="input-group-custom">
+                            <label>V fuente (V)</label>
+                            <input type="number" id="c_vf" value="12" min="0" step="0.1">
+                        </div>
+                        <div class="input-group-custom">
+                            <label>V LED (V)</label>
+                            <input type="number" id="c_vled" value="2.0" min="0" step="0.1">
+                        </div>
+                        <div class="input-group-custom">
+                            <label>LEDs en serie (N)</label>
+                            <input type="number" id="c_serie" value="3" min="1" step="1">
+                        </div>
+                        <div class="input-group-custom">
+                            <label>Cadenas en paralelo (M)</label>
+                            <input type="number" id="c_paralelo" value="2" min="1" step="1">
+                        </div>
+                        <div class="input-group-custom">
+                            <label>I LED (mA)</label>
+                            <input type="number" id="c_iled" value="20" min="1" step="1">
+                        </div>
+                    </div>
+                    <button class="calc-btn" onclick="calcCombinado()">
+                        <i class="fas fa-calculator"></i> Calcular
+                    </button>
+                    <div class="led-result" id="res_combinado">
+                        <div class="led-result-value" id="res_combinado_val"></div>
+                        <div class="led-result-sub" id="res_combinado_sub"></div>
+                        <div class="led-warning" id="res_combinado_warn" style="display:none;">
+                            <i class="fas fa-triangle-exclamation"></i>
+                            <span id="res_combinado_warn_txt"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="note">
+                    <i class="fas fa-fire"></i>
+                    <div>
+                        <strong>¿Qué potencia debe tener el resistor?</strong><br>
+                        Calculá con <code style="color:#a5b4fc">P = I² × R</code>. Usá un resistor con el <strong>doble de la potencia calculada</strong> como margen de seguridad. Valores típicos: ¼ W, ½ W y 1 W.
+                    </div>
+                </div>
+
+            </div><!-- /tab diodos -->
+
+        </div><!-- /tab-content -->
+    </div><!-- /container -->
+
+    <footer class="site-footer">
+        <p>&copy; 2025 Marcos Pirani · <a href="../index.html" style="color:var(--primary); text-decoration:none;">Volver al inicio</a></p>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    // ============================================================
+    // RESISTOR COLOR CODE CALCULATOR
+    // ============================================================
+
+    const colorValues = {
+        negro:    { digit: 0, mult: 1,          tol: null   },
+        marron:   { digit: 1, mult: 10,         tol: 1      },
+        rojo:     { digit: 2, mult: 100,        tol: 2      },
+        naranja:  { digit: 3, mult: 1000,       tol: null   },
+        amarillo: { digit: 4, mult: 10000,      tol: null   },
+        verde:    { digit: 5, mult: 100000,     tol: 0.5    },
+        azul:     { digit: 6, mult: 1000000,    tol: 0.25   },
+        violeta:  { digit: 7, mult: 10000000,   tol: 0.1    },
+        gris:     { digit: 8, mult: 100000000,  tol: 0.05   },
+        blanco:   { digit: 9, mult: 1000000000, tol: null   },
+        dorado:   { digit: null, mult: 0.1,     tol: 5      },
+        plateado: { digit: null, mult: 0.01,    tol: 10     },
+    };
+
+    const tolLabels = {
+        marron:'±1%', rojo:'±2%', verde:'±0.5%', azul:'±0.25%',
+        violeta:'±0.1%', gris:'±0.05%', dorado:'±5%', plateado:'±10%'
+    };
+
+    let currentBands = 4;
+
+    function setBands(n, btn) {
+        currentBands = n;
+        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const is5 = n === 5;
+        document.getElementById('grp3mult').style.display = is5 ? 'none' : '';
+        document.getElementById('grp3dig').style.display  = is5 ? '' : 'none';
+        document.getElementById('grp4mult').style.display = is5 ? '' : 'none';
+        document.getElementById('band4').style.display    = is5 ? '' : 'none';
+        document.getElementById('bandGap').style.display  = is5 ? '' : 'none';
+        updateResistor();
+    }
+
+    function parseSelect(sel) {
+        const parts = sel.value.split(',');
+        return { name: parts[0], hex: parts[1] };
+    }
+
+    function formatResistance(ohms) {
+        if (ohms >= 1e9) return (ohms / 1e9).toFixed(ohms % 1e9 === 0 ? 0 : 2) + ' GΩ';
+        if (ohms >= 1e6) return (ohms / 1e6).toFixed(ohms % 1e6 === 0 ? 0 : 2) + ' MΩ';
+        if (ohms >= 1e3) return (ohms / 1e3).toFixed(ohms % 1e3 === 0 ? 0 : 2) + ' KΩ';
+        return ohms.toFixed(ohms < 1 ? 2 : 0) + ' Ω';
+    }
+
+    function updateResistor() {
+        const b1  = parseSelect(document.getElementById('sel1'));
+        const b2  = parseSelect(document.getElementById('sel2'));
+        const tol = parseSelect(document.getElementById('selTol'));
+
+        document.getElementById('band1').style.background   = b1.hex;
+        document.getElementById('band2').style.background   = b2.hex;
+        document.getElementById('bandTol').style.background = tol.hex;
+
+        const d1 = colorValues[b1.name].digit;
+        const d2 = colorValues[b2.name].digit;
+
+        if (d1 === null || d2 === null) {
+            document.getElementById('resistorResult').textContent = 'Inválido';
+            document.getElementById('resistorTol').textContent = '';
+            return;
+        }
+
+        let value;
+        if (currentBands === 4) {
+            const multSel = parseSelect(document.getElementById('sel3mult'));
+            document.getElementById('band3').style.background = multSel.hex;
+            const mult = colorValues[multSel.name].mult;
+            value = (d1 * 10 + d2) * mult;
+        } else {
+            const b3dig  = parseSelect(document.getElementById('sel3dig'));
+            const b4mult = parseSelect(document.getElementById('sel4mult'));
+            document.getElementById('band3').style.background = b3dig.hex;
+            document.getElementById('band4').style.background = b4mult.hex;
+            const d3   = colorValues[b3dig.name].digit;
+            const mult = colorValues[b4mult.name].mult;
+            if (d3 === null) {
+                document.getElementById('resistorResult').textContent = 'Inválido';
+                document.getElementById('resistorTol').textContent = '';
+                return;
+            }
+            value = (d1 * 100 + d2 * 10 + d3) * mult;
+        }
+
+        const tolPct = tolLabels[tol.name] || '—';
+        const tolVal = colorValues[tol.name]?.tol;
+        document.getElementById('resistorResult').textContent = formatResistance(value);
+
+        if (tolVal !== null && tolVal !== undefined) {
+            const min = formatResistance(value * (1 - tolVal / 100));
+            const max = formatResistance(value * (1 + tolVal / 100));
+            document.getElementById('resistorTol').textContent =
+                `Tolerancia: ${tolPct} → entre ${min} y ${max}`;
+        } else {
+            document.getElementById('resistorTol').textContent = `Tolerancia: ${tolPct}`;
+        }
+    }
+
+    // Init
+    updateResistor();
+
+    // ============================================================
+    // LED CALCULATOR
+    // ============================================================
+
+    function formatR(ohms) {
+        if (ohms >= 1000) return (ohms / 1000).toFixed(2) + ' KΩ';
+        return ohms.toFixed(1) + ' Ω';
+    }
+
+    function getNearestStd(r) {
+        const e24 = [1.0,1.1,1.2,1.3,1.5,1.6,1.8,2.0,2.2,2.4,2.7,3.0,
+                     3.3,3.6,3.9,4.3,4.7,5.1,5.6,6.2,6.8,7.5,8.2,9.1];
+        const decades = [1,10,100,1000,10000,100000];
+        let best = null, bestDiff = Infinity;
+        for (const dec of decades) {
+            for (const base of e24) {
+                const val = base * dec;
+                const diff = Math.abs(val - r);
+                if (diff < bestDiff) { bestDiff = diff; best = val; }
+            }
+        }
+        return best;
+    }
+
+    function getPowerLabel(watts) {
+        if (watts * 2 < 0.25) return '¼ W';
+        if (watts * 2 < 0.5)  return '½ W';
+        return '1 W';
+    }
+
+    function showLedResult(id, r, vdropTotal, iled_ma, totalLeds) {
+        const resEl  = document.getElementById(id);
+        const valEl  = document.getElementById(id + '_val');
+        const subEl  = document.getElementById(id + '_sub');
+        const warnEl = document.getElementById(id + '_warn');
+        const warnTx = document.getElementById(id + '_warn_txt');
+
+        resEl.classList.add('show');
+
+        if (r <= 0 || isNaN(r)) {
+            valEl.textContent = 'Error: tensión insuficiente';
+            subEl.textContent = 'La tensión de la fuente debe superar la caída total en los LEDs.';
+            warnEl.style.display = 'none';
+            return;
+        }
+
+        const std   = getNearestStd(r);
+        const power = Math.pow(iled_ma / 1000, 2) * r;
+
+        valEl.textContent = formatR(r) + ' (exacto)';
+        subEl.innerHTML =
+            `Valor estándar E24 más cercano: <strong>${formatR(std)}</strong> &nbsp;|&nbsp; ` +
+            `Potencia disipada: <strong>${(power * 1000).toFixed(1)} mW</strong> → usar ≥ <strong>${getPowerLabel(power)}</strong>` +
+            (totalLeds ? ` &nbsp;|&nbsp; Total LEDs: <strong>${totalLeds}</strong>` : '');
+
+        if (vdropTotal < 0.5) {
+            warnEl.style.display = 'flex';
+            warnTx.textContent = 'La caída en el resistor es muy baja. El circuito es sensible a variaciones de tensión y temperatura.';
+        } else {
+            warnEl.style.display = 'none';
+        }
+    }
+
+    function calcSerie() {
+        const vf   = parseFloat(document.getElementById('s_vf').value);
+        const vled = parseFloat(document.getElementById('s_vled').value);
+        const n    = parseInt(document.getElementById('s_cant').value);
+        const iled = parseFloat(document.getElementById('s_iled').value);
+        const r    = (vf - vled * n) / (iled / 1000);
+        showLedResult('res_serie', r, vf - vled * n, iled, n);
+    }
+
+    function calcParalelo() {
+        const vf   = parseFloat(document.getElementById('p_vf').value);
+        const vled = parseFloat(document.getElementById('p_vled').value);
+        const n    = parseInt(document.getElementById('p_cant').value);
+        const iled = parseFloat(document.getElementById('p_iled').value);
+        const r    = (vf - vled) / ((iled / 1000) * n);
+        showLedResult('res_paralelo', r, vf - vled, iled * n, n);
+    }
+
+    function calcCombinado() {
+        const vf  = parseFloat(document.getElementById('c_vf').value);
+        const vled= parseFloat(document.getElementById('c_vled').value);
+        const ns  = parseInt(document.getElementById('c_serie').value);
+        const mp  = parseInt(document.getElementById('c_paralelo').value);
+        const iled= parseFloat(document.getElementById('c_iled').value);
+        const r   = (vf - vled * ns) / ((iled / 1000) * mp);
+        showLedResult('res_combinado', r, vf - vled * ns, iled * mp, ns * mp);
+    }
+    </script>
+
+</body>
+</html>
