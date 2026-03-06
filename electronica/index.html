@@ -241,6 +241,37 @@
         .reg-table td { padding:9px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--text); }
         .reg-table tr:last-child td { border-bottom:none; }
         .reg-table tr:hover td { background:rgba(255,255,255,.02); }
+
+        /* ======================== DIFICULTAD ======================== */
+        .dif { font-size:.58rem; letter-spacing:0; margin-left:4px; vertical-align:middle; opacity:.85; }
+        .dif-1 { color:#34d399; }
+        .dif-2 { color:#f97316; }
+        .dif-3 { color:#ef4444; }
+
+        /* ======================== HERRAMIENTAS ======================== */
+        .step-list { list-style:none; padding:0; margin:0; }
+        .step-list li { display:flex; gap:14px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--text-light); line-height:1.6; }
+        .step-list li:last-child { border-bottom:none; }
+        .step-num { width:26px; height:26px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:700; font-family:'Poppins',sans-serif; flex-shrink:0; margin-top:1px; }
+        .solder-compare { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; }
+        .solder-good { background:rgba(16,185,129,.08); border:1px solid rgba(16,185,129,.25); border-radius:10px; padding:12px 16px; }
+        .solder-bad  { background:rgba(239,68,68,.08);  border:1px solid rgba(239,68,68,.25);  border-radius:10px; padding:12px 16px; }
+        .solder-good h5 { color:#34d399; font-size:.85rem; margin-bottom:6px; }
+        .solder-bad  h5 { color:#f87171; font-size:.85rem; margin-bottom:6px; }
+        .solder-good li, .solder-bad li { font-size:.82rem; color:var(--text-light); }
+        .img-slot { background:#0d0d18; border:2px dashed var(--border-light); border-radius:12px; padding:28px 20px; text-align:center; color:var(--text-muted); font-size:.82rem; margin:14px 0; }
+        .img-slot i { font-size:2rem; color:var(--border-light); display:block; margin-bottom:8px; }
+        .img-slot code { display:block; color:#60a5fa; font-size:.75rem; margin-top:4px; }
+        .method-header { display:flex; align-items:center; gap:10px; margin:20px 0 12px; }
+        .method-badge { background:var(--gradient); border-radius:20px; padding:4px 14px; font-size:.78rem; font-weight:700; color:white; white-space:nowrap; }
+        .safety-card { background:rgba(239,68,68,.07); border:1px solid rgba(239,68,68,.25); border-radius:12px; padding:14px 18px; margin-top:14px; }
+        .safety-card h5 { color:#f87171; font-size:.9rem; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+        .safety-card li { font-size:.85rem; color:var(--text-light); }
+
+        /* ======================== TIRISTOR ======================== */
+        .scr-body { background:#1a1a2e; border:2px solid var(--border-light); border-radius:10px; padding:16px; max-width:200px; margin:0 auto; }
+        .scr-pin { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid rgba(255,255,255,.06); font-size:.82rem; }
+        .scr-pin:last-child { border-bottom:none; }
     </style>
 </head>
 <body>
@@ -269,17 +300,19 @@
     </div>
 
     <ul class="nav nav-tabs mb-0" id="mainTabs" role="tablist">
-        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#electricidad" type="button"><i class="fas fa-bolt me-1"></i>Electricidad</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#resistencias" type="button"><i class="fas fa-wave-square me-1"></i>Resistencias</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#diodos" type="button"><i class="fas fa-lightbulb me-1"></i>Diodos y LED</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#transistor" type="button"><i class="fas fa-microchip me-1"></i>Transistor</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#capacitor" type="button"><i class="fas fa-battery-half me-1"></i>Capacitor</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#rele" type="button"><i class="fas fa-toggle-on me-1"></i>Relé</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#ldr" type="button"><i class="fas fa-sun me-1"></i>LDR</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#ir" type="button"><i class="fas fa-satellite-dish me-1"></i>LED IR</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#divisor" type="button"><i class="fas fa-divide me-1"></i>Divisor de V</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#timer555" type="button"><i class="fas fa-clock me-1"></i>555 Timer</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#reguladores" type="button"><i class="fas fa-plug me-1"></i>Reguladores</button></li>
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#electricidad" type="button"><i class="fas fa-bolt me-1"></i>Electricidad<span class="dif dif-1">★</span></button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#herramientas" type="button"><i class="fas fa-screwdriver-wrench me-1"></i>Herramientas<span class="dif dif-1">★</span></button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#resistencias" type="button"><i class="fas fa-wave-square me-1"></i>Resistencias<span class="dif dif-1">★</span></button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#diodos" type="button"><i class="fas fa-lightbulb me-1"></i>Diodos y LED<span class="dif dif-1">★</span></button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#transistor" type="button"><i class="fas fa-microchip me-1"></i>Transistor<span class="dif dif-2">★★</span></button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#capacitor" type="button"><i class="fas fa-battery-half me-1"></i>Capacitor<span class="dif dif-2">★★</span></button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#rele" type="button"><i class="fas fa-toggle-on me-1"></i>Relé<span class="dif dif-2">★★</span></button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#ldr" type="button"><i class="fas fa-sun me-1"></i>LDR<span class="dif dif-1">★</span></button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#ir" type="button"><i class="fas fa-satellite-dish me-1"></i>LED IR<span class="dif dif-2">★★</span></button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#divisor" type="button"><i class="fas fa-divide me-1"></i>Divisor de V<span class="dif dif-2">★★</span></button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#timer555" type="button"><i class="fas fa-clock me-1"></i>555 Timer<span class="dif dif-2">★★</span></button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tiristor" type="button"><i class="fas fa-fire-flame-curved me-1"></i>Tiristor (SCR)<span class="dif dif-3">★★★</span></button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#reguladores" type="button"><i class="fas fa-plug me-1"></i>Reguladores<span class="dif dif-2">★★</span></button></li>
     </ul>
 
     <div class="tab-content">
@@ -453,6 +486,255 @@
             </div>
 
         </div><!-- /electricidad -->
+
+
+        <!-- ===================== TAB HERRAMIENTAS ===================== -->
+        <div class="tab-pane fade" id="herramientas" role="tabpanel">
+
+            <!-- PROTOBOARD -->
+            <div class="info-card">
+                <h3><i class="fas fa-grip-dots"></i> Protoboard</h3>
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-7">
+                        <p>La <strong style="color:#f8fafc">protoboard</strong> (o breadboard) permite armar circuitos sin soldar, ideal para pruebas y modificaciones rápidas. Los agujeros están conectados internamente por láminas metálicas con resorte que sujetan los componentes.</p>
+                        <div class="params-grid mt-3">
+                            <div class="param-box"><div class="param-label">Líneas de alimentación (laterales)</div><div class="param-value">Horizontal, extremo a extremo. Rojo = + · Azul = −</div></div>
+                            <div class="param-box"><div class="param-label">Zona central</div><div class="param-value">Columnas de 5 agujeros conectados verticalmente</div></div>
+                            <div class="param-box"><div class="param-label">Zanja central</div><div class="param-value">Divide eléctricamente las dos mitades. Ideal para CI DIP.</div></div>
+                            <div class="param-box"><div class="param-label">Tamaño típico</div><div class="param-value">830 puntos (63 filas × 2 mitades + 4 líneas)</div></div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="img-slot">
+                            <i class="fas fa-image"></i>
+                            Diagrama de conexiones internas de la protoboard
+                            <code>electronica/img/protoboard.png</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="note mt-3"><i class="fas fa-lightbulb"></i><span>Siempre conectá primero la alimentación (+V y GND) en las líneas laterales antes de armar el circuito. Usá colores: rojo para +, negro o azul para GND. Hace el circuito mucho más fácil de leer.</span></div>
+                <div class="extra-toggle" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Errores comunes y consejos de uso</div>
+                <div class="extra-body">
+                    <h5>Errores frecuentes</h5>
+                    <ul>
+                        <li>No doblar las patas de los componentes — insertarlas rectas. Doblarlas dificulta el contacto y puede romper el componente.</li>
+                        <li>Confundir las filas: cada fila del centro tiene <strong>solo 5 agujeros conectados</strong>, no toda la fila horizontal.</li>
+                        <li>Usar cables muy gruesos (mayor a 24 AWG) puede aflojar los contactos con el tiempo.</li>
+                        <li>Olvidar conectar las líneas de GND de un lado al otro si se usan las dos mitades laterales.</li>
+                        <li>No verificar la alimentación antes de insertar componentes sensibles (transistores, CI).</li>
+                    </ul>
+                    <h5>Consejos</h5>
+                    <ul>
+                        <li>Planificá el circuito en papel (o con software como Fritzing) antes de armar.</li>
+                        <li>Los CI DIP van a <strong>caballo</strong> sobre la zanja central para no cortocircuitar sus pines.</li>
+                        <li>Usá cables jumper prearmados (macho-macho). Son más prolijos que cables pelados.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- MULTÍMETRO -->
+            <div class="info-card">
+                <h3><i class="fas fa-gauge"></i> Multímetro</h3>
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-7">
+                        <p>El <strong style="color:#f8fafc">multímetro</strong> es la herramienta de medición más importante del taller. Permite medir voltaje, corriente, resistencia, continuidad y más. Hay analógicos (aguja) y digitales (DMM). En el taller generalmente se usa el digital.</p>
+                        <div class="params-grid mt-3">
+                            <div class="param-box"><div class="param-label">COM (negro)</div><div class="param-value">Siempre va al negativo / GND</div></div>
+                            <div class="param-box"><div class="param-label">VΩmA (rojo)</div><div class="param-value">Para voltaje, resistencia y corrientes pequeñas</div></div>
+                            <div class="param-box"><div class="param-label">10A (rojo)</div><div class="param-value">Solo para corrientes grandes (mover la punta)</div></div>
+                            <div class="param-box"><div class="param-label">Selector</div><div class="param-value">DCV / ACV / Ω / mA / diodo / continuidad</div></div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="img-slot">
+                            <i class="fas fa-image"></i>
+                            Multímetro digital con partes indicadas
+                            <code>electronica/img/multimetro.png</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="note note-warn mt-3"><i class="fas fa-triangle-exclamation"></i><span><strong>Nunca medir corriente en paralelo</strong> — el multímetro tiene muy baja resistencia interna en modo amperímetro y puede quemarse o dañar el circuito. La corriente se mide en <strong>serie</strong>, cortando el circuito.</span></div>
+                <div class="extra-toggle" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Cómo usar cada función</div>
+                <div class="extra-body">
+                    <h5>Voltaje DC (DCV)</h5>
+                    <ul><li>Selector en DCV en el rango adecuado (o en AUTO si tiene).</li><li>Puntas en paralelo: roja al punto de mayor potencial, negra a GND.</li><li>No hace falta apagar el circuito.</li></ul>
+                    <h5>Resistencia (Ω)</h5>
+                    <ul><li>Circuito APAGADO y el componente desconectado (al menos un extremo).</li><li>Si muestra "OL" o "1.": cambiar a un rango mayor.</li></ul>
+                    <h5>Continuidad (bocina)</h5>
+                    <ul><li>Modo con símbolo de onda o bocina. Si hay continuidad, emite un pitido.</li><li>Útil para verificar cables, fusibles, pistas de PCB cortadas.</li></ul>
+                    <h5>Prueba de diodo</h5>
+                    <ul><li>Modo con símbolo de diodo. Muestra la caída de tensión directa (~0.6V en silicio, ~0.2V en Schottky). En inversa muestra "OL".</li></ul>
+                </div>
+            </div>
+
+            <!-- SOLDADOR -->
+            <div class="info-card">
+                <h3><i class="fas fa-fire-flame-curved"></i> Soldador de estaño (cautín)</h3>
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-7">
+                        <p>El <strong style="color:#f8fafc">cautín</strong> es la herramienta que genera el calor necesario para fundir el estaño y hacer uniones eléctricas permanentes. Para electrónica se usan cautines de <strong style="color:#f8fafc">25 a 40 W</strong>. Las estaciones de soldadura permiten ajustar la temperatura (ideal: 320–360°C para estaño con plomo).</p>
+                        <div class="params-grid mt-3">
+                            <div class="param-box"><div class="param-label">Estaño 60/40 (Sn/Pb)</div><div class="param-value">Funde a ~183°C. Más fácil de trabajar.</div></div>
+                            <div class="param-box"><div class="param-label">Estaño sin plomo (SAC305)</div><div class="param-value">Funde a ~217°C. Requiere más temperatura.</div></div>
+                            <div class="param-box"><div class="param-label">Diámetro del hilo</div><div class="param-value">0.5 – 1.0 mm para electrónica</div></div>
+                            <div class="param-box"><div class="param-label">Flux (fundente)</div><div class="param-value">Está incluido en el núcleo del hilo de estaño</div></div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="img-slot">
+                            <i class="fas fa-image"></i>
+                            Cautín y estación de soldadura
+                            <code>electronica/img/cautin.png</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="note mt-3"><i class="fas fa-lightbulb"></i><span>Antes de usar el cautín, <strong>estañá la punta</strong>: aplicá un poco de estaño sobre la punta caliente y limpiá con la esponja húmeda. La punta debe verse brillante y cubierta de estaño, no oxidada.</span></div>
+
+                <!-- Método 1 -->
+                <div class="method-header">
+                    <span class="method-badge">Método 1</span>
+                    <strong style="color:#f8fafc;font-size:.95rem">Soldar componentes THT en placa PCB</strong>
+                </div>
+                <div class="row g-3 align-items-start mb-2">
+                    <div class="col-md-7">
+                        <ol class="step-list">
+                            <li><span class="step-num">1</span>Insertá el componente en los agujeros de la placa. Doblá las patas ligeramente hacia afuera (~30°) para que no caiga.</li>
+                            <li><span class="step-num">2</span>Apoyá la punta del cautín sobre la <strong>unión</strong> (pad de la placa + pata del componente) durante 2–3 segundos para calentar ambas.</li>
+                            <li><span class="step-num">3</span>Aplicá el hilo de estaño directamente a la <strong>unión caliente</strong>, no al cautín. El estaño debe fluir solo.</li>
+                            <li><span class="step-num">4</span>Retirá el estaño primero, luego el cautín. Esperá que enfríe sin mover el componente (2–3 s).</li>
+                            <li><span class="step-num">5</span>Cortá el exceso de pata con alicates de corte al ras de la soldadura.</li>
+                        </ol>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="img-slot">
+                            <i class="fas fa-image"></i>
+                            Proceso de soldadura en PCB
+                            <code>electronica/img/soldadura_tht.png</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="solder-compare">
+                    <div class="solder-good">
+                        <h5><i class="fas fa-circle-check me-1"></i> Soldadura bien hecha</h5>
+                        <ul style="padding-left:16px">
+                            <li>Forma de volcán o cono</li>
+                            <li>Superficie brillante</li>
+                            <li>Bien adherida al pad</li>
+                            <li>Se ve la silueta de la pata</li>
+                        </ul>
+                    </div>
+                    <div class="solder-bad">
+                        <h5><i class="fas fa-circle-xmark me-1"></i> Soldadura fría (mala)</h5>
+                        <ul style="padding-left:16px">
+                            <li>Superficie opaca o granulosa</li>
+                            <li>Forma redondeada / gota</li>
+                            <li>No se adhiere bien al pad</li>
+                            <li>Puede generar falla intermitente</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="img-slot mt-3">
+                    <i class="fas fa-image"></i>
+                    Soldadura bien hecha vs soldadura fría (comparación)
+                    <code>electronica/img/soldadura_comparacion.png</code>
+                </div>
+
+                <!-- Método 2 -->
+                <div class="method-header">
+                    <span class="method-badge">Método 2</span>
+                    <strong style="color:#f8fafc;font-size:.95rem">Unir cables entre sí (estañado)</strong>
+                </div>
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-7">
+                        <ol class="step-list">
+                            <li><span class="step-num">1</span>Pelá ambos cables unos 10–15 mm con una pinza peladora o navaja.</li>
+                            <li><span class="step-num">2</span>Retorcé los filamentos de cada cable sobre sí mismos para que no se deshilachen.</li>
+                            <li><span class="step-num">3</span><strong>Estañá cada cable por separado:</strong> apoyá el cautín sobre el cable y aplicá estaño hasta que impregne todos los filamentos. Resultado: punta rígida y brillante.</li>
+                            <li><span class="step-num">4</span>Pasá un trozo de termocontraíble (heat shrink) sobre uno de los cables <strong>antes</strong> de unirlos.</li>
+                            <li><span class="step-num">5</span>Juntá las dos puntas estañadas y aplicá el cautín hasta que el estaño fluya y los una. No agregues más estaño si no es necesario.</li>
+                            <li><span class="step-num">6</span>Deslizá el termocontraíble sobre la unión y aplicá calor (con encendedor o pistola de calor) hasta que se contraiga.</li>
+                        </ol>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="img-slot">
+                            <i class="fas fa-image"></i>
+                            Proceso de estañado y unión de cables
+                            <code>electronica/img/soldadura_cables.png</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="safety-card mt-3">
+                    <h5><i class="fas fa-triangle-exclamation"></i> Seguridad con el cautín</h5>
+                    <ul style="padding-left:16px">
+                        <li>Siempre usá el <strong>soporte para cautín</strong>. Nunca lo apoyés sobre la mesa.</li>
+                        <li>Soldá en lugar <strong>ventilado</strong>: el humo del flux es irritante para los pulmones. Usá extractor de humo o ventilador lateral.</li>
+                        <li>No toques nunca la punta ni el elemento calefactor. Queman a más de 300°C.</li>
+                        <li>Desenchufá el cautín cuando termines. Una punta oxidada no conduce bien el calor.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- FABRICACIÓN DE PCB -->
+            <div class="info-card">
+                <h3><i class="fas fa-microchip"></i> Fabricación de placa con fibron indeleble</h3>
+                <p>El método del fibron es la forma más accesible de fabricar una placa de circuito impreso (PCB) en el taller. El fibron actúa como <strong style="color:#f8fafc">máscara de resistencia</strong>: protege el cobre que querés conservar del ataque químico.</p>
+
+                <div class="row g-3 align-items-start mt-2">
+                    <div class="col-md-8">
+                        <ol class="step-list">
+                            <li><span class="step-num">1</span><strong>Prepará la placa virgen:</strong> limpialá con alcohol isopropílico o con fibra de vidrio (papel de lija fino) hasta que el cobre quede brillante y sin grasa.</li>
+                            <li><span class="step-num">2</span><strong>Dibujá el circuito:</strong> usá un fibron permanente de punta fina (Sharpie o similar) para trazar las pistas sobre el cobre. Las zonas dibujadas = cobre que va a quedar.</li>
+                            <li><span class="step-num">3</span><strong>Preparar la solución de ataque:</strong> percloruro de hierro (FeCl₃) disuelto en agua tibia, o agua oxigenada 30 vol + ácido clorhídrico (mezcla 2:1). La temperatura acorta el tiempo de ataque.</li>
+                            <li><span class="step-num">4</span><strong>Sumergí la placa</strong> en la solución y agitá cada tanto. El cobre expuesto se disuelve (se pone verdoso). Revisá cada 5 minutos. Tiempo típico: 15–40 minutos.</li>
+                            <li><span class="step-num">5</span><strong>Lavá con agua</strong> apenas todo el cobre expuesto desapareció. No dejes la placa de más o el ácido puede atacar también las pistas.</li>
+                            <li><span class="step-num">6</span><strong>Quitá el fibron</strong> con acetona (quitaesmalte) y un paño. Debería quedar el cobre de las pistas limpio y brillante.</li>
+                            <li><span class="step-num">7</span><strong>Perforá</strong> los agujeros para los componentes con un mini taladro (broca de 0.8–1.0 mm para THT común).</li>
+                            <li><span class="step-num">8</span><strong>Soldá los componentes</strong> aplicando el método THT descripto arriba.</li>
+                        </ol>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="img-slot">
+                            <i class="fas fa-image"></i>
+                            Placa de cobre virgen (FR4 o baquelita)
+                            <code>electronica/img/pcb_virgen.png</code>
+                        </div>
+                        <div class="img-slot">
+                            <i class="fas fa-image"></i>
+                            Placa luego del ataque químico (antes y después)
+                            <code>electronica/img/pcb_atacada.png</code>
+                        </div>
+                        <div class="img-slot">
+                            <i class="fas fa-image"></i>
+                            Placa terminada con componentes soldados
+                            <code>electronica/img/pcb_terminada.png</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="safety-card">
+                    <h5><i class="fas fa-triangle-exclamation"></i> Seguridad con los químicos</h5>
+                    <ul style="padding-left:16px">
+                        <li>Usá <strong>guantes de nitrilo</strong>: el FeCl₃ mancha permanentemente la ropa y la piel.</li>
+                        <li>Trabajá con <strong>ventilación</strong>: los vapores son irritantes.</li>
+                        <li><strong>No tirés los residuos por la canilla</strong>: el cobre disuelto contamina el agua. Llevalo a un punto de residuos especiales o neutralizalo con bicarbonato antes de descartarlo.</li>
+                        <li>Si usás la mezcla agua oxigenada + ácido clorhídrico, preparala siempre <strong>en ese orden</strong> (nunca al revés).</li>
+                    </ul>
+                </div>
+
+                <div class="extra-toggle mt-3" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Método alternativo: transferencia de tóner (plancha)</div>
+                <div class="extra-body">
+                    <p>En lugar de dibujar a mano con fibron, se puede imprimir el diseño en papel satinado (de revista) con impresora láser y transferirlo al cobre con plancha a ~150°C durante 2–3 minutos.</p>
+                    <ul>
+                        <li>Permite diseños mucho más prolijos y precisos (pistas de 0.5 mm o menos).</li>
+                        <li>El diseño se crea en software como <strong>KiCad</strong> (gratuito y profesional) o <strong>EasyEDA</strong> (en línea).</li>
+                        <li>Una vez transferido el tóner, el proceso de ataque químico es idéntico.</li>
+                        <li>Limitación: requiere impresora láser y papel especial. No vale para cualquier papel.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div><!-- /herramientas -->
 
 
         <!-- ===================== TAB RESISTENCIAS ===================== -->
@@ -1034,9 +1316,9 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
 
             <div class="info-card">
                 <h3><i class="fas fa-diagram-project"></i> Conexión con transistor NPN</h3>
-                <p style="margin-bottom:12px">Como la bobina consume más corriente de la que puede dar un Arduino/ESP32, se usa un transistor NPN como driver.</p>
+                <p style="margin-bottom:12px">Como la bobina del relé consume más corriente de la que puede dar directamente un pin de control, se usa un transistor NPN como driver.</p>
                 <div class="formula-box">
-                    Arduino/GPIO → R<sub>B</sub> → Base (NPN)<br>
+                    Pin de control → R<sub>B</sub> → Base (NPN)<br>
                     Colector (NPN) → Bobina relé → V<sub>CC</sub> (5V o 12V)<br>
                     Emisor (NPN) → GND<br>
                     Diodo 1N4007 en paralelo con la bobina (cátodo a V<sub>CC</sub>)
@@ -1067,7 +1349,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
                         </div>
                     </div>
                 </div>
-                <div class="note note-warn mt-3"><i class="fas fa-triangle-exclamation"></i><span>Los módulos de relé listos para Arduino ya traen transistor y diodo incorporados. Verificá si son de lógica <strong>activa alta</strong> (IN=HIGH activa) o <strong>activa baja</strong> (IN=LOW activa).</span></div>
+                <div class="note note-warn mt-3"><i class="fas fa-triangle-exclamation"></i><span>Los módulos de relé prefabricados ya traen transistor y diodo incorporados. Verificá si son de lógica <strong>activa alta</strong> (IN=HIGH activa) o <strong>activa baja</strong> (IN=LOW activa).</span></div>
             </div>
 
             <!-- Driver calculator -->
@@ -1075,7 +1357,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
                 <h3><i class="fas fa-calculator"></i> Calculadora — Resistencia de base para driver de relé</h3>
                 <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">Calculá la resistencia de base del transistor NPN que va a activar la bobina del relé.</p>
                 <div class="calc-inputs">
-                    <div class="input-group-custom"><label>V control (GPIO/pin)</label><input type="number" id="rel_vctrl" value="5" step="0.1"></div>
+                    <div class="input-group-custom"><label>V control (V)</label><input type="number" id="rel_vctrl" value="5" step="0.1"></div>
                     <div class="input-group-custom"><label>I bobina del relé (mA)</label><input type="number" id="rel_ibob" value="70" step="1"><div style="font-size:.75rem;color:var(--text-muted);margin-top:3px">Dato del datasheet del relé</div></div>
                     <div class="input-group-custom"><label>β / hFE del transistor</label><input type="number" id="rel_hfe" value="100" step="1"></div>
                     <div class="input-group-custom"><label>Factor de saturación</label><input type="number" id="rel_sat" value="10" step="1" min="2" max="20"><div style="font-size:.75rem;color:var(--text-muted);margin-top:3px">Usar 5–10 para garantizar saturación</div></div>
@@ -1085,7 +1367,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
                     <div class="led-result-value" id="res_rele_driver_val"></div>
                     <div class="led-result-sub" id="res_rele_driver_sub"></div>
                 </div>
-                <div class="extra-toggle mt-2" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Módulos de relé listos para Arduino</div>
+                <div class="extra-toggle mt-2" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Módulos de relé prefabricados</div>
                 <div class="extra-body">
                     <p>Los módulos de relé que se consiguen en el taller ya traen el transistor, el diodo flyback y a veces un optoacoplador integrado. Solo necesitás conectar IN, VCC y GND.</p>
                     <h5>Lógica activa alta vs activa baja</h5>
@@ -1407,6 +1689,134 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
             </div>
 
         </div><!-- /timer555 -->
+
+
+        <!-- ===================== TAB TIRISTOR ===================== -->
+        <div class="tab-pane fade" id="tiristor" role="tabpanel">
+
+            <div class="info-card">
+                <h3><i class="fas fa-fire-flame-curved"></i> Tiristor — SCR (Silicon Controlled Rectifier)</h3>
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-7">
+                        <p>El <strong style="color:#f8fafc">tiristor</strong> (o SCR) es un semiconductor de cuatro capas (PNPN) con tres terminales. A diferencia del transistor, actúa como un <strong style="color:#f8fafc">interruptor con memoria</strong>: un pulso en el Gate lo enciende, y permanece encendido aunque el Gate se retire. Solo se apaga cortando la corriente principal.</p>
+                        <div class="params-grid mt-3">
+                            <div class="param-box"><div class="param-label">Ánodo (A)</div><div class="param-value">Terminal positivo de la carga</div></div>
+                            <div class="param-box"><div class="param-label">Cátodo (K)</div><div class="param-value">Terminal negativo (retorno)</div></div>
+                            <div class="param-box"><div class="param-label">Gate (G)</div><div class="param-value">Pulso de disparo (control)</div></div>
+                            <div class="param-box"><div class="param-label">Corriente de mantenimiento I<sub>H</sub></div><div class="param-value">Mínima para seguir conduciendo</div></div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="img-slot">
+                            <i class="fas fa-image"></i>
+                            Símbolo esquemático del SCR y pinout TO-220
+                            <code>electronica/img/scr_pinout.png</code>
+                        </div>
+                        <div class="scr-body mt-3">
+                            <div style="text-align:center;font-family:'Poppins',sans-serif;font-weight:700;color:#f8fafc;margin-bottom:8px;font-size:.9rem">Pinout TO-220</div>
+                            <div class="scr-pin"><span class="ic-num p-out">A</span><div><div class="ic-name">Ánodo</div><div class="ic-func">Conectar a carga / V+</div></div></div>
+                            <div class="scr-pin"><span class="ic-num p-gnd">K</span><div><div class="ic-name">Cátodo</div><div class="ic-func">Conectar a GND / retorno</div></div></div>
+                            <div class="scr-pin"><span class="ic-num p-trig">G</span><div><div class="ic-name">Gate</div><div class="ic-func">Pulso de disparo</div></div></div>
+                            <div style="text-align:center;font-size:.68rem;color:var(--text-muted);margin-top:8px">⚠ Verificar datasheet: el pinout varía según el modelo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h3><i class="fas fa-diagram-project"></i> Principio de funcionamiento</h3>
+                <p style="margin-bottom:14px">El SCR tiene tres estados de operación:</p>
+                <div class="params-grid">
+                    <div class="param-box">
+                        <div class="param-label" style="color:#ef4444">Estado bloqueado (OFF)</div>
+                        <div class="param-value" style="font-size:.88rem">No conduce aunque haya voltaje entre A y K. Gate sin señal.</div>
+                    </div>
+                    <div class="param-box">
+                        <div class="param-label" style="color:#34d399">Disparo (TRIGGER)</div>
+                        <div class="param-value" style="font-size:.88rem">Un pulso de corriente en el Gate activa la conducción. La corriente debe superar I<sub>GT</sub>.</div>
+                    </div>
+                    <div class="param-box">
+                        <div class="param-label" style="color:#60a5fa">Conducción (ON)</div>
+                        <div class="param-value" style="font-size:.88rem">Conduce aunque el Gate se retire. Sigue hasta que I<sub>A</sub> cae por debajo de I<sub>H</sub>.</div>
+                    </div>
+                    <div class="param-box">
+                        <div class="param-label" style="color:#f97316">Apagado (TURN OFF)</div>
+                        <div class="param-value" style="font-size:.88rem">Cortar la corriente principal (abrir circuito) o invertir la tensión A-K. En CA: ocurre solo en cada cruce por cero.</div>
+                    </div>
+                </div>
+                <div class="formula-box mt-3">
+                    V<sub>AK</sub> > 0 V &nbsp;+&nbsp; I<sub>G</sub> > I<sub>GT</sub> → SCR conduce<br>
+                    I<sub>A</sub> < I<sub>H</sub> → SCR se apaga (independiente del Gate)
+                </div>
+                <div class="note note-warn mt-3"><i class="fas fa-triangle-exclamation"></i><span>El SCR <strong>no se apaga</strong> retirando la señal del Gate. Una vez disparado, solo se apaga reduciendo la corriente de ánodo por debajo de I<sub>H</sub>. En DC esto requiere abrir el circuito. En AC se apaga solo en cada semiciclo negativo.</span></div>
+                <div class="extra-toggle mt-2" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Diferencias: transistor vs SCR vs Triac</div>
+                <div class="extra-body">
+                    <div class="color-table-wrap">
+                        <table class="color-table">
+                            <thead><tr><th>Característica</th><th>Transistor BJT</th><th>SCR</th><th>Triac</th></tr></thead>
+                            <tbody>
+                                <tr><td>Terminales</td><td>B, C, E</td><td>G, A, K</td><td>G, T1, T2</td></tr>
+                                <tr><td>Tipo de señal</td><td>CC y CA</td><td>CC (y CA rectificada)</td><td>CA (ambos semiciclos)</td></tr>
+                                <tr><td>Control</td><td>Continuo (señal en B)</td><td>Latching (un pulso basta)</td><td>Latching (pulso en G)</td></tr>
+                                <tr><td>Apagado</td><td>Retirando señal de base</td><td>Cortar I o invertir V</td><td>Cruce por cero en CA</td></tr>
+                                <tr><td>Aplicación típica</td><td>Amplificador, switch</td><td>Rectificadores controlados, protecciones</td><td>Dimmers, control de velocidad CA</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h3><i class="fas fa-table"></i> Modelos comunes de SCR</h3>
+                <div class="color-table-wrap">
+                    <table class="reg-table">
+                        <thead><tr><th>Modelo</th><th>V<sub>DRM</sub></th><th>I<sub>T</sub> media</th><th>I<sub>GT</sub></th><th>I<sub>H</sub></th><th>Package</th><th>Uso típico</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>MCR100-6</strong></td><td>400V</td><td>0.8 A</td><td>0.2 mA</td><td>5 mA</td><td>TO-92</td><td>Cargas pequeñas, señalización</td></tr>
+                            <tr><td><strong>TIC106D</strong></td><td>400V</td><td>4 A</td><td>15 mA</td><td>30 mA</td><td>TO-220</td><td>Propósito general, AC/DC</td></tr>
+                            <tr><td><strong>BT151-650R</strong></td><td>650V</td><td>7.5 A</td><td>15 mA</td><td>40 mA</td><td>TO-220</td><td>Control de motores, dimmers</td></tr>
+                            <tr><td><strong>2N6504</strong></td><td>400V</td><td>25 A</td><td>30 mA</td><td>100 mA</td><td>TO-220</td><td>Alta corriente, rectificadores</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="note mt-3"><i class="fas fa-info-circle"></i><span>V<sub>DRM</sub> = tensión máxima de bloqueo directa · I<sub>T</sub> = corriente media en conducción · I<sub>GT</sub> = corriente de Gate mínima para disparar · I<sub>H</sub> = corriente de mantenimiento (si cae por debajo, se apaga)</span></div>
+            </div>
+
+            <div class="info-card">
+                <h3><i class="fas fa-calculator"></i> Calculadora — Resistencia de Gate</h3>
+                <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">El Gate del SCR necesita una corriente mínima (I<sub>GT</sub>) para dispararse. Se coloca una resistencia en serie para limitar esa corriente.</p>
+                <div class="formula-box">R<sub>G</sub> = ( V<sub>control</sub> − V<sub>GT</sub> ) / I<sub>GT</sub></div>
+                <div class="calc-inputs mt-3">
+                    <div class="input-group-custom"><label>V control (V)</label><input type="number" id="scr_vctrl" value="5" step="0.1"></div>
+                    <div class="input-group-custom"><label>V<sub>GT</sub> (caída gate, V)</label><input type="number" id="scr_vgt" value="0.8" step="0.1"><div style="font-size:.75rem;color:var(--text-muted);margin-top:3px">Típico: 0.7 – 1.5 V</div></div>
+                    <div class="input-group-custom"><label>I<sub>GT</sub> del SCR (mA)</label><input type="number" id="scr_igt" value="15" step="1"><div style="font-size:.75rem;color:var(--text-muted);margin-top:3px">Dato del datasheet</div></div>
+                    <div class="input-group-custom"><label>Factor de seguridad (×)</label><input type="number" id="scr_factor" value="3" step="1" min="1" max="10"><div style="font-size:.75rem;color:var(--text-muted);margin-top:3px">Usar 2–5× I<sub>GT</sub> para disparo seguro</div></div>
+                </div>
+                <button class="calc-btn" onclick="calcSCR()"><i class="fas fa-calculator"></i> Calcular</button>
+                <div class="led-result" id="res_scr">
+                    <div class="led-result-value" id="res_scr_val"></div>
+                    <div class="led-result-sub" id="res_scr_sub"></div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h3><i class="fas fa-wave-square"></i> El Triac — control de cargas CA</h3>
+                <p>El <strong style="color:#f8fafc">Triac</strong> es equivalente a dos SCR en antiparalelo. Conduce en <strong style="color:#f8fafc">ambos semiciclos</strong> de la corriente alterna, lo que lo hace ideal para controlar cargas CA como lámparas, calefactores y motores.</p>
+                <div class="params-grid mt-3">
+                    <div class="param-box"><div class="param-label">Terminales</div><div class="param-value">T1, T2 (carga) y G (gate)</div></div>
+                    <div class="param-box"><div class="param-label">Modelo común</div><div class="param-value">BT136, BTA16, MAC97</div></div>
+                    <div class="param-box"><div class="param-label">Detonador DIAC</div><div class="param-value">Se usa con el Triac en dimmers</div></div>
+                    <div class="param-box"><div class="param-label">Apagado</div><div class="param-value">Automático en cada cruce por cero (50Hz = 100 veces/s)</div></div>
+                </div>
+                <div class="img-slot mt-3">
+                    <i class="fas fa-image"></i>
+                    Circuito típico Triac + Diac para control de intensidad (dimmer)
+                    <code>electronica/img/triac_dimmer.png</code>
+                </div>
+                <div class="note note-warn mt-3"><i class="fas fa-triangle-exclamation"></i><span>Los circuitos con Triac y SCR trabajan directamente conectados a la <strong>red eléctrica (220V CA)</strong>. Son peligrosos. Requieren conocimiento sólido, aislación adecuada y nunca deben manipularse sin supervisión y con el circuito energizado.</span></div>
+            </div>
+
+        </div><!-- /tiristor -->
 
 
         <!-- ===================== TAB REGULADORES ===================== -->
@@ -1829,6 +2239,14 @@ const searchIndex = [
     {tab:'divisor',title:'Divisor de tensión',desc:'R1 y R2 para obtener un voltaje menor al de entrada',icon:'fa-divide',kw:['divisor','tension','voltaje','r1','r2','vout','vin','5v','3.3v','adaptar']},
     {tab:'timer555',title:'555 Timer — Modo Astable (oscilador)',desc:'LED parpadeante, buzzer, PWM. Calcular Ra, Rb, C',icon:'fa-clock',kw:['555','timer','astable','frecuencia','duty','cycle','ra','rb','parpadeo','oscilador','onda','cuadrada']},
     {tab:'timer555',title:'555 Timer — Modo Monoestable (temporizador)',desc:'Pulso único de duración configurable al recibir un disparo',icon:'fa-stopwatch',kw:['555','monoestable','temporizador','tiempo','pulso','trigger','disparo','unico']},
+    {tab:'herramientas',title:'Protoboard',desc:'Cómo funciona internamente, conexiones, consejos de uso',icon:'fa-grip-dots',kw:['protoboard','breadboard','conexion','circuito','prueba','lineas','alimentacion','zanja']},
+    {tab:'herramientas',title:'Multímetro',desc:'Medir voltaje, corriente, resistencia, continuidad y diodos',icon:'fa-gauge',kw:['multimetro','medir','voltaje','corriente','resistencia','continuidad','ohmimetro','dmm','tester']},
+    {tab:'herramientas',title:'Soldadura — Componentes THT en PCB',desc:'Paso a paso para soldar componentes en placa. Soldadura buena vs fría.',icon:'fa-fire-flame-curved',kw:['soldar','soldadura','estaño','cautin','tht','placa','pcb','pads','fria','frio']},
+    {tab:'herramientas',title:'Soldadura — Unir cables (estañado)',desc:'Cómo estañar y unir dos cables con calor',icon:'fa-fire-flame-curved',kw:['cable','estañar','unir','estaño','termocontraible','heat shrink','soldar cables']},
+    {tab:'herramientas',title:'Fabricación de PCB con fibron indeleble',desc:'Proceso completo: cobre virgen → ataque químico → placa terminada',icon:'fa-microchip',kw:['pcb','placa','fibron','indeleble','percloruro','fecl3','ataque','corrosion','fabricar','circuito impreso']},
+    {tab:'tiristor',title:'Tiristor (SCR) — Principio de funcionamiento',desc:'Interruptor con memoria PNPN. Gate, Ánodo, Cátodo.',icon:'fa-fire-flame-curved',kw:['tiristor','scr','silicon','controlled','rectifier','gate','anodo','catodo','latch','disparo','ith','igt']},
+    {tab:'tiristor',title:'Tiristor — Calculadora resistencia de Gate',desc:'Rg = (Vcontrol − VGT) / IGT',icon:'fa-calculator',kw:['scr','gate','resistencia','rg','igt','vgt','calcular','disparo']},
+    {tab:'tiristor',title:'Triac y Diac — Control de cargas CA',desc:'Dos SCR en antiparalelo. Dimmers, motores CA.',icon:'fa-wave-square',kw:['triac','diac','dimmer','ca','ac','220','control','velocidad','intensidad','bt136']},
     {tab:'reguladores',title:'Familia 78xx — Reguladores de voltaje fijo',desc:'7805, 7812, etc. Calculadora de disipación y heatsink',icon:'fa-plug',kw:['regulador','7805','7812','78xx','fuente','5v','12v','tension fija','lm7805','heatsink','disipador']},
     {tab:'reguladores',title:'Diodo Zener como regulador',desc:'Rs = (Vin−Vz)/(Iz+Icarga). Regulación simple',icon:'fa-bolt',kw:['zener','regulador','tension','rs','iz','vz','diodo','1n47','simple']},
 ];
@@ -2161,6 +2579,27 @@ function calc7805() {
     if(P >= 1) { warn.style.display='flex'; warn.querySelector('i').className='fas fa-fire'; warn.querySelector('span').textContent=`${P.toFixed(2)}W: heatsink obligatorio. Sin disipador el regulador puede quemarse.`; }
     else if(P >= 0.5) { warn.style.display='flex'; warn.querySelector('i').className='fas fa-triangle-exclamation'; warn.querySelector('span').textContent=`${(P*1000).toFixed(0)}mW: conviene agregar un pequeño heatsink o reducir la diferencia V_in − V_out.`; }
     else { warn.style.display='none'; }
+}
+
+// ============================================================
+// TIRISTOR (SCR)
+// ============================================================
+function calcSCR() {
+    const vc     = +document.getElementById('scr_vctrl').value;
+    const vgt    = +document.getElementById('scr_vgt').value;
+    const igt_ma = +document.getElementById('scr_igt').value;
+    const factor = +document.getElementById('scr_factor').value;
+    const I_disparo = igt_ma * factor / 1000; // A
+    const Rg = (vc - vgt) / I_disparo;
+    const std = getNearestStd(Rg);
+    const P = Math.pow(vc - vgt, 2) / Rg;
+    const el = document.getElementById('res_scr');
+    el.classList.add('show');
+    document.getElementById('res_scr_val').textContent = formatResistance(Rg) + ' (exacto)';
+    document.getElementById('res_scr_sub').innerHTML =
+        `E24: <strong>${formatResistance(std)}</strong> &nbsp;|&nbsp; ` +
+        `I<sub>G</sub> real: <strong>${(I_disparo*1000).toFixed(1)} mA</strong> (×${factor} · I<sub>GT</sub>) &nbsp;|&nbsp; ` +
+        `P resistor: <strong>${(P*1000).toFixed(1)} mW</strong>`;
 }
 
 function calcZener() {
