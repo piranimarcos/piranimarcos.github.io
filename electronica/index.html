@@ -532,39 +532,286 @@
                 </div>
             </div>
 
-            <!-- MULTÍMETRO -->
+            <!-- MULTÍMETRO: PARTES -->
             <div class="info-card">
-                <h3><i class="fas fa-gauge"></i> Multímetro</h3>
+                <h3><i class="fas fa-gauge"></i> Multímetro / Tester — Partes</h3>
+                <p>El <strong style="color:#f8fafc">multímetro digital</strong> (DMM) es la herramienta de medición más importante del taller. Con él medís voltaje, corriente, resistencia, continuidad y podés probar diodos y transistores. Conocer cada parte es el primer paso para usarlo bien.</p>
+
+                <div class="row g-3 mt-2">
+                    <div class="col-md-6">
+                        <!-- Panel visual del tester -->
+                        <div style="background:#111827;border:2px solid var(--border-light);border-radius:14px;padding:18px;max-width:260px;margin:0 auto;">
+                            <!-- Display -->
+                            <div style="background:#0a1a0a;border:2px solid #16a34a;border-radius:8px;padding:10px 14px;text-align:center;margin-bottom:14px;">
+                                <div style="color:#4ade80;font-size:1.6rem;font-weight:700;font-family:'Courier New',monospace;letter-spacing:3px;">12.45</div>
+                                <div style="color:#16a34a;font-size:.65rem;letter-spacing:2px;margin-top:2px;">V DC <span style="margin-left:8px;opacity:.6;">① DISPLAY</span></div>
+                            </div>
+                            <!-- Selector dial -->
+                            <div style="background:#1a1a2e;border:1px solid var(--border-light);border-radius:10px;padding:10px;text-align:center;margin-bottom:10px;font-size:.72rem;color:var(--text-muted);">
+                                <div style="font-size:.65rem;color:#60a5fa;letter-spacing:1px;margin-bottom:6px;">② SELECTOR ROTATIVO</div>
+                                <div style="display:flex;justify-content:space-around;color:var(--text);">
+                                    <span style="color:#60a5fa;font-weight:600;">DCV</span>
+                                    <span style="color:#a78bfa;font-weight:600;">ACV</span>
+                                    <span style="color:#f97316;font-weight:600;">Ω</span>
+                                    <span style="color:#34d399;font-weight:600;">mA</span>
+                                    <span style="color:#f87171;font-weight:600;">⏻</span>
+                                </div>
+                                <div style="width:30px;height:30px;border-radius:50%;background:var(--primary);margin:8px auto 0;display:flex;align-items:center;justify-content:center;">
+                                    <i class="fas fa-circle-dot" style="color:white;font-size:.9rem;"></i>
+                                </div>
+                            </div>
+                            <!-- Buttons -->
+                            <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px;">
+                                <div style="background:#1e293b;border:1px solid var(--border-light);border-radius:6px;padding:4px 10px;font-size:.68rem;color:var(--text-muted);">③ HOLD</div>
+                                <div style="background:#1e293b;border:1px solid var(--border-light);border-radius:6px;padding:4px 10px;font-size:.68rem;color:var(--text-muted);">SEL</div>
+                            </div>
+                            <!-- Ports -->
+                            <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+                                <div style="background:#0d0d18;border:2px solid #6b7280;border-radius:8px;padding:6px 8px;text-align:center;font-size:.65rem;">
+                                    <div style="font-size:.9rem;">●</div>
+                                    <div style="color:#94a3b8;font-weight:700;">COM</div>
+                                    <div style="color:#64748b;">④ Negro</div>
+                                </div>
+                                <div style="background:#0d0d18;border:2px solid #dc2626;border-radius:8px;padding:6px 8px;text-align:center;font-size:.65rem;">
+                                    <div style="font-size:.9rem;">●</div>
+                                    <div style="color:#f87171;font-weight:700;">VΩHz</div>
+                                    <div style="color:#64748b;">⑤ Rojo</div>
+                                </div>
+                                <div style="background:#0d0d18;border:2px solid #dc2626;border-radius:8px;padding:6px 8px;text-align:center;font-size:.65rem;">
+                                    <div style="font-size:.9rem;">●</div>
+                                    <div style="color:#f87171;font-weight:700;">mA</div>
+                                    <div style="color:#64748b;">⑥</div>
+                                </div>
+                                <div style="background:#0d0d18;border:2px solid #dc2626;border-radius:8px;padding:6px 8px;text-align:center;font-size:.65rem;">
+                                    <div style="font-size:.9rem;">●</div>
+                                    <div style="color:#f87171;font-weight:700;">10A</div>
+                                    <div style="color:#64748b;">⑦</div>
+                                </div>
+                            </div>
+                            <div style="text-align:center;font-size:.6rem;color:var(--text-muted);margin-top:10px;">⑧ Puntas de prueba: roja y negra</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <ol class="step-list">
+                            <li><span class="step-num" style="background:#16a34a">①</span><div><strong style="color:#f8fafc">Display LCD</strong> — Muestra el valor medido con su unidad. Algunos muestran también el signo (−) si la punta negra está en un punto de mayor potencial.</div></li>
+                            <li><span class="step-num" style="background:#2563eb">②</span><div><strong style="color:#f8fafc">Selector rotativo (dial)</strong> — Elige el modo de medición y el rango. Muchos tienen rango automático (AUTO o ACV/DCV sin número).</div></li>
+                            <li><span class="step-num" style="background:#7c3aed">③</span><div><strong style="color:#f8fafc">Botón HOLD</strong> — Congela la lectura en pantalla. Útil cuando el acceso al display es difícil. Algunos tienen también REL (relativo) o SEL.</div></li>
+                            <li><span class="step-num" style="background:#6b7280">④</span><div><strong style="color:#f8fafc">Puerto COM (negro)</strong> — Siempre conectado a la punta negra. Va al negativo, GND o al punto de referencia. <em>Nunca lo muevas de este puerto.</em></div></li>
+                            <li><span class="step-num" style="background:#dc2626">⑤</span><div><strong style="color:#f8fafc">Puerto VΩHz (rojo)</strong> — Para medir voltaje, resistencia, frecuencia y corrientes pequeñas (hasta 200–400 mA según el modelo).</div></li>
+                            <li><span class="step-num" style="background:#dc2626">⑥</span><div><strong style="color:#f8fafc">Puerto mA (rojo)</strong> — Algunos modelos tienen un puerto separado para corrientes medias. Verificar en el manual del equipo.</div></li>
+                            <li><span class="step-num" style="background:#dc2626">⑦</span><div><strong style="color:#f8fafc">Puerto 10A (rojo)</strong> — Solo para corrientes grandes. Mover la punta roja aquí y poner el selector en 10A. Tiene fusible propio.</div></li>
+                            <li><span class="step-num" style="background:#ea580c">⑧</span><div><strong style="color:#f8fafc">Puntas de prueba</strong> — Roja (+) y negra (−). Las puntas deben estar en buen estado: sin peladuras en el cable, punta metálica firme.</div></li>
+                        </ol>
+
+                        <div class="img-slot mt-2">
+                            <i class="fas fa-image"></i>
+                            Foto del multímetro con cada parte numerada
+                            <code>electronica/img/multimetro_partes.png</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="note note-warn mt-3"><i class="fas fa-triangle-exclamation"></i><span><strong>Regla de oro:</strong> la punta negra siempre en COM. Si el display muestra "OL", "1." o "---" en cualquier modo, el rango elegido es demasiado bajo — subir al siguiente. Si el signo es negativo, las puntas están invertidas.</span></div>
+            </div>
+
+            <!-- MEDICIÓN DE TENSIÓN -->
+            <div class="info-card">
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+                    <div style="background:rgba(59,130,246,.15);border:2px solid rgba(59,130,246,.4);border-radius:10px;padding:10px 16px;font-family:'Poppins',sans-serif;font-size:1.4rem;font-weight:800;color:#60a5fa;min-width:60px;text-align:center;">V</div>
+                    <div><h3 style="margin:0"><i class="fas fa-bolt" style="color:#60a5fa"></i> Medición de Tensión (Voltaje)</h3><p style="color:var(--text-muted);font-size:.85rem;margin:3px 0 0">Selector: <strong>DCV</strong> (continua) · <strong>ACV</strong> (alterna)</p></div>
+                </div>
+
                 <div class="row g-3 align-items-start">
                     <div class="col-md-7">
-                        <p>El <strong style="color:#f8fafc">multímetro</strong> es la herramienta de medición más importante del taller. Permite medir voltaje, corriente, resistencia, continuidad y más. Hay analógicos (aguja) y digitales (DMM). En el taller generalmente se usa el digital.</p>
+                        <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">El voltímetro se conecta <strong style="color:#f8fafc">en paralelo</strong> con el componente o entre los dos puntos que querés medir. No hace falta apagar el circuito.</p>
+
+                        <div class="formula-box" style="font-size:.82rem;line-height:1.9">
+                            <span style="color:#94a3b8">Conexión:</span><br>
+                            Punta <span style="color:#f87171">ROJA</span> → punto de mayor potencial (o terminal +)<br>
+                            Punta <span style="color:#94a3b8">NEGRA</span> → punto de menor potencial (GND o terminal −)<br>
+                            Multímetro en <strong style="color:#60a5fa">paralelo</strong> con el elemento medido
+                        </div>
+
+                        <ol class="step-list mt-3">
+                            <li><span class="step-num">1</span>Poner la punta negra en <strong>COM</strong> y la roja en <strong>VΩ</strong>.</li>
+                            <li><span class="step-num">2</span>Girar el selector a <strong>DCV</strong> (para baterías, fuentes, circuitos DC) o <strong>ACV</strong> (para la red eléctrica). Si el tester tiene AUTO, elegir ese; si tiene rangos, empezar por el mayor.</li>
+                            <li><span class="step-num">3</span>Apoyar la punta roja en el punto A y la negra en el punto B (referencia/GND) sin apagar el circuito.</li>
+                            <li><span class="step-num">4</span>Leer el valor en el display. Si muestra "OL" o "1.", bajar el rango. Si el valor es negativo, las puntas están invertidas.</li>
+                            <li><span class="step-num">5</span>Una vez leído, retirar primero la punta roja y luego la negra.</li>
+                        </ol>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="img-slot">
+                            <i class="fas fa-image"></i>
+                            Puntas en paralelo midiendo voltaje en una pila
+                            <code>electronica/img/mm_tension.png</code>
+                        </div>
                         <div class="params-grid mt-3">
-                            <div class="param-box"><div class="param-label">COM (negro)</div><div class="param-value">Siempre va al negativo / GND</div></div>
-                            <div class="param-box"><div class="param-label">VΩmA (rojo)</div><div class="param-value">Para voltaje, resistencia y corrientes pequeñas</div></div>
-                            <div class="param-box"><div class="param-label">10A (rojo)</div><div class="param-value">Solo para corrientes grandes (mover la punta)</div></div>
-                            <div class="param-box"><div class="param-label">Selector</div><div class="param-value">DCV / ACV / Ω / mA / diodo / continuidad</div></div>
+                            <div class="param-box"><div class="param-label">Pila AA cargada</div><div class="param-value">1.5 V DC</div></div>
+                            <div class="param-box"><div class="param-label">LiPo cargada</div><div class="param-value">4.1 – 4.2 V</div></div>
+                            <div class="param-box"><div class="param-label">USB</div><div class="param-value">4.8 – 5.2 V</div></div>
+                            <div class="param-box"><div class="param-label">Red eléctrica (AR)</div><div class="param-value">~220 V AC</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="note mt-3"><i class="fas fa-lightbulb"></i><span>Una pila "cargada" que mide menos de 1.2 V bajo carga está agotada. Si medís 0 V entre dos puntos de un circuito alimentado, probablemente hay un cable cortado o un componente quemado en ese tramo.</span></div>
+            </div>
+
+            <!-- MEDICIÓN DE RESISTENCIA -->
+            <div class="info-card">
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+                    <div style="background:rgba(249,115,22,.12);border:2px solid rgba(249,115,22,.4);border-radius:10px;padding:10px 16px;font-family:'Poppins',sans-serif;font-size:1.4rem;font-weight:800;color:#f97316;min-width:60px;text-align:center;">Ω</div>
+                    <div><h3 style="margin:0"><i class="fas fa-wave-square" style="color:#f97316"></i> Medición de Resistencia</h3><p style="color:var(--text-muted);font-size:.85rem;margin:3px 0 0">Selector: <strong>Ω</strong> (ohms) · Circuito apagado</p></div>
+                </div>
+
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-7">
+                        <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">El óhmetro inyecta una pequeña corriente propia para medir la resistencia. Por eso el circuito <strong style="color:#f8fafc">debe estar apagado</strong> y el componente desconectado al menos por un extremo.</p>
+
+                        <div class="formula-box" style="font-size:.82rem;line-height:1.9">
+                            <span style="color:#94a3b8">Conexión:</span><br>
+                            Punta <span style="color:#f87171">ROJA</span> → un extremo del componente<br>
+                            Punta <span style="color:#94a3b8">NEGRA</span> → el otro extremo<br>
+                            <span style="color:#f97316">¡Sin polaridad! Las puntas son intercambiables.</span>
+                        </div>
+
+                        <ol class="step-list mt-3">
+                            <li><span class="step-num">1</span><strong>Apagar el circuito</strong> y descargar cualquier capacitor antes de medir. La tensión residual arruina la lectura y puede dañar el tester.</li>
+                            <li><span class="step-num">2</span>Desconectar <strong>al menos un extremo</strong> del componente a medir. Si queda en el circuito, las resistencias en paralelo afectan el resultado.</li>
+                            <li><span class="step-num">3</span>Selector en <strong>Ω</strong>. Si tiene rangos (200Ω, 2KΩ, 20KΩ, 200KΩ, 2MΩ), empezar por el mayor y bajar hasta que el display muestre un valor estable.</li>
+                            <li><span class="step-num">4</span>Apoyar las puntas sobre cada extremo del componente. Sostener firme pero no tocar las partes metálicas con los dedos (la resistencia de la piel altera lecturas en KΩ/MΩ).</li>
+                            <li><span class="step-num">5</span>Leer el valor. Compararlo con el valor nominal del componente ± su tolerancia.</li>
+                        </ol>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="img-slot">
+                            <i class="fas fa-image"></i>
+                            Midiendo una resistencia desconectada del circuito
+                            <code>electronica/img/mm_resistencia.png</code>
+                        </div>
+                        <div style="background:#0d0d18;border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px;font-size:.82rem;">
+                            <div style="color:var(--text-muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Qué significa cada lectura</div>
+                            <div style="display:flex;flex-direction:column;gap:6px;">
+                                <div style="display:flex;justify-content:space-between;"><span style="color:#34d399;font-weight:600;">123 Ω</span><span style="color:var(--text-light)">Valor normal</span></div>
+                                <div style="display:flex;justify-content:space-between;"><span style="color:#f97316;font-weight:600;">0 Ω / 0.0</span><span style="color:var(--text-light)">Cortocircuito</span></div>
+                                <div style="display:flex;justify-content:space-between;"><span style="color:#f87171;font-weight:600;">OL / 1.</span><span style="color:var(--text-light)">Rango bajo o abierto</span></div>
+                                <div style="display:flex;justify-content:space-between;"><span style="color:#f87171;font-weight:600;">OL en rango máx.</span><span style="color:var(--text-light)">Resistencia quemada (abierta)</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTINUIDAD -->
+            <div class="info-card">
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+                    <div style="background:rgba(52,211,153,.1);border:2px solid rgba(52,211,153,.35);border-radius:10px;padding:10px 14px;font-size:1.3rem;color:#34d399;min-width:60px;text-align:center;"><i class="fas fa-volume-high"></i></div>
+                    <div><h3 style="margin:0"><i class="fas fa-circle-nodes" style="color:#34d399"></i> Prueba de Continuidad</h3><p style="color:var(--text-muted);font-size:.85rem;margin:3px 0 0">Selector: símbolo de bocina <strong>))) </strong> o diodo con bocina · Circuito apagado</p></div>
+                </div>
+
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-7">
+                        <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">La prueba de continuidad verifica si dos puntos están <strong style="color:#f8fafc">eléctricamente conectados</strong>. Si hay continuidad (resistencia muy baja, generalmente &lt; 30Ω), el tester emite un <strong style="color:#34d399">pitido</strong>. Si no hay pitido, la conexión está interrumpida.</p>
+
+                        <div class="formula-box" style="font-size:.82rem;line-height:1.9">
+                            <span style="color:#34d399">Pitido</span> → hay conexión (baja resistencia)<br>
+                            <span style="color:#f87171">Sin pitido</span> → circuito abierto, cable cortado o componente en falla<br>
+                            <span style="color:#94a3b8">OL / valor alto</span> → resistencia elevada (no hay conexión directa)
+                        </div>
+
+                        <ol class="step-list mt-3">
+                            <li><span class="step-num">1</span><strong>Apagar el circuito</strong>. Nunca probar continuidad con tensión presente — puede dañar el tester.</li>
+                            <li><span class="step-num">2</span>Selector en el modo de continuidad (símbolo de bocina o onda). En algunos modelos comparte selector con el modo diodo.</li>
+                            <li><span class="step-num">3</span>Tocar las dos puntas entre sí: el tester debe emitir un pitido continuo. Eso confirma que el modo está activo y las puntas funcionan.</li>
+                            <li><span class="step-num">4</span>Apoyar las puntas en los dos puntos del circuito a verificar.</li>
+                            <li><span class="step-num">5</span>Pitido = hay conexión. Sin pitido = cable cortado, pista rota, fusible fundido o componente abierto.</li>
+                        </ol>
+
+                        <div class="extra-toggle mt-3" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Usos comunes en el taller</div>
+                        <div class="extra-body">
+                            <ul>
+                                <li><strong>Verificar cables:</strong> medir de extremo a extremo. Si no pita, el cable está cortado internamente.</li>
+                                <li><strong>Pistas de PCB:</strong> detectar pistas rotas o cortocircuitos entre pistas adyacentes.</li>
+                                <li><strong>Fusibles:</strong> un fusible quemado muestra OL (abierto). Uno bueno pita.</li>
+                                <li><strong>Interruptores y relés:</strong> verificar si los contactos abren y cierran correctamente al accionarlos.</li>
+                                <li><strong>GND del circuito:</strong> verificar que todos los puntos de tierra estén realmente conectados.</li>
+                                <li><strong>Continuidad a tierra no deseada:</strong> detectar cortocircuitos entre V+ y GND en una placa apagada.</li>
+                            </ul>
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="img-slot">
                             <i class="fas fa-image"></i>
-                            Multímetro digital con partes indicadas
-                            <code>electronica/img/multimetro.png</code>
+                            Probando continuidad en un cable y en una pista de PCB
+                            <code>electronica/img/mm_continuidad.png</code>
+                        </div>
+                        <div class="note mt-3" style="font-size:.83rem"><i class="fas fa-lightbulb"></i><span>El modo continuidad también sirve para identificar pines en un conector desconocido: probá cada combinación hasta que pite.</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRUEBA DE DIODO -->
+            <div class="info-card">
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+                    <div style="background:rgba(167,139,250,.1);border:2px solid rgba(167,139,250,.35);border-radius:10px;padding:10px 14px;font-size:1.2rem;color:#a78bfa;min-width:60px;text-align:center;"><i class="fas fa-right-long"></i>|</div>
+                    <div><h3 style="margin:0"><i class="fas fa-bolt" style="color:#a78bfa"></i> Prueba de Diodo (modo ➞|)</h3><p style="color:var(--text-muted);font-size:.85rem;margin:3px 0 0">Selector: símbolo de diodo <strong>➞|</strong> · Componente desconectado</p></div>
+                </div>
+
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-7">
+                        <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">En modo diodo el tester aplica una pequeña tensión entre las puntas y muestra la <strong style="color:#f8fafc">caída de tensión directa (V<sub>f</sub>)</strong>. Esto permite verificar si el diodo está bien, quemado o cortocircuitado, e incluso identificar el ánodo y el cátodo.</p>
+
+                        <div class="formula-box" style="font-size:.82rem;line-height:2">
+                            <strong style="color:#34d399">Polarización directa:</strong><br>
+                            Punta <span style="color:#f87171">ROJA</span> → Ánodo (+) · Punta <span style="color:#94a3b8">NEGRA</span> → Cátodo (−)<br>
+                            Resultado esperado: <span style="color:#34d399">0.5 – 0.7 V</span> (silicio) · <span style="color:#34d399">0.2 – 0.4 V</span> (Schottky)<br><br>
+                            <strong style="color:#f97316">Polarización inversa:</strong><br>
+                            Punta <span style="color:#f87171">ROJA</span> → Cátodo · Punta <span style="color:#94a3b8">NEGRA</span> → Ánodo<br>
+                            Resultado esperado: <span style="color:#60a5fa">OL</span> (no conduce)
+                        </div>
+
+                        <ol class="step-list mt-3">
+                            <li><span class="step-num">1</span>Desconectar el diodo del circuito (al menos un extremo). Selector en modo diodo ➞|.</li>
+                            <li><span class="step-num">2</span><strong>Prueba directa:</strong> punta roja al ánodo (banda sin raya), punta negra al cátodo (banda con raya o marcado en el cuerpo). El display debe mostrar entre 0.4 V y 0.7 V para diodo de silicio.</li>
+                            <li><span class="step-num">3</span><strong>Prueba inversa:</strong> invertir las puntas. El display debe mostrar "OL" o "1." (no conduce). Si conduce en inversa, el diodo está quemado.</li>
+                            <li><span class="step-num">4</span>Si en ambas posiciones muestra 0 V → diodo en cortocircuito (quemado). Si en ambas posiciones muestra OL → diodo abierto (quemado).</li>
+                        </ol>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="img-slot">
+                            <i class="fas fa-image"></i>
+                            Probando un diodo 1N4007 en polarización directa e inversa
+                            <code>electronica/img/mm_diodo.png</code>
+                        </div>
+
+                        <div style="background:#0d0d18;border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px;font-size:.82rem;">
+                            <div style="color:var(--text-muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Valores esperados según componente</div>
+                            <div style="display:flex;flex-direction:column;gap:7px;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;"><span style="color:#f8fafc">Diodo silicio (1N4007)</span><span style="color:#34d399;font-weight:600;">0.55 – 0.70 V</span></div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;"><span style="color:#f8fafc">Diodo Schottky (1N5819)</span><span style="color:#34d399;font-weight:600;">0.20 – 0.40 V</span></div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;"><span style="color:#f8fafc">Diodo Zener (directo)</span><span style="color:#34d399;font-weight:600;">0.55 – 0.70 V</span></div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;"><span style="color:#f8fafc">LED rojo / amarillo</span><span style="color:#34d399;font-weight:600;">1.6 – 2.2 V</span></div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;"><span style="color:#f8fafc">LED azul / blanco</span><span style="color:#34d399;font-weight:600;">2.8 – 3.4 V</span></div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;"><span style="color:#f8fafc">Quemado (corto)</span><span style="color:#f87171;font-weight:600;">0.00 V</span></div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;"><span style="color:#f8fafc">Quemado (abierto)</span><span style="color:#f87171;font-weight:600;">OL en ambas</span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="note note-warn mt-3"><i class="fas fa-triangle-exclamation"></i><span><strong>Nunca medir corriente en paralelo</strong> — el multímetro tiene muy baja resistencia interna en modo amperímetro y puede quemarse o dañar el circuito. La corriente se mide en <strong>serie</strong>, cortando el circuito.</span></div>
-                <div class="extra-toggle" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Cómo usar cada función</div>
+
+                <div class="extra-toggle mt-3" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Usar el modo diodo para identificar terminales de un transistor</div>
                 <div class="extra-body">
-                    <h5>Voltaje DC (DCV)</h5>
-                    <ul><li>Selector en DCV en el rango adecuado (o en AUTO si tiene).</li><li>Puntas en paralelo: roja al punto de mayor potencial, negra a GND.</li><li>No hace falta apagar el circuito.</li></ul>
-                    <h5>Resistencia (Ω)</h5>
-                    <ul><li>Circuito APAGADO y el componente desconectado (al menos un extremo).</li><li>Si muestra "OL" o "1.": cambiar a un rango mayor.</li></ul>
-                    <h5>Continuidad (bocina)</h5>
-                    <ul><li>Modo con símbolo de onda o bocina. Si hay continuidad, emite un pitido.</li><li>Útil para verificar cables, fusibles, pistas de PCB cortadas.</li></ul>
-                    <h5>Prueba de diodo</h5>
-                    <ul><li>Modo con símbolo de diodo. Muestra la caída de tensión directa (~0.6V en silicio, ~0.2V en Schottky). En inversa muestra "OL".</li></ul>
+                    <p>Como la unión B-E y la unión B-C de un transistor son diodos, podés usar el modo diodo del tester para identificar sus terminales e incluso determinar si es NPN o PNP:</p>
+                    <ol style="padding-left:18px">
+                        <li>Probar cada combinación de terminales (hay 6 posibles: A→B, B→A, A→C, C→A, B→C, C→B). En alguna orientación dos pares mostrarán ~0.6V y el tercero OL.</li>
+                        <li>El terminal que en su posición directa conduce con <strong>ambos</strong> de los otros dos → ese es la <strong>Base</strong>.</li>
+                        <li>Si la punta ROJA en la base conduce → <strong>NPN</strong>. Si la punta NEGRA en la base conduce → <strong>PNP</strong>.</li>
+                        <li>Para distinguir Colector de Emisor: el Colector generalmente muestra ~0.6V y el Emisor puede dar un valor ligeramente diferente. En la práctica conviene consultar el datasheet para confirmar el pinout.</li>
+                    </ol>
                 </div>
+
+                <div class="note mt-3"><i class="fas fa-lightbulb"></i><span>Algunos LEDs emiten luz levemente visible cuando los probás en modo diodo. Es una forma rápida de verificar si un LED funciona sin necesidad de armar un circuito.</span></div>
             </div>
 
             <!-- SOLDADOR -->
