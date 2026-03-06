@@ -167,6 +167,80 @@
             .page-hero h1{font-size:1.8rem;}
             .resistor-wire{width:18px;}
         }
+
+        /* ======================== BUSCADOR ======================== */
+        .search-wrap { position:relative; margin-bottom:28px; }
+        .search-box { width:100%; background:var(--bg-card); border:1px solid var(--border-light); border-radius:14px; color:var(--text); padding:14px 50px 14px 20px; font-size:1rem; font-family:'Inter',sans-serif; transition:border-color .3s,box-shadow .3s; }
+        .search-box:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+        .search-box::placeholder { color:var(--text-muted); }
+        .search-icon-wrap { position:absolute; right:16px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:1.1rem; pointer-events:none; }
+        .search-panel { display:none; position:absolute; top:calc(100% + 8px); left:0; right:0; background:var(--bg-card); border:1px solid var(--border-light); border-radius:14px; z-index:300; max-height:380px; overflow-y:auto; box-shadow:0 12px 40px rgba(0,0,0,.6); }
+        .search-panel.open { display:block; }
+        .s-item { display:flex; align-items:flex-start; gap:13px; padding:13px 18px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .2s; }
+        .s-item:last-child { border-bottom:none; }
+        .s-item:hover { background:rgba(59,130,246,.08); }
+        .s-item-icon { width:32px; height:32px; border-radius:8px; background:rgba(59,130,246,.15); display:flex; align-items:center; justify-content:center; color:var(--primary); font-size:.85rem; flex-shrink:0; margin-top:1px; }
+        .s-item-title { font-weight:600; color:var(--text); font-size:.9rem; }
+        .s-item-desc { font-size:.78rem; color:var(--text-muted); margin-top:2px; }
+        .s-no-results { padding:22px; text-align:center; color:var(--text-muted); font-size:.9rem; }
+
+        /* ======================== SABER MAS (extra collapsible) ======================== */
+        .extra-toggle { display:inline-flex; align-items:center; gap:7px; cursor:pointer; color:var(--primary); font-size:.85rem; font-weight:500; margin-top:14px; padding:6px 14px; border:1px solid rgba(59,130,246,.3); border-radius:20px; transition:background .2s; user-select:none; }
+        .extra-toggle:hover { background:rgba(59,130,246,.08); }
+        .extra-toggle i.arr { transition:transform .25s; }
+        .extra-toggle.open i.arr { transform:rotate(90deg); }
+        .extra-body { display:none; margin-top:12px; padding:16px 20px; background:#0d0d18; border:1px solid var(--border); border-radius:10px; }
+        .extra-body.open { display:block; }
+        .extra-body p, .extra-body li { color:var(--text-light); font-size:.88rem; line-height:1.7; }
+        .extra-body h5 { color:#f8fafc; font-size:.92rem; margin-top:14px; margin-bottom:6px; }
+        .extra-body h5:first-child { margin-top:0; }
+        .extra-body ul { padding-left:18px; margin:4px 0; }
+
+        /* ======================== LEY DE OHM ======================== */
+        .ohm-solve-btns { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+        .ohm-solve-btn { padding:10px 22px; border:1px solid var(--border-light); background:transparent; color:var(--text-muted); border-radius:10px; cursor:pointer; font-size:.9rem; font-weight:600; font-family:'Poppins',sans-serif; transition:all .3s; }
+        .ohm-solve-btn:hover { border-color:var(--primary); color:var(--text); }
+        .ohm-solve-btn.active { background:var(--primary); border-color:var(--primary); color:white; }
+        .ohm-formula { text-align:center; font-family:'Courier New',monospace; font-size:1.1rem; color:#a5b4fc; margin:10px 0 20px; letter-spacing:.5px; }
+        .res-sub-formula { font-family:'Courier New',monospace; font-size:.82rem; color:#64748b; margin-top:6px; }
+
+        /* ======================== SERIE / PARALELO ======================== */
+        .rp-item { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+        .rp-item input { flex:1; background:#0d0d18; border:1px solid var(--border-light); border-radius:8px; color:var(--text); padding:9px 11px; font-size:.92rem; transition:border-color .3s; min-width:0; }
+        .rp-item input:focus { outline:none; border-color:var(--primary); }
+        .rp-item select { background:#0d0d18; border:1px solid var(--border-light); border-radius:8px; color:var(--text); padding:9px 8px; font-size:.85rem; cursor:pointer; }
+        .rp-remove-btn { background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); color:#f87171; border-radius:8px; padding:7px 11px; cursor:pointer; font-size:.82rem; transition:all .2s; white-space:nowrap; flex-shrink:0; }
+        .rp-remove-btn:hover { background:rgba(239,68,68,.2); }
+        .rp-add-btn { background:rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.3); color:#60a5fa; border-radius:8px; padding:8px 14px; cursor:pointer; font-size:.85rem; transition:all .2s; margin-top:4px; }
+        .rp-add-btn:hover { background:rgba(59,130,246,.2); }
+        .rp-bar-row { display:flex; align-items:center; gap:10px; margin-bottom:6px; font-size:.8rem; }
+        .rp-bar-track { flex:1; background:var(--bg-darker); border-radius:4px; height:16px; overflow:hidden; }
+        .rp-bar-fill { height:100%; border-radius:4px; transition:width .4s; }
+        .rp-bar-label { white-space:nowrap; font-weight:500; color:var(--text); min-width:90px; text-align:right; }
+
+        /* ======================== 555 PINOUT ======================== */
+        .ic-wrap { display:flex; justify-content:center; margin:20px 0; }
+        .ic-body { background:#1a1a2e; border:2px solid var(--border-light); border-radius:10px; overflow:hidden; width:280px; }
+        .ic-header { text-align:center; font-family:'Poppins',sans-serif; font-weight:700; color:#f8fafc; font-size:1.1rem; padding:10px; background:#0d0d18; border-bottom:1px solid var(--border); }
+        .ic-row { display:flex; justify-content:space-between; align-items:stretch; border-bottom:1px solid rgba(255,255,255,.05); }
+        .ic-row:last-child { border-bottom:none; }
+        .ic-pin { display:flex; align-items:center; gap:7px; padding:8px 12px; flex:1; }
+        .ic-pin.right { flex-direction:row-reverse; text-align:right; }
+        .ic-num { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700; flex-shrink:0; }
+        .ic-name { font-weight:600; color:#f8fafc; font-size:.78rem; }
+        .ic-func { color:var(--text-muted); font-size:.68rem; display:block; }
+        .ic-divider { width:2px; background:var(--border-light); flex-shrink:0; }
+        .p-gnd{background:#dc2626;color:#fff} .p-vcc{background:#16a34a;color:#fff}
+        .p-out{background:#2563eb;color:#fff} .p-trig{background:#7c3aed;color:#fff}
+        .p-thr{background:#ea580c;color:#fff} .p-rst{background:#dc2626;color:#fff}
+        .p-disch{background:#0891b2;color:#fff} .p-cv{background:#6b7280;color:#fff}
+
+        /* ======================== REGULADORES ======================== */
+        .reg-table { width:100%; border-collapse:collapse; font-size:.86rem; }
+        .reg-table th { background:#0d0d18; color:var(--text-light); padding:9px 12px; text-align:center; font-size:.78rem; text-transform:uppercase; letter-spacing:.5px; border-bottom:1px solid var(--border-light); }
+        .reg-table td { padding:9px 12px; text-align:center; border-bottom:1px solid var(--border); color:var(--text); }
+        .reg-table tr:last-child td { border-bottom:none; }
+        .reg-table tr:hover td { background:rgba(255,255,255,.02); }
     </style>
 </head>
 <body>
@@ -187,21 +261,202 @@
 
 <div class="container pb-5">
 
+    <!-- BUSCADOR -->
+    <div class="search-wrap">
+        <input type="text" class="search-box" id="searchInput" placeholder="Buscar... (ej: resistencia, 555, transistor, ley de ohm)" autocomplete="off" oninput="onSearch(this.value)">
+        <div class="search-icon-wrap"><i class="fas fa-magnifying-glass"></i></div>
+        <div class="search-panel" id="searchPanel"></div>
+    </div>
+
     <ul class="nav nav-tabs mb-0" id="mainTabs" role="tablist">
-        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#resistencias" type="button"><i class="fas fa-wave-square me-1"></i>Resistencias</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#diodos" type="button"><i class="fas fa-bolt me-1"></i>Diodos y LED</button></li>
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#electricidad" type="button"><i class="fas fa-bolt me-1"></i>Electricidad</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#resistencias" type="button"><i class="fas fa-wave-square me-1"></i>Resistencias</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#diodos" type="button"><i class="fas fa-lightbulb me-1"></i>Diodos y LED</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#transistor" type="button"><i class="fas fa-microchip me-1"></i>Transistor</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#capacitor" type="button"><i class="fas fa-battery-half me-1"></i>Capacitor</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#rele" type="button"><i class="fas fa-toggle-on me-1"></i>Relé</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#ldr" type="button"><i class="fas fa-sun me-1"></i>LDR</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#ir" type="button"><i class="fas fa-satellite-dish me-1"></i>LED IR</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#divisor" type="button"><i class="fas fa-divide me-1"></i>Divisor de V</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#timer555" type="button"><i class="fas fa-clock me-1"></i>555 Timer</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#reguladores" type="button"><i class="fas fa-plug me-1"></i>Reguladores</button></li>
     </ul>
 
     <div class="tab-content">
 
+        <!-- ===================== TAB ELECTRICIDAD ===================== -->
+        <div class="tab-pane fade show active" id="electricidad" role="tabpanel">
+
+            <!-- Introducción -->
+            <div class="info-card">
+                <h3><i class="fas fa-bolt"></i> ¿Qué es la electricidad?</h3>
+                <p>La electricidad es el <strong style="color:#f8fafc">flujo de electrones</strong> a través de un material conductor. Los electrones son partículas con carga negativa que se mueven cuando hay una diferencia de potencial (voltaje) entre dos puntos de un circuito.</p>
+                <div class="note mt-3"><i class="fas fa-lightbulb"></i><span><strong>Conductores:</strong> permiten el paso de electrones (cobre, aluminio, hierro, agua salada). <strong>Aislantes:</strong> no lo permiten (plástico, goma, vidrio, madera seca, aire). <strong>Semiconductores:</strong> conducen solo bajo ciertas condiciones (silicio, germanio — base de transistores y diodos).</span></div>
+                <div class="extra-toggle" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Cómo usar el multímetro</div>
+                <div class="extra-body">
+                    <h5><i class="fas fa-gauge" style="color:var(--primary)"></i> Medir Voltaje (V)</h5>
+                    <ul><li>Selector en <strong>DCV</strong> (continua) o <strong>ACV</strong> (alterna) en el rango correcto.</li><li>Puntas <strong>en paralelo</strong> al componente o entre los dos puntos a medir.</li><li>Rojo → punto de mayor voltaje, Negro → GND (0V).</li></ul>
+                    <h5><i class="fas fa-gauge" style="color:#34d399"></i> Medir Corriente (I)</h5>
+                    <ul><li>Selector en <strong>DC mA</strong> o <strong>DC A</strong>.</li><li>Puntas <strong>en serie</strong>: hay que "cortar" el circuito e intercalar el multímetro.</li><li><strong>Nunca medir corriente en paralelo</strong> — quema el fusible interno (o el multímetro).</li></ul>
+                    <h5><i class="fas fa-gauge" style="color:#f97316"></i> Medir Resistencia (Ω)</h5>
+                    <ul><li>Selector en <strong>Ω</strong>. El componente debe estar <strong>desconectado del circuito</strong>.</li><li>Si el display muestra "OL" o "1." (overload): el rango elegido es demasiado bajo, subir al siguiente.</li></ul>
+                </div>
+            </div>
+
+            <!-- Las 3 magnitudes -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="info-card h-100">
+                        <h3><i class="fas fa-bolt" style="color:#60a5fa"></i> Voltaje (V)</h3>
+                        <p>La <strong style="color:#f8fafc">diferencia de potencial</strong> entre dos puntos. Es la "fuerza" que empuja a los electrones a moverse por el circuito.</p>
+                        <p style="color:var(--text-muted);font-size:.85rem;margin-top:6px">Unidad: <strong style="color:#f8fafc">Volt [V]</strong></p>
+                        <div class="note mt-2" style="font-size:.8rem"><i class="fas fa-droplet"></i><span>Como la <strong>presión</strong> del agua: a mayor presión, más flujo.</span></div>
+                        <div class="params-grid" style="margin-top:14px">
+                            <div class="param-box"><div class="param-label">Pila AA</div><div class="param-value">1.5 V</div></div>
+                            <div class="param-box"><div class="param-label">USB / Arduino</div><div class="param-value">5 V</div></div>
+                            <div class="param-box"><div class="param-label">Batería de auto</div><div class="param-value">12 V</div></div>
+                            <div class="param-box"><div class="param-label">Red eléctrica AR</div><div class="param-value">220 V</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card h-100">
+                        <h3><i class="fas fa-arrow-right" style="color:#34d399"></i> Corriente (I)</h3>
+                        <p>La <strong style="color:#f8fafc">cantidad de electrones</strong> que pasan por un punto del circuito por segundo. A mayor voltaje y menor resistencia, más corriente.</p>
+                        <p style="color:var(--text-muted);font-size:.85rem;margin-top:6px">Unidad: <strong style="color:#f8fafc">Ampere [A]</strong> · mA = 0.001 A</p>
+                        <div class="note mt-2" style="font-size:.8rem"><i class="fas fa-droplet"></i><span>Como el <strong>caudal</strong> de agua: litros por segundo que pasan por la cañería.</span></div>
+                        <div class="params-grid" style="margin-top:14px">
+                            <div class="param-box"><div class="param-label">LED</div><div class="param-value">10 – 20 mA</div></div>
+                            <div class="param-box"><div class="param-label">Arduino (por pin)</div><div class="param-value">máx 40 mA</div></div>
+                            <div class="param-box"><div class="param-label">Cargador celular</div><div class="param-value">1 – 2 A</div></div>
+                            <div class="param-box"><div class="param-label">Motor arranque auto</div><div class="param-value">~100 A</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card h-100">
+                        <h3><i class="fas fa-wave-square" style="color:#f97316"></i> Resistencia (R)</h3>
+                        <p>La <strong style="color:#f8fafc">oposición</strong> al paso de corriente. Todos los materiales tienen alguna resistencia. Depende del material, longitud y grosor del conductor.</p>
+                        <p style="color:var(--text-muted);font-size:.85rem;margin-top:6px">Unidad: <strong style="color:#f8fafc">Ohm [Ω]</strong> · KΩ = 1000 Ω · MΩ = 1 000 000 Ω</p>
+                        <div class="note mt-2" style="font-size:.8rem"><i class="fas fa-droplet"></i><span>Como el <strong>diámetro</strong> de la cañería: más angosta = más resistencia = menos caudal.</span></div>
+                        <div class="params-grid" style="margin-top:14px">
+                            <div class="param-box"><div class="param-label">Cable de cobre</div><div class="param-value">≈ 0 Ω</div></div>
+                            <div class="param-box"><div class="param-label">Resistor típico</div><div class="param-value">10 Ω – 10 MΩ</div></div>
+                            <div class="param-box"><div class="param-label">Piel humana (seca)</div><div class="param-value">~100 KΩ</div></div>
+                            <div class="param-box"><div class="param-label">Aislante (plástico)</div><div class="param-value">> 1 GΩ</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tipos de corriente -->
+            <div class="info-card">
+                <h3><i class="fas fa-wave-square"></i> Tipos de corriente: CC y CA</h3>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="param-box">
+                            <div class="param-label" style="font-size:.8rem;margin-bottom:8px">CC — Corriente Continua (DC)</div>
+                            <div style="font-family:'Courier New',monospace;color:#60a5fa;font-size:1.1rem;letter-spacing:2px;margin-bottom:8px">— — — — — — →</div>
+                            <p style="color:var(--text-light);font-size:.88rem;margin:0">Los electrones fluyen siempre en el <strong style="color:#f8fafc">mismo sentido</strong>. La tensión es constante.</p>
+                            <p style="color:var(--text-muted);font-size:.8rem;margin-top:8px"><strong>Ejemplos:</strong> pilas, baterías (LiPo, plomo-ácido), USB, fuentes reguladas, paneles solares.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="param-box">
+                            <div class="param-label" style="font-size:.8rem;margin-bottom:8px">CA — Corriente Alterna (AC)</div>
+                            <div style="font-family:'Courier New',monospace;color:#a78bfa;font-size:1.1rem;letter-spacing:1px;margin-bottom:8px">∿∿∿∿∿∿∿∿∿∿</div>
+                            <p style="color:var(--text-light);font-size:.88rem;margin:0">Los electrones <strong style="color:#f8fafc">invierten su sentido</strong> periódicamente. En Argentina: 220 V a 50 Hz (50 ciclos por segundo).</p>
+                            <p style="color:var(--text-muted);font-size:.8rem;margin-top:8px"><strong>Ejemplos:</strong> red eléctrica del tomacorriente, transformadores, generadores.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="note note-warn mt-3"><i class="fas fa-triangle-exclamation"></i><span>En el taller casi siempre trabajamos con <strong>CC (DC)</strong>: pilas, fuentes reguladas o adaptadores. La CA (220V de la red) es peligrosa y requiere capacitación especial. <strong>No manipular sin supervisión.</strong></span></div>
+                <div class="extra-toggle" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> ¿Por qué la red eléctrica usa CA y no CC?</div>
+                <div class="extra-body">
+                    <p>La CA permite usar <strong>transformadores</strong>, dispositivos que pueden subir o bajar el voltaje con muy poca pérdida. Esto es fundamental para la distribución de energía a larga distancia:</p>
+                    <ul>
+                        <li>La central eléctrica genera a ~10 000 V.</li>
+                        <li>Un transformador elevador sube a ~500 000 V para la transmisión (a mayor voltaje, menor corriente y menor pérdida en los cables).</li>
+                        <li>Transformadores reductores bajan hasta 220 V en los barrios.</li>
+                        <li>Tu cargador de celular convierte esos 220 V CA a 5 V CC usando un transformador y un rectificador.</li>
+                    </ul>
+                    <p>La CC no puede transformarse directamente sin electrónica compleja (conversores DC-DC). Por eso Tesla y Westinghouse ganaron la "guerra de las corrientes" frente a Edison a fines del siglo XIX.</p>
+                </div>
+            </div>
+
+            <!-- Ley de Ohm -->
+            <div class="calc-section">
+                <h3><i class="fas fa-calculator"></i> Calculadora — Ley de Ohm</h3>
+                <p style="color:var(--text-light);font-size:.9rem;margin-bottom:20px">La <strong style="color:#f8fafc">Ley de Ohm</strong> relaciona las tres magnitudes fundamentales: <strong style="color:#60a5fa">V = I × R</strong>. Conociendo dos, podés calcular la tercera.</p>
+                <div class="ohm-solve-btns">
+                    <button class="ohm-solve-btn" onclick="setOhmMode('V',this)">Calcular <strong>V</strong> (voltaje)</button>
+                    <button class="ohm-solve-btn active" onclick="setOhmMode('R',this)">Calcular <strong>R</strong> (resistencia)</button>
+                    <button class="ohm-solve-btn" onclick="setOhmMode('I',this)">Calcular <strong>I</strong> (corriente)</button>
+                </div>
+
+                <!-- Calcular V -->
+                <div id="ohm_v_inputs" class="calc-inputs" style="display:none">
+                    <div class="input-group-custom"><label>Corriente (I)</label><input type="number" id="ohm_v_i" value="20" step="any"></div>
+                    <div class="input-group-custom"><label>Unidad I</label><select id="ohm_v_i_unit"><option value="0.001" selected>mA</option><option value="1">A</option></select></div>
+                    <div class="input-group-custom"><label>Resistencia (R)</label><input type="number" id="ohm_v_r" value="220" step="any"></div>
+                    <div class="input-group-custom"><label>Unidad R</label><select id="ohm_v_r_unit"><option value="1" selected>Ω</option><option value="1000">KΩ</option><option value="1000000">MΩ</option></select></div>
+                </div>
+                <!-- Calcular R -->
+                <div id="ohm_r_inputs" class="calc-inputs">
+                    <div class="input-group-custom"><label>Voltaje (V)</label><input type="number" id="ohm_r_v" value="5" step="any"></div>
+                    <div class="input-group-custom"><label>Corriente (I)</label><input type="number" id="ohm_r_i" value="20" step="any"></div>
+                    <div class="input-group-custom"><label>Unidad I</label><select id="ohm_r_i_unit"><option value="0.001" selected>mA</option><option value="1">A</option></select></div>
+                </div>
+                <!-- Calcular I -->
+                <div id="ohm_i_inputs" class="calc-inputs" style="display:none">
+                    <div class="input-group-custom"><label>Voltaje (V)</label><input type="number" id="ohm_i_v" value="5" step="any"></div>
+                    <div class="input-group-custom"><label>Resistencia (R)</label><input type="number" id="ohm_i_r" value="220" step="any"></div>
+                    <div class="input-group-custom"><label>Unidad R</label><select id="ohm_i_r_unit"><option value="1" selected>Ω</option><option value="1000">KΩ</option><option value="1000000">MΩ</option></select></div>
+                </div>
+
+                <button class="calc-btn mt-2" onclick="calcOhm()"><i class="fas fa-calculator"></i> Calcular</button>
+                <div class="led-result" id="res_ohm">
+                    <div class="led-result-value" id="res_ohm_val"></div>
+                    <div class="res-sub-formula" id="res_ohm_formula"></div>
+                    <div class="led-result-sub" id="res_ohm_sub" style="margin-top:8px"></div>
+                </div>
+            </div>
+
+            <!-- Potencia -->
+            <div class="calc-section">
+                <h3><i class="fas fa-bolt"></i> Calculadora — Potencia eléctrica</h3>
+                <p style="color:var(--text-light);font-size:.9rem;margin-bottom:6px">La <strong style="color:#f8fafc">potencia</strong> indica cuánta energía consume un componente por segundo. Se mide en <strong style="color:#f8fafc">Watts [W]</strong>.</p>
+                <div class="formula-box">P = V × I &nbsp;|&nbsp; P = I² × R &nbsp;|&nbsp; P = V² / R</div>
+                <div class="calc-inputs">
+                    <div class="input-group-custom"><label>Voltaje (V)</label><input type="number" id="pot_v" value="5" step="any"></div>
+                    <div class="input-group-custom"><label>Corriente (I)</label><input type="number" id="pot_i" value="20" step="any"></div>
+                    <div class="input-group-custom"><label>Unidad I</label><select id="pot_i_unit"><option value="0.001" selected>mA</option><option value="1">A</option></select></div>
+                </div>
+                <button class="calc-btn" onclick="calcPotencia()"><i class="fas fa-calculator"></i> Calcular</button>
+                <div class="led-result" id="res_pot">
+                    <div class="led-result-value" id="res_pot_val"></div>
+                    <div class="led-result-sub" id="res_pot_sub"></div>
+                    <div class="led-warning" id="res_pot_warn" style="display:none"><i class="fas fa-fire"></i><span></span></div>
+                </div>
+                <div class="extra-toggle mt-3" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Ejemplos de potencia en el taller</div>
+                <div class="extra-body">
+                    <div class="params-grid">
+                        <div class="param-box"><div class="param-label">LED (5V, 20mA)</div><div class="param-value">0.1 W</div></div>
+                        <div class="param-box"><div class="param-label">Resistor ¼W</div><div class="param-value">máx 250 mW</div></div>
+                        <div class="param-box"><div class="param-label">Cargador de celular</div><div class="param-value">5 – 18 W</div></div>
+                        <div class="param-box"><div class="param-label">Motor DC pequeño</div><div class="param-value">1 – 10 W</div></div>
+                        <div class="param-box"><div class="param-label">Microondas</div><div class="param-value">~1000 W</div></div>
+                        <div class="param-box"><div class="param-label">Heladera</div><div class="param-value">~150 W</div></div>
+                    </div>
+                    <p style="margin-top:12px"><strong>Regla de oro:</strong> los resistores deben aguantar el doble de la potencia calculada como margen de seguridad. Un resistor de ¼W que disipa 200mW va a calentarse mucho y puede fallar.</p>
+                </div>
+            </div>
+
+        </div><!-- /electricidad -->
+
+
         <!-- ===================== TAB RESISTENCIAS ===================== -->
-        <div class="tab-pane fade show active" id="resistencias" role="tabpanel">
+        <div class="tab-pane fade" id="resistencias" role="tabpanel">
 
             <div class="info-card">
                 <h3><i class="fas fa-book-open"></i> ¿Qué es una resistencia?</h3>
@@ -455,6 +710,27 @@
                 </div>
             </div>
 
+            <!-- Serie / Paralelo -->
+            <div class="calc-section">
+                <h3><i class="fas fa-layer-group"></i> Calculadora — Resistencias en Serie y Paralelo</h3>
+                <div class="bands-toggle" id="rp_toggle">
+                    <button class="toggle-btn active" onclick="setRPMode('serie',this)">En Serie</button>
+                    <button class="toggle-btn" onclick="setRPMode('paralelo',this)">En Paralelo</button>
+                </div>
+                <div class="note mb-3"><i class="fas fa-info-circle"></i><span id="rp_formula_note">Serie: R<sub>T</sub> = R1 + R2 + ... &nbsp;|&nbsp; La corriente es la misma en todas.</span></div>
+                <div id="rp_inputs"></div>
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px">
+                    <button class="rp-add-btn" onclick="addR()"><i class="fas fa-plus"></i> Agregar resistencia</button>
+                    <span style="color:var(--text-muted);font-size:.8rem" id="rp_max_note"></span>
+                </div>
+                <button class="calc-btn mt-3" onclick="calcRP()"><i class="fas fa-calculator"></i> Calcular</button>
+                <div class="led-result" id="rp_result">
+                    <div class="led-result-value" id="rp_result_val"></div>
+                    <div class="led-result-sub" id="rp_result_sub"></div>
+                </div>
+                <div id="rp_bars"></div>
+            </div>
+
         </div><!-- /resistencias -->
 
 
@@ -703,6 +979,33 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
                 </div>
             </div>
 
+            <!-- Frecuencia de corte RC -->
+            <div class="info-card">
+                <h3><i class="fas fa-filter"></i> Calculadora — Filtro RC: Frecuencia de corte</h3>
+                <p style="color:var(--text-light);font-size:.9rem;margin-bottom:10px">Un resistor y un capacitor en serie forman un filtro. La <strong style="color:#f8fafc">frecuencia de corte</strong> es el punto donde la señal empieza a atenuarse. Por debajo pasa (filtro pasa-bajos), por arriba se bloquea.</p>
+                <div class="formula-box">f<sub>c</sub> = 1 / (2π × R × C)</div>
+                <div class="calc-inputs">
+                    <div class="input-group-custom"><label>Resistencia</label><input type="number" id="fc_r" value="10" step="any"></div>
+                    <div class="input-group-custom"><label>Unidad R</label><select id="fc_r_unit"><option value="1">Ω</option><option value="1000" selected>KΩ</option><option value="1000000">MΩ</option></select></div>
+                    <div class="input-group-custom"><label>Capacitancia</label><input type="number" id="fc_c" value="100" step="any"></div>
+                    <div class="input-group-custom"><label>Unidad C</label><select id="fc_c_unit"><option value="1e-12">pF</option><option value="1e-9">nF</option><option value="1e-6" selected>μF</option><option value="1e-3">mF</option></select></div>
+                </div>
+                <button class="calc-btn" onclick="calcFc()"><i class="fas fa-calculator"></i> Calcular</button>
+                <div class="led-result" id="res_fc">
+                    <div class="led-result-value" id="res_fc_val"></div>
+                    <div class="led-result-sub" id="res_fc_sub"></div>
+                </div>
+                <div class="extra-toggle mt-2" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> ¿Para qué sirve un filtro RC?</div>
+                <div class="extra-body">
+                    <ul>
+                        <li><strong>Filtro pasa-bajos:</strong> deja pasar frecuencias bajas y bloquea las altas. Útil para eliminar ruido en señales de sensores o suavizar la salida de un PWM.</li>
+                        <li><strong>Filtro pasa-altos:</strong> invirtiendo la posición de R y C en el circuito, bloquea DC y deja pasar señales AC (AC coupling).</li>
+                        <li><strong>En audio:</strong> un capacitor de acoplamiento entre etapas bloquea el offset DC y deja pasar la señal de audio.</li>
+                        <li><strong>En el 555:</strong> el tiempo de carga/descarga del capacitor determina la frecuencia de oscilación — es el mismo principio.</li>
+                    </ul>
+                </div>
+            </div>
+
         </div><!-- /capacitor -->
 
 
@@ -765,6 +1068,38 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
                     </div>
                 </div>
                 <div class="note note-warn mt-3"><i class="fas fa-triangle-exclamation"></i><span>Los módulos de relé listos para Arduino ya traen transistor y diodo incorporados. Verificá si son de lógica <strong>activa alta</strong> (IN=HIGH activa) o <strong>activa baja</strong> (IN=LOW activa).</span></div>
+            </div>
+
+            <!-- Driver calculator -->
+            <div class="info-card">
+                <h3><i class="fas fa-calculator"></i> Calculadora — Resistencia de base para driver de relé</h3>
+                <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">Calculá la resistencia de base del transistor NPN que va a activar la bobina del relé.</p>
+                <div class="calc-inputs">
+                    <div class="input-group-custom"><label>V control (GPIO/pin)</label><input type="number" id="rel_vctrl" value="5" step="0.1"></div>
+                    <div class="input-group-custom"><label>I bobina del relé (mA)</label><input type="number" id="rel_ibob" value="70" step="1"><div style="font-size:.75rem;color:var(--text-muted);margin-top:3px">Dato del datasheet del relé</div></div>
+                    <div class="input-group-custom"><label>β / hFE del transistor</label><input type="number" id="rel_hfe" value="100" step="1"></div>
+                    <div class="input-group-custom"><label>Factor de saturación</label><input type="number" id="rel_sat" value="10" step="1" min="2" max="20"><div style="font-size:.75rem;color:var(--text-muted);margin-top:3px">Usar 5–10 para garantizar saturación</div></div>
+                </div>
+                <button class="calc-btn" onclick="calcReleDriver()"><i class="fas fa-calculator"></i> Calcular</button>
+                <div class="led-result" id="res_rele_driver">
+                    <div class="led-result-value" id="res_rele_driver_val"></div>
+                    <div class="led-result-sub" id="res_rele_driver_sub"></div>
+                </div>
+                <div class="extra-toggle mt-2" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Módulos de relé listos para Arduino</div>
+                <div class="extra-body">
+                    <p>Los módulos de relé que se consiguen en el taller ya traen el transistor, el diodo flyback y a veces un optoacoplador integrado. Solo necesitás conectar IN, VCC y GND.</p>
+                    <h5>Lógica activa alta vs activa baja</h5>
+                    <ul>
+                        <li><strong>Activa alta (Active HIGH):</strong> IN = HIGH (5V) activa el relé. Más intuitivo.</li>
+                        <li><strong>Activa baja (Active LOW):</strong> IN = LOW (0V) activa el relé. Es lo más común en módulos chinos con optoacoplador. El relé está activado por defecto y se desactiva con HIGH.</li>
+                    </ul>
+                    <p>Para saber cuál es tu módulo: al arrancar el micro, ¿el relé hace "clic"? Si sí, es activo bajo. Revisá el datasheet o la serigrafía de la placa.</p>
+                    <h5>Tipos de contacto</h5>
+                    <ul>
+                        <li><strong>SPDT</strong> (más común): tiene COM, NO y NC. Un poste, dos posiciones.</li>
+                        <li><strong>DPDT:</strong> doble SPDT, dos interruptores que se mueven juntos.</li>
+                    </ul>
+                </div>
             </div>
 
         </div><!-- /rele -->
@@ -924,6 +1259,265 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
 
         </div><!-- /divisor -->
 
+        <!-- ===================== TAB 555 TIMER ===================== -->
+        <div class="tab-pane fade" id="timer555" role="tabpanel">
+
+            <div class="info-card">
+                <h3><i class="fas fa-clock"></i> El temporizador 555</h3>
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-7">
+                        <p>El <strong style="color:#f8fafc">NE555</strong> es uno de los circuitos integrados más populares de la historia. Con solo unos pocos componentes externos (resistencias y un capacitor) puede funcionar como <strong style="color:#60a5fa">oscilador</strong> (modo astable) o como <strong style="color:#a78bfa">temporizador de un solo disparo</strong> (modo monoestable).</p>
+                        <div class="params-grid mt-3">
+                            <div class="param-box"><div class="param-label">Tensión de trabajo</div><div class="param-value">4.5 – 16 V</div></div>
+                            <div class="param-box"><div class="param-label">Corriente de salida</div><div class="param-value">hasta 200 mA</div></div>
+                            <div class="param-box"><div class="param-label">Frecuencia máxima</div><div class="param-value">~300 kHz</div></div>
+                            <div class="param-box"><div class="param-label">Package</div><div class="param-value">DIP-8</div></div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <!-- Pinout visual -->
+                        <div class="ic-wrap">
+                            <div class="ic-body">
+                                <div class="ic-header">NE555 — DIP-8</div>
+                                <div class="ic-row">
+                                    <div class="ic-pin left"><span class="ic-num p-gnd">1</span><div><div class="ic-name">GND</div><div class="ic-func">Tierra (0 V)</div></div></div>
+                                    <div class="ic-divider"></div>
+                                    <div class="ic-pin right"><span class="ic-num p-vcc">8</span><div><div class="ic-name">VCC</div><div class="ic-func">Alimentación</div></div></div>
+                                </div>
+                                <div class="ic-row">
+                                    <div class="ic-pin left"><span class="ic-num p-trig">2</span><div><div class="ic-name">TRIG</div><div class="ic-func">Disparo (inicio)</div></div></div>
+                                    <div class="ic-divider"></div>
+                                    <div class="ic-pin right"><span class="ic-num p-disch">7</span><div><div class="ic-name">DISCH</div><div class="ic-func">Descarga del cap.</div></div></div>
+                                </div>
+                                <div class="ic-row">
+                                    <div class="ic-pin left"><span class="ic-num p-out">3</span><div><div class="ic-name">OUT</div><div class="ic-func">Salida</div></div></div>
+                                    <div class="ic-divider"></div>
+                                    <div class="ic-pin right"><span class="ic-num p-thr">6</span><div><div class="ic-name">THR</div><div class="ic-func">Umbral (threshold)</div></div></div>
+                                </div>
+                                <div class="ic-row">
+                                    <div class="ic-pin left"><span class="ic-num p-rst">4</span><div><div class="ic-name">RST</div><div class="ic-func">Reset (conectar a VCC)</div></div></div>
+                                    <div class="ic-divider"></div>
+                                    <div class="ic-pin right"><span class="ic-num p-cv">5</span><div><div class="ic-name">CV</div><div class="ic-func">Control V (cap. 10nF a GND)</div></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="extra-toggle" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Historia y variantes del 555</div>
+                <div class="extra-body">
+                    <p>El 555 fue diseñado en <strong>1971</strong> por Hans Camenzind para Signetics. Su nombre viene de los tres resistores internos de <strong>5 KΩ</strong> que forman un divisor resistivo de referencia. Es uno de los CI más fabricados de la historia, con miles de millones de unidades vendidas.</p>
+                    <h5>Variantes</h5>
+                    <ul>
+                        <li><strong>NE555 / LM555:</strong> el original bipolar. Más corriente de salida, pero mayor consumo.</li>
+                        <li><strong>TLC555 / LMC555 (CMOS):</strong> consume mucho menos, funciona desde ~2V, menos ruido. Recomendado para proyectos con batería.</li>
+                        <li><strong>NE556:</strong> doble 555 en un CI de 14 pines.</li>
+                        <li><strong>NE558:</strong> cuádruple 555 (4 timers en un CI).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Selector de modo -->
+            <div class="calc-section">
+                <h3><i class="fas fa-calculator"></i> Calculadoras del 555</h3>
+                <div class="bands-toggle" id="mode555_toggle">
+                    <button class="toggle-btn active" onclick="set555Tab('astable',this)"><i class="fas fa-wave-square me-1"></i>Modo Astable (oscilador)</button>
+                    <button class="toggle-btn" onclick="set555Tab('mono',this)"><i class="fas fa-stopwatch me-1"></i>Modo Monoestable (temporizador)</button>
+                </div>
+
+                <!-- ---- ASTABLE ---- -->
+                <div id="section_astable">
+                    <p style="color:var(--text-light);font-size:.88rem;margin-bottom:14px">El 555 en modo astable genera una onda cuadrada continua. Conectá <strong style="color:#f8fafc">Ra</strong> entre VCC y DISCH (pin 7), <strong style="color:#f8fafc">Rb</strong> entre DISCH (7) y THR/TRIG (6+2), y <strong style="color:#f8fafc">C</strong> entre THR/TRIG y GND. RST (4) → VCC. CV (5) → cap. 10nF → GND.</p>
+                    <div class="formula-box">f = 1.44 / ((Ra + 2×Rb) × C) &nbsp;|&nbsp; Duty = (Ra + Rb) / (Ra + 2×Rb) × 100%</div>
+                    <div class="bands-toggle" id="ast_sub_toggle" style="margin-top:16px">
+                        <button class="toggle-btn active" onclick="setAstMode('direct',this)">Ra, Rb, C → f y Duty</button>
+                        <button class="toggle-btn" onclick="setAstMode('inverse',this)">f y Duty → Ra, Rb</button>
+                    </div>
+                    <!-- Directo -->
+                    <div id="ast_direct_inputs" class="calc-inputs mt-3">
+                        <div class="input-group-custom"><label>Ra</label><input type="number" id="ast_ra" value="10" step="any"></div>
+                        <div class="input-group-custom"><label>Unidad Ra</label><select id="ast_ra_unit"><option value="1">Ω</option><option value="1000" selected>KΩ</option><option value="1000000">MΩ</option></select></div>
+                        <div class="input-group-custom"><label>Rb</label><input type="number" id="ast_rb" value="10" step="any"></div>
+                        <div class="input-group-custom"><label>Unidad Rb</label><select id="ast_rb_unit"><option value="1">Ω</option><option value="1000" selected>KΩ</option><option value="1000000">MΩ</option></select></div>
+                        <div class="input-group-custom"><label>C</label><input type="number" id="ast_c" value="100" step="any"></div>
+                        <div class="input-group-custom"><label>Unidad C</label><select id="ast_c_unit"><option value="1e-12">pF</option><option value="1e-9">nF</option><option value="1e-6" selected>μF</option></select></div>
+                    </div>
+                    <!-- Inverso -->
+                    <div id="ast_inv_inputs" class="calc-inputs mt-3" style="display:none">
+                        <div class="input-group-custom"><label>Frecuencia deseada (Hz)</label><input type="number" id="ast_inv_f" value="1" step="any"></div>
+                        <div class="input-group-custom"><label>Duty cycle % (>50%)</label><input type="number" id="ast_inv_duty" value="66" min="51" max="99" step="1"></div>
+                        <div class="input-group-custom"><label>Capacitor C</label><input type="number" id="ast_inv_c" value="10" step="any"></div>
+                        <div class="input-group-custom"><label>Unidad C</label><select id="ast_inv_c_unit"><option value="1e-12">pF</option><option value="1e-9">nF</option><option value="1e-6" selected>μF</option></select></div>
+                    </div>
+                    <button class="calc-btn mt-2" onclick="calcAstable()"><i class="fas fa-calculator"></i> Calcular</button>
+                    <div class="led-result" id="res_astable">
+                        <div class="led-result-value" id="res_astable_val"></div>
+                        <div class="led-result-sub" id="res_astable_sub"></div>
+                    </div>
+                    <div class="note mt-3"><i class="fas fa-info-circle"></i><span>El duty cycle en modo estándar nunca puede ser <strong>menor o igual a 50%</strong> porque Ra siempre está en el camino de carga. Para duty ≤ 50% se necesita un diodo en paralelo con Rb (truquito con diodo 1N4148).</span></div>
+                    <div class="extra-toggle mt-2" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Ejemplos de frecuencias comunes</div>
+                    <div class="extra-body">
+                        <div class="params-grid">
+                            <div class="param-box"><div class="param-label">LED parpadeante lento</div><div class="param-value">0.5 – 2 Hz</div></div>
+                            <div class="param-box"><div class="param-label">LED parpadeante rápido</div><div class="param-value">5 – 10 Hz</div></div>
+                            <div class="param-box"><div class="param-label">Buzzer (tono audible)</div><div class="param-value">1 kHz – 4 kHz</div></div>
+                            <div class="param-box"><div class="param-label">PWM para motor</div><div class="param-value">1 – 20 kHz</div></div>
+                        </div>
+                        <p style="margin-top:10px">Para 1 Hz con Ra=10KΩ, Rb=33KΩ, C=10μF: f = 1.44/(76000×0.00001) ≈ 1.89 Hz. Ajustando Rb podés acercarte a 1 Hz exacto.</p>
+                    </div>
+                </div>
+
+                <!-- ---- MONOESTABLE ---- -->
+                <div id="section_mono" style="display:none">
+                    <p style="color:var(--text-light);font-size:.88rem;margin-bottom:14px">El 555 monoestable genera un <strong style="color:#f8fafc">pulso de duración fija</strong> al recibir un disparo en TRIG (pin 2). Conectá <strong style="color:#f8fafc">R</strong> entre VCC y THR/DISCH (6+7), y <strong style="color:#f8fafc">C</strong> entre THR y GND. RST (4) → VCC. CV (5) → cap. 10nF → GND. TRIG se activa con flanco bajante.</p>
+                    <div class="formula-box">t = 1.1 × R × C</div>
+                    <div class="bands-toggle" id="mono_sub_toggle" style="margin-top:16px">
+                        <button class="toggle-btn active" onclick="setMonoMode('direct',this)">R y C → tiempo</button>
+                        <button class="toggle-btn" onclick="setMonoMode('inverse',this)">Tiempo → calcular R</button>
+                    </div>
+                    <!-- Directo -->
+                    <div id="mono_direct_inputs" class="calc-inputs mt-3">
+                        <div class="input-group-custom"><label>R</label><input type="number" id="mono_r" value="100" step="any"></div>
+                        <div class="input-group-custom"><label>Unidad R</label><select id="mono_r_unit"><option value="1">Ω</option><option value="1000" selected>KΩ</option><option value="1000000">MΩ</option></select></div>
+                        <div class="input-group-custom"><label>C</label><input type="number" id="mono_c" value="10" step="any"></div>
+                        <div class="input-group-custom"><label>Unidad C</label><select id="mono_c_unit"><option value="1e-12">pF</option><option value="1e-9">nF</option><option value="1e-6" selected>μF</option></select></div>
+                    </div>
+                    <!-- Inverso -->
+                    <div id="mono_inv_inputs" class="calc-inputs mt-3" style="display:none">
+                        <div class="input-group-custom"><label>Tiempo deseado</label><input type="number" id="mono_inv_t" value="1" step="any"></div>
+                        <div class="input-group-custom"><label>Unidad t</label><select id="mono_inv_t_unit"><option value="0.001">ms</option><option value="1" selected>s</option><option value="60">min</option></select></div>
+                        <div class="input-group-custom"><label>Capacitor C</label><input type="number" id="mono_inv_c" value="10" step="any"></div>
+                        <div class="input-group-custom"><label>Unidad C</label><select id="mono_inv_c_unit"><option value="1e-12">pF</option><option value="1e-9">nF</option><option value="1e-6" selected>μF</option></select></div>
+                    </div>
+                    <button class="calc-btn mt-2" onclick="calcMono()"><i class="fas fa-calculator"></i> Calcular</button>
+                    <div class="led-result" id="res_mono">
+                        <div class="led-result-value" id="res_mono_val"></div>
+                        <div class="led-result-sub" id="res_mono_sub"></div>
+                    </div>
+                    <div class="extra-toggle mt-2" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Tabla de tiempos comunes</div>
+                    <div class="extra-body">
+                        <div class="params-grid">
+                            <div class="param-box"><div class="param-label">Antirrebote de botón</div><div class="param-value">10 – 100 ms</div></div>
+                            <div class="param-box"><div class="param-label">Alarma sonora breve</div><div class="param-value">0.5 – 2 s</div></div>
+                            <div class="param-box"><div class="param-label">Temporizador de luz</div><div class="param-value">30 s – 5 min</div></div>
+                            <div class="param-box"><div class="param-label">Retardo de arranque</div><div class="param-value">1 – 10 s</div></div>
+                        </div>
+                        <p style="margin-top:10px">Para tiempos largos (minutos), conviene usar C grande (100μF o más) y R también grande. Con R=10MΩ, C=100μF: t = 1.1 × 10⁷ × 10⁻⁴ = 1100 s ≈ 18 minutos.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /timer555 -->
+
+
+        <!-- ===================== TAB REGULADORES ===================== -->
+        <div class="tab-pane fade" id="reguladores" role="tabpanel">
+
+            <div class="info-card">
+                <h3><i class="fas fa-plug"></i> Reguladores de voltaje</h3>
+                <p>Un <strong style="color:#f8fafc">regulador de voltaje</strong> mantiene una tensión de salida fija sin importar variaciones en la tensión de entrada o en la carga. Son esenciales en cualquier fuente de alimentación.</p>
+                <div class="note mt-3"><i class="fas fa-info-circle"></i><span>El regulador disipa como calor la diferencia entre V_in y V_out. A mayor diferencia y mayor corriente, más calor — puede necesitar <strong>disipador (heatsink)</strong>.</span></div>
+            </div>
+
+            <!-- Familia 78xx -->
+            <div class="info-card">
+                <h3><i class="fas fa-table"></i> Familia 78xx — Reguladores fijos positivos</h3>
+                <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">Tres pines: IN, GND, OUT. Solo necesitan dos capacitores de filtro (típico: 0.1μF cerámica en IN y OUT a GND). Corriente máxima: <strong style="color:#f8fafc">1 A</strong> (en TO-220). V_in mínima = V_out + 2V (margen de dropout).</p>
+                <div class="color-table-wrap">
+                    <table class="reg-table">
+                        <thead><tr><th>Modelo</th><th>V salida</th><th>V entrada mín.</th><th>V entrada máx.</th><th>Package</th><th>Uso típico</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>7805</strong></td><td style="color:#34d399">5 V</td><td>7 V</td><td>35 V</td><td>TO-220, TO-92</td><td>Arduino Uno, lógica TTL</td></tr>
+                            <tr><td><strong>7806</strong></td><td style="color:#34d399">6 V</td><td>8 V</td><td>35 V</td><td>TO-220</td><td>Poco común</td></tr>
+                            <tr><td><strong>7808</strong></td><td style="color:#34d399">8 V</td><td>10 V</td><td>35 V</td><td>TO-220</td><td>Poco común</td></tr>
+                            <tr><td><strong>7809</strong></td><td style="color:#34d399">9 V</td><td>11 V</td><td>35 V</td><td>TO-220</td><td>Efectos de guitarra</td></tr>
+                            <tr><td><strong>7812</strong></td><td style="color:#60a5fa">12 V</td><td>14 V</td><td>35 V</td><td>TO-220</td><td>Relés, motores DC, tiras LED</td></tr>
+                            <tr><td><strong>7815</strong></td><td style="color:#a78bfa">15 V</td><td>17 V</td><td>35 V</td><td>TO-220</td><td>Audio, amplificadores</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="note mt-3"><i class="fas fa-info-circle"></i><span>La familia <strong>79xx</strong> es el equivalente negativo: 7905 = −5V, 7912 = −12V, etc. Se usa en fuentes simétricas para amplificadores.</span></div>
+                <div class="extra-toggle" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> El LM317: regulador ajustable</div>
+                <div class="extra-body">
+                    <p>El <strong>LM317</strong> permite ajustar la salida entre 1.25V y ~37V con solo dos resistencias externas.</p>
+                    <div class="formula-box" style="margin:10px 0">V_out = 1.25 × (1 + R2/R1) &nbsp;|&nbsp; R1 típico: 240Ω</div>
+                    <ul>
+                        <li>También tiene 3 pines: IN, ADJ (ajuste) y OUT.</li>
+                        <li>El pin ADJ va al divisor resistivo R1-R2. R1 entre OUT y ADJ, R2 entre ADJ y GND.</li>
+                        <li>Ejemplo: R1=240Ω, R2=720Ω → V_out = 1.25×(1+3) = 5V.</li>
+                        <li>Mucho más flexible que el 78xx pero requiere calcular las resistencias.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Calculadora 7805 -->
+            <div class="info-card">
+                <h3><i class="fas fa-calculator"></i> Calculadora — Disipación del 78xx</h3>
+                <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">Calculá cuánto calor disipa el regulador y si necesita disipador.</p>
+                <div class="calc-inputs">
+                    <div class="input-group-custom">
+                        <label>Modelo (V salida)</label>
+                        <select id="reg_model">
+                            <option value="5">7805 → 5V</option>
+                            <option value="9">7809 → 9V</option>
+                            <option value="12" selected>7812 → 12V</option>
+                            <option value="15">7815 → 15V</option>
+                        </select>
+                    </div>
+                    <div class="input-group-custom"><label>V entrada (V)</label><input type="number" id="reg_vin" value="18" step="0.1"></div>
+                    <div class="input-group-custom"><label>I carga (mA)</label><input type="number" id="reg_iload" value="500" step="10"></div>
+                </div>
+                <button class="calc-btn" onclick="calc7805()"><i class="fas fa-calculator"></i> Calcular</button>
+                <div class="led-result" id="res_reg">
+                    <div class="led-result-value" id="res_reg_val"></div>
+                    <div class="led-result-sub" id="res_reg_sub"></div>
+                    <div class="led-warning" id="res_reg_warn" style="display:none"><i class="fas fa-fire"></i><span></span></div>
+                </div>
+            </div>
+
+            <!-- Diodo Zener -->
+            <div class="info-card">
+                <h3><i class="fas fa-bolt"></i> Diodo Zener como regulador simple</h3>
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-8">
+                        <p>El diodo Zener conduce en polarización inversa a partir de su <strong style="color:#f8fafc">tensión Zener (V<sub>z</sub>)</strong>, manteniéndola constante. Se usa con una resistencia en serie para regular voltaje.</p>
+                        <div class="formula-box" style="margin-top:12px">R<sub>s</sub> = (V<sub>in</sub> − V<sub>z</sub>) / (I<sub>z_min</sub> + I<sub>carga</sub>)</div>
+                        <div class="params-grid" style="margin-top:12px">
+                            <div class="param-box"><div class="param-label">Valores comunes V<sub>z</sub></div><div class="param-value">3.3V, 5.1V, 6.2V, 9.1V, 12V</div></div>
+                            <div class="param-box"><div class="param-label">I<sub>z_min</sub> típica</div><div class="param-value">5 – 10 mA</div></div>
+                            <div class="param-box"><div class="param-label">Potencia (1N47xx)</div><div class="param-value">400 mW – 1 W</div></div>
+                            <div class="param-box"><div class="param-label">Regulación</div><div class="param-value">Simple pero poco eficiente</div></div>
+                        </div>
+                        <div class="note note-warn mt-3"><i class="fas fa-triangle-exclamation"></i><span>El Zener regula bien solo si la corriente de carga es <strong>mucho menor</strong> que la corriente por el Zener. Para cargas variables o grandes, es mejor usar un 7805.</span></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="param-box" style="font-family:'Courier New',monospace;font-size:.8rem;color:var(--text-light);line-height:2">
+                            <div style="color:#60a5fa">VIN ──[Rs]──┬── VOUT</div>
+                            <div style="color:#a78bfa">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│</div>
+                            <div style="color:#a78bfa">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Dz]← cátodo arriba</div>
+                            <div style="color:#a78bfa">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│</div>
+                            <div style="color:#6b7280">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GND</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h3><i class="fas fa-calculator"></i> Calculadora — Regulador Zener</h3>
+                <div class="calc-inputs">
+                    <div class="input-group-custom"><label>V entrada (V)</label><input type="number" id="zen_vin" value="12" step="0.1"></div>
+                    <div class="input-group-custom"><label>V Zener V<sub>z</sub> (V)</label><input type="number" id="zen_vz" value="5.1" step="0.1"></div>
+                    <div class="input-group-custom"><label>I carga (mA)</label><input type="number" id="zen_iload" value="20" step="1"></div>
+                    <div class="input-group-custom"><label>I Zener mínima (mA)</label><input type="number" id="zen_iz" value="5" step="1"></div>
+                </div>
+                <button class="calc-btn" onclick="calcZener()"><i class="fas fa-calculator"></i> Calcular</button>
+                <div class="led-result" id="res_zener">
+                    <div class="led-result-value" id="res_zener_val"></div>
+                    <div class="led-result-sub" id="res_zener_sub"></div>
+                </div>
+            </div>
+
+        </div><!-- /reguladores -->
+
     </div><!-- /tab-content -->
 </div><!-- /container -->
 
@@ -985,7 +1579,7 @@ function populateTolSelect(n) {
 
 function setBands(n, btn) {
     currentBands = n;
-    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.closest('.bands-toggle').querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const is5 = n === 5;
     document.getElementById('grp3mult').style.display = is5 ? 'none' : '';
@@ -1196,13 +1790,400 @@ function calcLDR(){
 let divMode='vout';
 function setDivMode(mode,btn){
     divMode=mode;
-    document.querySelectorAll('#divisor .toggle-btn').forEach(b=>b.classList.remove('active'));
+    btn.closest('.bands-toggle').querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('div_vout_inputs').style.display=mode==='vout'?'grid':'none';
     document.getElementById('div_r2_inputs').style.display=mode==='r2'?'grid':'none';
     document.getElementById('div_r1_inputs').style.display=mode==='r1'?'grid':'none';
     document.getElementById('res_divisor').classList.remove('show');
 }
+// ============================================================
+// TOGGLE EXTRA (collapsibles)
+// ============================================================
+function toggleExtra(el) {
+    el.classList.toggle('open');
+    el.nextElementSibling.classList.toggle('open');
+}
+
+// ============================================================
+// BUSCADOR
+// ============================================================
+const searchIndex = [
+    {tab:'electricidad',title:'Electricidad — Voltaje, corriente, resistencia',desc:'Las tres magnitudes fundamentales y sus unidades',icon:'fa-bolt',kw:['voltaje','tension','volt','corriente','amper','resistencia','ohm','electricidad','magnitud','unidades']},
+    {tab:'electricidad',title:'Tipos de corriente: DC y AC',desc:'Corriente continua vs alterna, 50Hz, baterías, red eléctrica',icon:'fa-wave-square',kw:['dc','ac','continua','alterna','corriente','frecuencia','hertz','220','baterias','red','tomacorriente','pila']},
+    {tab:'electricidad',title:'Ley de Ohm — Calculadora V, I, R',desc:'V = I × R. Calcular voltaje, corriente o resistencia',icon:'fa-calculator',kw:['ley ohm','ohm','v=ir','calcular','voltaje','corriente','resistencia','formula']},
+    {tab:'electricidad',title:'Potencia eléctrica — Calculadora',desc:'P = V × I en Watts. ¿Cuánta potencia consume el circuito?',icon:'fa-bolt',kw:['potencia','watts','vatios','w','consumo','energia','p=vi','calor','disipacion']},
+    {tab:'resistencias',title:'Código de colores de resistencias',desc:'Leer resistencias de 4 y 5 bandas',icon:'fa-wave-square',kw:['resistencia','color','banda','codigo','4 bandas','5 bandas','leer','identificar']},
+    {tab:'resistencias',title:'Calculadora resistencias en serie y paralelo',desc:'R_total en serie (suma) y en paralelo (inversa)',icon:'fa-layer-group',kw:['serie','paralelo','resistencias','total','equivalente','asociacion','combinar']},
+    {tab:'diodos',title:'Diodo — Polaridad y caída de tensión',desc:'Ánodo, cátodo, Vf. Tipos: silicio, Schottky, Zener',icon:'fa-bolt',kw:['diodo','anodo','catodo','silicio','germanio','schottky','1n4007','polaridad','vf','caida']},
+    {tab:'diodos',title:'LED — Resistencia limitadora',desc:'Calculadora serie, paralelo y combinado de LEDs',icon:'fa-lightbulb',kw:['led','resistencia','serie','paralelo','corriente','vf','rojo','verde','azul','blanco','calculadora']},
+    {tab:'transistor',title:'Transistor NPN / PNP',desc:'Base, colector, emisor. Interruptor electrónico y amplificador',icon:'fa-microchip',kw:['transistor','npn','pnp','base','colector','emisor','bc547','2n2222','tip31','interruptor','switch','amplificador','hfe','beta','saturacion']},
+    {tab:'transistor',title:'Calculadora resistencia de base',desc:'Rb para saturar un transistor como llave',icon:'fa-calculator',kw:['resistencia','base','rb','saturacion','transistor','calcular','ib','hfe']},
+    {tab:'capacitor',title:'Capacitor electrolítico',desc:'Polaridad, capacitancia, tensión de trabajo',icon:'fa-battery-half',kw:['capacitor','condensador','electrolitico','polaridad','microfaradios','uf','carga','descarga','positivo','negativo']},
+    {tab:'capacitor',title:'Constante de tiempo τ = R × C',desc:'Tiempo de carga del capacitor al 63% y al 99%',icon:'fa-calculator',kw:['tau','constante','tiempo','rc','carga','descarga','capacitor','calcular']},
+    {tab:'capacitor',title:'Filtro RC — Frecuencia de corte',desc:'fc = 1/(2πRC). Pasa-bajos y pasa-altos',icon:'fa-filter',kw:['frecuencia','corte','filtro','rc','pasa','bajos','altos','hz','señal','ruido']},
+    {tab:'rele',title:'Relé — NO, NC, COM',desc:'Interruptor electromecánico. Bobina, contactos, flyback',icon:'fa-toggle-on',kw:['rele','relay','bobina','contacto','no','nc','com','normalmente abierto','normalmente cerrado','flyback','diodo']},
+    {tab:'rele',title:'Calculadora driver de relé (transistor NPN)',desc:'Resistencia de base para activar la bobina del relé',icon:'fa-calculator',kw:['rele','driver','transistor','base','resistencia','npn','activar','bobina']},
+    {tab:'ldr',title:'LDR — Fotorresistencia',desc:'Sensor de luz. Divisor de tensión con LDR',icon:'fa-sun',kw:['ldr','fotoresistencia','luz','sensor','oscuridad','fotoresistor','brillo','oscuro']},
+    {tab:'ir',title:'LED Infrarrojo',desc:'Controles remotos, sensores, barreras ópticas. Calculadora de R',icon:'fa-satellite-dish',kw:['infrarrojo','ir','led ir','tsop','tcrt5000','control remoto','sensor','invisible','barrera']},
+    {tab:'divisor',title:'Divisor de tensión',desc:'R1 y R2 para obtener un voltaje menor al de entrada',icon:'fa-divide',kw:['divisor','tension','voltaje','r1','r2','vout','vin','5v','3.3v','adaptar']},
+    {tab:'timer555',title:'555 Timer — Modo Astable (oscilador)',desc:'LED parpadeante, buzzer, PWM. Calcular Ra, Rb, C',icon:'fa-clock',kw:['555','timer','astable','frecuencia','duty','cycle','ra','rb','parpadeo','oscilador','onda','cuadrada']},
+    {tab:'timer555',title:'555 Timer — Modo Monoestable (temporizador)',desc:'Pulso único de duración configurable al recibir un disparo',icon:'fa-stopwatch',kw:['555','monoestable','temporizador','tiempo','pulso','trigger','disparo','unico']},
+    {tab:'reguladores',title:'Familia 78xx — Reguladores de voltaje fijo',desc:'7805, 7812, etc. Calculadora de disipación y heatsink',icon:'fa-plug',kw:['regulador','7805','7812','78xx','fuente','5v','12v','tension fija','lm7805','heatsink','disipador']},
+    {tab:'reguladores',title:'Diodo Zener como regulador',desc:'Rs = (Vin−Vz)/(Iz+Icarga). Regulación simple',icon:'fa-bolt',kw:['zener','regulador','tension','rs','iz','vz','diodo','1n47','simple']},
+];
+
+function onSearch(q) {
+    q = q.trim().toLowerCase();
+    const panel = document.getElementById('searchPanel');
+    if(q.length < 2) { panel.classList.remove('open'); return; }
+    const results = searchIndex.filter(item =>
+        item.kw.some(k => k.includes(q)) ||
+        item.title.toLowerCase().includes(q) ||
+        item.desc.toLowerCase().includes(q)
+    );
+    if(results.length === 0) {
+        panel.innerHTML = `<div class="s-no-results">Sin resultados para "<strong>${q}</strong>" — probá con otra palabra</div>`;
+    } else {
+        panel.innerHTML = results.map(r =>
+            `<div class="s-item" onclick="goToTab('${r.tab}')">
+                <div class="s-item-icon"><i class="fas ${r.icon}"></i></div>
+                <div><div class="s-item-title">${r.title}</div><div class="s-item-desc">${r.desc}</div></div>
+            </div>`
+        ).join('');
+    }
+    panel.classList.add('open');
+}
+
+function goToTab(tabId) {
+    document.getElementById('searchPanel').classList.remove('open');
+    document.getElementById('searchInput').value = '';
+    const tabBtn = document.querySelector(`[data-bs-target="#${tabId}"]`);
+    if(tabBtn) {
+        bootstrap.Tab.getOrCreateInstance(tabBtn).show();
+        setTimeout(() => window.scrollTo({ top: document.getElementById('mainTabs').offsetTop - 80, behavior:'smooth' }), 80);
+    }
+}
+document.addEventListener('click', e => {
+    if(!e.target.closest('.search-wrap')) document.getElementById('searchPanel').classList.remove('open');
+});
+
+// ============================================================
+// LEY DE OHM
+// ============================================================
+let ohmMode = 'R';
+function setOhmMode(mode, btn) {
+    ohmMode = mode;
+    btn.closest('.ohm-solve-btns').querySelectorAll('.ohm-solve-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('ohm_v_inputs').style.display = mode === 'V' ? 'grid' : 'none';
+    document.getElementById('ohm_r_inputs').style.display = mode === 'R' ? 'grid' : 'none';
+    document.getElementById('ohm_i_inputs').style.display = mode === 'I' ? 'grid' : 'none';
+    document.getElementById('res_ohm').classList.remove('show');
+}
+function fmtI(A) { return A >= 0.001 ? (A*1000).toFixed(3)+' mA' : (A*1000000).toFixed(3)+' μA'; }
+function calcOhm() {
+    let V, I, R;
+    if(ohmMode === 'V') {
+        I = +document.getElementById('ohm_v_i').value * +document.getElementById('ohm_v_i_unit').value;
+        R = +document.getElementById('ohm_v_r').value * +document.getElementById('ohm_v_r_unit').value;
+        V = I * R;
+    } else if(ohmMode === 'I') {
+        V = +document.getElementById('ohm_i_v').value;
+        R = +document.getElementById('ohm_i_r').value * +document.getElementById('ohm_i_r_unit').value;
+        I = R > 0 ? V / R : 0;
+    } else {
+        V = +document.getElementById('ohm_r_v').value;
+        I = +document.getElementById('ohm_r_i').value * +document.getElementById('ohm_r_i_unit').value;
+        R = I > 0 ? V / I : 0;
+    }
+    const P = V * I;
+    const el = document.getElementById('res_ohm');
+    el.classList.add('show');
+    let resultText;
+    if(ohmMode === 'V') resultText = V.toFixed(3)+' V';
+    else if(ohmMode === 'I') resultText = fmtI(I);
+    else resultText = formatResistance(R);
+    document.getElementById('res_ohm_val').textContent = resultText;
+    document.getElementById('res_ohm_formula').textContent =
+        ohmMode==='V' ? `V = I × R = ${fmtI(I)} × ${formatResistance(R)}` :
+        ohmMode==='I' ? `I = V / R = ${V.toFixed(3)}V / ${formatResistance(R)}` :
+                        `R = V / I = ${V.toFixed(3)}V / ${fmtI(I)}`;
+    document.getElementById('res_ohm_sub').innerHTML =
+        `V = <strong>${V.toFixed(3)} V</strong> &nbsp;|&nbsp; I = <strong>${fmtI(I)}</strong> &nbsp;|&nbsp; R = <strong>${formatResistance(R)}</strong> &nbsp;|&nbsp; P = <strong>${P>=1?P.toFixed(3)+' W':(P*1000).toFixed(2)+' mW'}</strong>`;
+}
+
+// ============================================================
+// POTENCIA
+// ============================================================
+function calcPotencia() {
+    const V = +document.getElementById('pot_v').value;
+    const I = +document.getElementById('pot_i').value * +document.getElementById('pot_i_unit').value;
+    const P = V * I;
+    const el = document.getElementById('res_pot');
+    el.classList.add('show');
+    document.getElementById('res_pot_val').textContent = P >= 1 ? P.toFixed(3)+' W' : (P*1000).toFixed(2)+' mW';
+    document.getElementById('res_pot_sub').innerHTML =
+        `R equivalente: <strong>${formatResistance(V/I)}</strong> &nbsp;|&nbsp; Resistor mínimo: <strong>${getPowerLabel(P)}</strong>`;
+    const warn = document.getElementById('res_pot_warn');
+    if(P >= 2) { warn.style.display='flex'; warn.querySelector('span').textContent=`${P.toFixed(1)}W es mucho para un resistor estándar. Usá resistores de potencia o repartí la carga.`; }
+    else warn.style.display='none';
+}
+
+// ============================================================
+// SERIE / PARALELO (resistencias)
+// ============================================================
+const R_COLORS = ['#3b82f6','#a78bfa','#34d399','#f97316','#f87171','#fbbf24'];
+let rpCount = 2;
+let rpMode = 'serie';
+
+function renderRInputs() {
+    const c = document.getElementById('rp_inputs');
+    let html = '';
+    for(let i=0; i<rpCount; i++) {
+        html += `<div class="rp-item">
+            <span style="color:${R_COLORS[i]};font-weight:700;font-size:.85rem;min-width:22px">R${i+1}</span>
+            <input type="number" id="rv${i}" value="1" min="0.001" step="any">
+            <select id="ru${i}">
+                <option value="1">Ω</option>
+                <option value="1000" selected>KΩ</option>
+                <option value="1000000">MΩ</option>
+            </select>
+            ${rpCount>2 ? `<button class="rp-remove-btn" onclick="removeR(${i})"><i class="fas fa-xmark"></i></button>` : ''}
+        </div>`;
+    }
+    c.innerHTML = html;
+    document.getElementById('rp_max_note').textContent = rpCount >= 6 ? 'Máximo 6 resistencias' : '';
+    document.getElementById('rp_result').classList.remove('show');
+    document.getElementById('rp_bars').innerHTML = '';
+}
+
+function addR() {
+    if(rpCount >= 6) return;
+    // save current values
+    const saved = [];
+    for(let i=0; i<rpCount; i++) {
+        saved.push({ v: document.getElementById('rv'+i)?.value||1, u: document.getElementById('ru'+i)?.value||1000 });
+    }
+    rpCount++;
+    renderRInputs();
+    saved.forEach((s,i) => { document.getElementById('rv'+i).value=s.v; document.getElementById('ru'+i).value=s.u; });
+}
+
+function removeR(idx) {
+    const saved = [];
+    for(let i=0; i<rpCount; i++) saved.push({ v: document.getElementById('rv'+i)?.value||1, u: document.getElementById('ru'+i)?.value||1000 });
+    saved.splice(idx,1);
+    rpCount--;
+    renderRInputs();
+    saved.forEach((s,i) => { document.getElementById('rv'+i).value=s.v; document.getElementById('ru'+i).value=s.u; });
+}
+
+function setRPMode(mode, btn) {
+    rpMode = mode;
+    btn.closest('#rp_toggle').querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('rp_formula_note').innerHTML =
+        mode==='serie'
+        ? 'Serie: R<sub>T</sub> = R1 + R2 + ... &nbsp;|&nbsp; La corriente es la misma en todas.'
+        : 'Paralelo: 1/R<sub>T</sub> = 1/R1 + 1/R2 + ... &nbsp;|&nbsp; El voltaje es el mismo en todas. R<sub>T</sub> siempre menor a la menor R.';
+    document.getElementById('rp_result').classList.remove('show');
+    document.getElementById('rp_bars').innerHTML = '';
+}
+
+function calcRP() {
+    const vals = [];
+    for(let i=0; i<rpCount; i++) {
+        const v = +(document.getElementById('rv'+i)?.value||0);
+        const u = +(document.getElementById('ru'+i)?.value||1);
+        if(v <= 0) { alert('Todos los valores deben ser mayores a 0'); return; }
+        vals.push(v * u);
+    }
+    let rTotal = rpMode==='serie' ? vals.reduce((a,b)=>a+b,0) : 1/vals.reduce((a,b)=>a+1/b,0);
+    const el = document.getElementById('rp_result');
+    el.classList.add('show');
+    document.getElementById('rp_result_val').textContent = formatResistance(rTotal);
+    document.getElementById('rp_result_sub').innerHTML = rpMode==='serie'
+        ? `Suma directa de todas las resistencias`
+        : `Siempre menor a la más pequeña: <strong>${formatResistance(Math.min(...vals))}</strong>`;
+    // Barras
+    const gTotal = vals.reduce((a,b)=>a+1/b,0);
+    let bHtml = `<div style="margin-top:16px;font-size:.78rem;color:var(--text-muted);margin-bottom:8px">${rpMode==='serie'?'% de tensión sobre cada R':'% de corriente por cada R'}</div>`;
+    vals.forEach((r,i) => {
+        const pct = rpMode==='serie' ? r/rTotal*100 : (1/r)/gTotal*100;
+        bHtml += `<div class="rp-bar-row">
+            <span style="color:${R_COLORS[i]};font-weight:700;min-width:22px;font-size:.8rem">R${i+1}</span>
+            <div class="rp-bar-track"><div class="rp-bar-fill" style="width:${pct.toFixed(1)}%;background:${R_COLORS[i]}"></div></div>
+            <span class="rp-bar-label">${formatResistance(r)} (${pct.toFixed(1)}%)</span>
+        </div>`;
+    });
+    document.getElementById('rp_bars').innerHTML = bHtml;
+}
+
+renderRInputs();
+
+// ============================================================
+// FRECUENCIA DE CORTE RC
+// ============================================================
+function calcFc() {
+    const R = +document.getElementById('fc_r').value * +document.getElementById('fc_r_unit').value;
+    const C = +document.getElementById('fc_c').value * +document.getElementById('fc_c_unit').value;
+    const fc = 1 / (2 * Math.PI * R * C);
+    const el = document.getElementById('res_fc');
+    el.classList.add('show');
+    document.getElementById('res_fc_val').textContent = fc >= 1000 ? (fc/1000).toFixed(2)+' kHz' : fc.toFixed(2)+' Hz';
+    document.getElementById('res_fc_sub').innerHTML =
+        `τ = R×C = <strong>${formatTime(R*C)}</strong> &nbsp;|&nbsp; f<sub>c</sub> = 1 / (2π × ${formatResistance(R)} × ${(C*1e6).toFixed(3)} μF)`;
+}
+
+// ============================================================
+// DRIVER DE RELÉ
+// ============================================================
+function calcReleDriver() {
+    const vc = +document.getElementById('rel_vctrl').value;
+    const ic = +document.getElementById('rel_ibob').value;
+    const hfe = +document.getElementById('rel_hfe').value;
+    const sat = +document.getElementById('rel_sat').value;
+    const vbe = 0.7;
+    const ib_needed = (ic / hfe) * sat; // mA
+    const rb = (vc - vbe) / (ib_needed / 1000); // Ohms
+    const el = document.getElementById('res_rele_driver');
+    el.classList.add('show');
+    document.getElementById('res_rele_driver_val').textContent = formatResistance(rb);
+    document.getElementById('res_rele_driver_sub').innerHTML =
+        `I<sub>B</sub> necesaria: <strong>${ib_needed.toFixed(2)} mA</strong> (×${sat}) &nbsp;|&nbsp; ` +
+        `V<sub>BE</sub> = 0.7V &nbsp;|&nbsp; E24 cercano: <strong>${formatR(getNearestStd(rb))}</strong>`;
+}
+
+// ============================================================
+// 555 TIMER
+// ============================================================
+function set555Tab(mode, btn) {
+    btn.closest('#mode555_toggle').querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('section_astable').style.display = mode==='astable' ? 'block' : 'none';
+    document.getElementById('section_mono').style.display = mode==='mono' ? 'block' : 'none';
+}
+
+// Astable
+function setAstMode(mode, btn) {
+    btn.closest('#ast_sub_toggle').querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('ast_direct_inputs').style.display = mode==='direct' ? 'grid' : 'none';
+    document.getElementById('ast_inv_inputs').style.display = mode==='inverse' ? 'grid' : 'none';
+    document.getElementById('res_astable').classList.remove('show');
+}
+
+function calcAstable() {
+    const el = document.getElementById('res_astable');
+    el.classList.add('show');
+    const isDirect = document.getElementById('ast_direct_inputs').style.display !== 'none';
+    if(isDirect) {
+        const Ra = +document.getElementById('ast_ra').value * +document.getElementById('ast_ra_unit').value;
+        const Rb = +document.getElementById('ast_rb').value * +document.getElementById('ast_rb_unit').value;
+        const C  = +document.getElementById('ast_c').value  * +document.getElementById('ast_c_unit').value;
+        const f = 1.44 / ((Ra + 2*Rb) * C);
+        const duty = (Ra + Rb) / (Ra + 2*Rb) * 100;
+        const Th = 0.693 * (Ra + Rb) * C;
+        const Tl = 0.693 * Rb * C;
+        document.getElementById('res_astable_val').textContent = f >= 1000 ? (f/1000).toFixed(3)+' kHz' : f.toFixed(3)+' Hz';
+        document.getElementById('res_astable_sub').innerHTML =
+            `Período: <strong>${formatTime(Th+Tl)}</strong> &nbsp;|&nbsp; Duty: <strong>${duty.toFixed(1)}%</strong> &nbsp;|&nbsp; T alto: <strong>${formatTime(Th)}</strong> &nbsp;|&nbsp; T bajo: <strong>${formatTime(Tl)}</strong>`;
+    } else {
+        const f = +document.getElementById('ast_inv_f').value;
+        const duty = +document.getElementById('ast_inv_duty').value / 100;
+        const C = +document.getElementById('ast_inv_c').value * +document.getElementById('ast_inv_c_unit').value;
+        if(duty <= 0.5) {
+            document.getElementById('res_astable_val').textContent = 'Duty ≤ 50%: no posible en config. estándar';
+            document.getElementById('res_astable_sub').innerHTML = 'Necesitás un diodo 1N4148 en paralelo con Rb para duty ≤ 50%.';
+            return;
+        }
+        const K = 1.44 / (f * C);
+        const Rb = K * (1 - duty);
+        const Ra = K * (2*duty - 1);
+        const stdRa = getNearestStd(Ra), stdRb = getNearestStd(Rb);
+        const fReal = 1.44 / ((stdRa + 2*stdRb) * C);
+        document.getElementById('res_astable_val').textContent = `Ra = ${formatResistance(Ra)} | Rb = ${formatResistance(Rb)}`;
+        document.getElementById('res_astable_sub').innerHTML =
+            `E24 Ra: <strong>${formatResistance(stdRa)}</strong> · Rb: <strong>${formatResistance(stdRb)}</strong> &nbsp;|&nbsp; f real: <strong>${fReal>=1000?(fReal/1000).toFixed(3)+' kHz':fReal.toFixed(3)+' Hz'}</strong>`;
+    }
+}
+
+// Monoestable
+function setMonoMode(mode, btn) {
+    btn.closest('#mono_sub_toggle').querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('mono_direct_inputs').style.display = mode==='direct' ? 'grid' : 'none';
+    document.getElementById('mono_inv_inputs').style.display = mode==='inverse' ? 'grid' : 'none';
+    document.getElementById('res_mono').classList.remove('show');
+}
+
+function calcMono() {
+    const el = document.getElementById('res_mono');
+    el.classList.add('show');
+    const isDirect = document.getElementById('mono_direct_inputs').style.display !== 'none';
+    if(isDirect) {
+        const R = +document.getElementById('mono_r').value * +document.getElementById('mono_r_unit').value;
+        const C = +document.getElementById('mono_c').value * +document.getElementById('mono_c_unit').value;
+        const t = 1.1 * R * C;
+        document.getElementById('res_mono_val').textContent = formatTime(t);
+        document.getElementById('res_mono_sub').innerHTML = `t = 1.1 × ${formatResistance(R)} × ${(C*1e6).toFixed(3)} μF`;
+    } else {
+        const t = +document.getElementById('mono_inv_t').value * +document.getElementById('mono_inv_t_unit').value;
+        const C = +document.getElementById('mono_inv_c').value * +document.getElementById('mono_inv_c_unit').value;
+        const R = t / (1.1 * C);
+        const std = getNearestStd(R);
+        document.getElementById('res_mono_val').textContent = formatResistance(R)+' (exacto)';
+        document.getElementById('res_mono_sub').innerHTML =
+            `E24: <strong>${formatResistance(std)}</strong> &nbsp;|&nbsp; Tiempo real: <strong>${formatTime(1.1*std*C)}</strong>`;
+    }
+}
+
+// ============================================================
+// REGULADORES
+// ============================================================
+function calc7805() {
+    const vout = +document.getElementById('reg_model').value;
+    const vin  = +document.getElementById('reg_vin').value;
+    const I    = +document.getElementById('reg_iload').value / 1000; // A
+    const el = document.getElementById('res_reg');
+    el.classList.add('show');
+    const warn = document.getElementById('res_reg_warn');
+    if(vin < vout + 2) {
+        document.getElementById('res_reg_val').textContent = 'Tensión insuficiente';
+        document.getElementById('res_reg_sub').innerHTML = `V_in mínima: <strong>${vout+2}V</strong> (ingresaste ${vin}V). El regulador no puede funcionar.`;
+        warn.style.display='none'; return;
+    }
+    const P = (vin - vout) * I;
+    document.getElementById('res_reg_val').textContent = (P*1000).toFixed(0)+' mW disipados';
+    document.getElementById('res_reg_sub').innerHTML =
+        `P = (${vin}V − ${vout}V) × ${(I*1000).toFixed(0)}mA = <strong>${P.toFixed(3)}W</strong> &nbsp;|&nbsp; V_out: <strong>${vout}V</strong> @ <strong>${(I*1000).toFixed(0)}mA</strong>`;
+    if(P >= 1) { warn.style.display='flex'; warn.querySelector('i').className='fas fa-fire'; warn.querySelector('span').textContent=`${P.toFixed(2)}W: heatsink obligatorio. Sin disipador el regulador puede quemarse.`; }
+    else if(P >= 0.5) { warn.style.display='flex'; warn.querySelector('i').className='fas fa-triangle-exclamation'; warn.querySelector('span').textContent=`${(P*1000).toFixed(0)}mW: conviene agregar un pequeño heatsink o reducir la diferencia V_in − V_out.`; }
+    else { warn.style.display='none'; }
+}
+
+function calcZener() {
+    const vin   = +document.getElementById('zen_vin').value;
+    const vz    = +document.getElementById('zen_vz').value;
+    const iload = +document.getElementById('zen_iload').value / 1000;
+    const iz    = +document.getElementById('zen_iz').value / 1000;
+    const el = document.getElementById('res_zener');
+    el.classList.add('show');
+    if(vin <= vz) {
+        document.getElementById('res_zener_val').textContent='Error';
+        document.getElementById('res_zener_sub').textContent='V_in debe ser mayor que V_Zener.';
+        return;
+    }
+    const Rs = (vin - vz) / (iz + iload);
+    const std = getNearestStd(Rs);
+    const P_rs = Math.pow(vin - vz, 2) / std;
+    const P_zen = vz * ((vin - vz) / std); // peor caso: sin carga
+    document.getElementById('res_zener_val').textContent = formatResistance(Rs)+' (exacto)';
+    document.getElementById('res_zener_sub').innerHTML =
+        `E24: <strong>${formatResistance(std)}</strong> &nbsp;|&nbsp; P resistor: <strong>${(P_rs*1000).toFixed(0)}mW → ≥ ${getPowerLabel(P_rs)}</strong> &nbsp;|&nbsp; P Zener (sin carga): <strong>${(P_zen*1000).toFixed(0)}mW</strong>`;
+}
+
 function calcDivisor(){
     const el=document.getElementById('res_divisor');
     el.classList.add('show');
