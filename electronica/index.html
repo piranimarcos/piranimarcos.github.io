@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electrónica - Calculadoras y Referencias | Marcos Pirani</title>
+    <title>Electrónica - Calculadoras y Referencias | Ing. Marcos Pirani</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
@@ -31,8 +31,10 @@
         .site-header { background:rgba(10,10,15,.95); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); padding:14px 0; position:sticky; top:0; z-index:100; }
         .brand { font-family:'Poppins',sans-serif; font-size:1.3rem; font-weight:700; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:10px; }
         .brand span { background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        .back-link { color:var(--text-light); text-decoration:none; font-size:.9rem; display:flex; align-items:center; gap:6px; transition:color .3s; }
-        .back-link:hover { color:var(--primary); }
+        /* scroll-to-top */
+        .scroll-top { position:fixed; bottom:26px; right:26px; width:42px; height:42px; border-radius:50%; background:var(--primary); border:none; color:white; font-size:1rem; cursor:pointer; display:none; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(59,130,246,.45); transition:opacity .3s,transform .3s; z-index:500; }
+        .scroll-top.visible { display:flex; }
+        .scroll-top:hover { transform:translateY(-3px); }
 
         .page-hero { padding:50px 0 30px; text-align:center; }
         .page-hero h1 { font-size:2.5rem; margin-bottom:12px; }
@@ -55,7 +57,7 @@
 
         /* Imagen de componente */
         .component-img-wrap { text-align:center; margin:16px 0; }
-        .component-img-wrap img { max-width:100%; max-height:220px; border-radius:12px; border:1px solid var(--border); object-fit:contain; background:#0d0d18; padding:10px; }
+        .component-img-wrap img { max-width:100%; max-height:260px; border-radius:12px; border:1px solid var(--border); object-fit:contain; background:#0d0d18; padding:10px; }
         .img-placeholder { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:#0d0d18; border:2px dashed var(--border-light); border-radius:12px; padding:30px 20px; color:var(--text-muted); font-size:.85rem; }
         .img-placeholder i { font-size:2.5rem; color:var(--border-light); }
         .img-placeholder code { color:#60a5fa; font-size:.78rem; }
@@ -272,20 +274,46 @@
         .scr-body { background:#1a1a2e; border:2px solid var(--border-light); border-radius:10px; padding:16px; max-width:200px; margin:0 auto; }
         .scr-pin { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid rgba(255,255,255,.06); font-size:.82rem; }
         .scr-pin:last-child { border-bottom:none; }
+
+        /* ======================== CALCULADORAS — QUICK ACCESS ======================== */
+        .calcs-fab { position:fixed; bottom:26px; left:26px; width:52px; height:52px; border-radius:50%; background:var(--gradient); border:none; color:white; font-size:1.15rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(59,130,246,.5); transition:transform .25s,box-shadow .25s; z-index:500; }
+        .calcs-fab:hover { transform:scale(1.1); box-shadow:0 6px 28px rgba(59,130,246,.65); }
+        .calcs-fab:active { transform:scale(.95); }
+        .calcs-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:600; backdrop-filter:blur(3px); }
+        .calcs-backdrop.open { display:block; }
+        .calcs-sheet { position:fixed; bottom:0; left:0; right:0; max-height:82vh; background:var(--bg-card); border-radius:20px 20px 0 0; border-top:1px solid var(--border-light); z-index:601; transform:translateY(100%); transition:transform .35s cubic-bezier(.32,.72,0,1); display:flex; flex-direction:column; }
+        .calcs-sheet.open { transform:translateY(0); }
+        .calcs-sheet-handle { width:40px; height:4px; background:var(--border-light); border-radius:2px; margin:12px auto 0; flex-shrink:0; }
+        .calcs-sheet-header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px 12px; flex-shrink:0; border-bottom:1px solid var(--border); }
+        .calcs-sheet-title { font-family:'Poppins',sans-serif; font-weight:700; font-size:1.05rem; color:#f8fafc; display:flex; align-items:center; gap:9px; }
+        .calcs-sheet-title i { background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .calcs-sheet-close { background:rgba(255,255,255,.07); border:none; color:var(--text-muted); width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.9rem; transition:background .2s,color .2s; }
+        .calcs-sheet-close:hover { background:rgba(255,255,255,.14); color:#f8fafc; }
+        .calcs-list { overflow-y:auto; padding:6px 12px 32px; flex:1; -webkit-overflow-scrolling:touch; }
+        .calcs-group-label { font-size:.68rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.9px; font-weight:700; padding:14px 6px 4px; display:flex; align-items:center; gap:6px; }
+        .calcs-group-label:first-child { padding-top:8px; }
+        .calcs-item { display:flex; align-items:center; gap:12px; padding:10px 10px; border-radius:12px; cursor:pointer; transition:background .15s,border-color .15s; border:1px solid transparent; margin-bottom:3px; -webkit-tap-highlight-color:transparent; }
+        .calcs-item:hover { background:rgba(59,130,246,.08); border-color:rgba(59,130,246,.18); }
+        .calcs-item:active { background:rgba(59,130,246,.16); }
+        .calcs-item-icon { width:36px; height:36px; border-radius:10px; background:rgba(59,130,246,.12); display:flex; align-items:center; justify-content:center; color:var(--primary); font-size:.82rem; flex-shrink:0; }
+        .calcs-item-body { flex:1; min-width:0; }
+        .calcs-item-name { font-weight:600; color:#f8fafc; font-size:.88rem; line-height:1.3; }
+        .calcs-item-desc { font-size:.72rem; color:var(--text-muted); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .calcs-item-arr { color:var(--border-light); font-size:.72rem; flex-shrink:0; }
     </style>
 </head>
 <body>
 
 <header class="site-header">
     <div class="container d-flex justify-content-between align-items-center">
-        <a href="../index.html" class="brand"><i class="fas fa-bolt" style="color:#f97316"></i>Marcos<span>Pirani</span></a>
-        <a href="../index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+        <a href="../index.html" class="brand"><i class="fas fa-bolt" style="color:#f97316"></i><span>Ing.</span>Marcos Pirani</a>
+        <img src="img/logoSP.png" alt="Logo Escuela" style="height:42px;border-radius:10px;opacity:.9;">
     </div>
 </header>
 
 <div class="page-hero">
     <div class="container">
-        <h1><span class="gradient-text"><i class="fas fa-microchip"></i> Electrónica</span></h1>
+        <h1><span class="gradient-text"><i class="fas fa-microchip"></i> Taller de Electrónica I</span></h1>
         <p>Calculadoras y referencias rápidas para electrónica básica</p>
     </div>
 </div>
@@ -418,7 +446,7 @@
             </div>
 
             <!-- Ley de Ohm -->
-            <div class="calc-section">
+            <div class="calc-section" id="calc-ohm">
                 <h3><i class="fas fa-calculator"></i> Calculadora — Ley de Ohm</h3>
                 <p style="color:var(--text-light);font-size:.9rem;margin-bottom:20px">La <strong style="color:#f8fafc">Ley de Ohm</strong> relaciona las tres magnitudes fundamentales: <strong style="color:#60a5fa">V = I × R</strong>. Conociendo dos, podés calcular la tercera.</p>
                 <div class="ohm-solve-btns">
@@ -456,7 +484,7 @@
             </div>
 
             <!-- Potencia -->
-            <div class="calc-section">
+            <div class="calc-section" id="calc-potencia">
                 <h3><i class="fas fa-bolt"></i> Calculadora — Potencia eléctrica</h3>
                 <p style="color:var(--text-light);font-size:.9rem;margin-bottom:6px">La <strong style="color:#f8fafc">potencia</strong> indica cuánta energía consume un componente por segundo. Se mide en <strong style="color:#f8fafc">Watts [W]</strong>.</p>
                 <div class="formula-box">P = V × I &nbsp;|&nbsp; P = I² × R &nbsp;|&nbsp; P = V² / R</div>
@@ -505,10 +533,8 @@
                         </div>
                     </div>
                     <div class="col-md-5">
-                        <div class="img-slot">
-                            <i class="fas fa-image"></i>
-                            Diagrama de conexiones internas de la protoboard
-                            <code>electronica/img/protoboard.png</code>
+                        <div class="component-img-wrap">
+                            <img src="img/protoboard.png" alt="Protoboard">
                         </div>
                     </div>
                 </div>
@@ -604,10 +630,8 @@
                             <li><span class="step-num" style="background:#ea580c">⑧</span><div><strong style="color:#f8fafc">Puntas de prueba</strong> — Roja (+) y negra (−). Las puntas deben estar en buen estado: sin peladuras en el cable, punta metálica firme.</div></li>
                         </ol>
 
-                        <div class="img-slot mt-2">
-                            <i class="fas fa-image"></i>
-                            Foto del multímetro con cada parte numerada
-                            <code>electronica/img/multimetro_partes.png</code>
+                        <div class="component-img-wrap">
+                            <img src="img/multimetro_partes.webp" alt="Multimetro">
                         </div>
                     </div>
                 </div>
@@ -634,18 +658,16 @@
                         </div>
 
                         <ol class="step-list mt-3">
-                            <li><span class="step-num">1</span>Poner la punta negra en <strong>COM</strong> y la roja en <strong>VΩ</strong>.</li>
-                            <li><span class="step-num">2</span>Girar el selector a <strong>DCV</strong> (para baterías, fuentes, circuitos DC) o <strong>ACV</strong> (para la red eléctrica). Si el tester tiene AUTO, elegir ese; si tiene rangos, empezar por el mayor.</li>
-                            <li><span class="step-num">3</span>Apoyar la punta roja en el punto A y la negra en el punto B (referencia/GND) sin apagar el circuito.</li>
-                            <li><span class="step-num">4</span>Leer el valor en el display. Si muestra "OL" o "1.", bajar el rango. Si el valor es negativo, las puntas están invertidas.</li>
-                            <li><span class="step-num">5</span>Una vez leído, retirar primero la punta roja y luego la negra.</li>
+                            <li><span class="step-num">1</span> <p>Poner la punta negra en <strong>COM</strong> y la roja en <strong>VΩ</strong>. </p></li>
+                            <li><span class="step-num">2</span> <p>Girar el selector a <strong>DCV</strong> (para baterías, fuentes, circuitos DC) o <strong>ACV</strong> (para la red eléctrica). Si el tester tiene AUTO, elegir ese; si tiene rangos, empezar por el mayor. </p></li>
+                            <li><span class="step-num">3</span> <p>Apoyar la punta roja en el punto A y la negra en el punto B (referencia/GND) sin apagar el circuito. </p></li>
+                            <li><span class="step-num">4</span> <p>Leer el valor en el display. Si muestra "OL" o "1.", bajar el rango. Si el valor es negativo, las puntas están invertidas. </p></li>
+                            <li><span class="step-num">5</span> <p>Una vez leído, retirar primero la punta roja y luego la negra. </p></li>
                         </ol>
                     </div>
                     <div class="col-md-5">
-                        <div class="img-slot">
-                            <i class="fas fa-image"></i>
-                            Puntas en paralelo midiendo voltaje en una pila
-                            <code>electronica/img/mm_tension.png</code>
+                        <div class="component-img-wrap">
+                            <img src="img/mm_tension.png" alt="Medición de tension">
                         </div>
                         <div class="params-grid mt-3">
                             <div class="param-box"><div class="param-label">Pila AA cargada</div><div class="param-value">1.5 V DC</div></div>
@@ -677,18 +699,16 @@
                         </div>
 
                         <ol class="step-list mt-3">
-                            <li><span class="step-num">1</span><strong>Apagar el circuito</strong> y descargar cualquier capacitor antes de medir. La tensión residual arruina la lectura y puede dañar el tester.</li>
-                            <li><span class="step-num">2</span>Desconectar <strong>al menos un extremo</strong> del componente a medir. Si queda en el circuito, las resistencias en paralelo afectan el resultado.</li>
-                            <li><span class="step-num">3</span>Selector en <strong>Ω</strong>. Si tiene rangos (200Ω, 2KΩ, 20KΩ, 200KΩ, 2MΩ), empezar por el mayor y bajar hasta que el display muestre un valor estable.</li>
-                            <li><span class="step-num">4</span>Apoyar las puntas sobre cada extremo del componente. Sostener firme pero no tocar las partes metálicas con los dedos (la resistencia de la piel altera lecturas en KΩ/MΩ).</li>
-                            <li><span class="step-num">5</span>Leer el valor. Compararlo con el valor nominal del componente ± su tolerancia.</li>
+                            <li><span class="step-num">1</span><p><strong>Apagar el circuito</strong> y descargar cualquier capacitor antes de medir. La tensión residual arruina la lectura y puede dañar el tester. </p></li>
+                            <li><span class="step-num">2</span><p>Desconectar <strong>al menos un extremo</strong> del componente a medir. Si queda en el circuito, las resistencias en paralelo afectan el resultado. </p></li>
+                            <li><span class="step-num">3</span><p>Selector en <strong>Ω</strong>. Si tiene rangos (200Ω, 2KΩ, 20KΩ, 200KΩ, 2MΩ), empezar por el mayor y bajar hasta que el display muestre un valor estable. </p></li>
+                            <li><span class="step-num">4</span><p>Apoyar las puntas sobre cada extremo del componente. Sostener firme pero no tocar las partes metálicas con los dedos (la resistencia de la piel altera lecturas en KΩ/MΩ). </p></li>
+                            <li><span class="step-num">5</span><p>Leer el valor. Verificar que la escala elegida tenga letra (K o M) Multiplicar por 1.000 (K) o por 1.000.000 (M) lo queu muestra el Display. Compararlo con el valor nominal del componente ± su tolerancia.  </p></li>
                         </ol>
                     </div>
                     <div class="col-md-5">
-                        <div class="img-slot">
-                            <i class="fas fa-image"></i>
-                            Midiendo una resistencia desconectada del circuito
-                            <code>electronica/img/mm_resistencia.png</code>
+                        <div class="component-img-wrap">
+                            <img src="img/mm_resistencia.png" alt="Medición de resistencia">
                         </div>
                         <div style="background:#0d0d18;border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px;font-size:.82rem;">
                             <div style="color:var(--text-muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Qué significa cada lectura</div>
@@ -741,10 +761,8 @@
                         </div>
                     </div>
                     <div class="col-md-5">
-                        <div class="img-slot">
-                            <i class="fas fa-image"></i>
-                            Probando continuidad en un cable y en una pista de PCB
-                            <code>electronica/img/mm_continuidad.png</code>
+                        <div class="component-img-wrap">
+                            <img src="img/mm_continuidad.png" alt="Probando continuidad en un cable y en una pista de PCB">
                         </div>
                         <div class="note mt-3" style="font-size:.83rem"><i class="fas fa-lightbulb"></i><span>El modo continuidad también sirve para identificar pines en un conector desconocido: probá cada combinación hasta que pite.</span></div>
                     </div>
@@ -779,10 +797,8 @@
                         </ol>
                     </div>
                     <div class="col-md-5">
-                        <div class="img-slot">
-                            <i class="fas fa-image"></i>
-                            Probando un diodo 1N4007 en polarización directa e inversa
-                            <code>electronica/img/mm_diodo.png</code>
+                        <div class="component-img-wrap">
+                            <img src="img/mm_diodo.png" alt="Probando un diodo 1N4007 en polarización directa e inversa">
                         </div>
 
                         <div style="background:#0d0d18;border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px;font-size:.82rem;">
@@ -828,10 +844,8 @@
                         </div>
                     </div>
                     <div class="col-md-5">
-                        <div class="img-slot">
-                            <i class="fas fa-image"></i>
-                            Cautín y estación de soldadura
-                            <code>electronica/img/cautin.png</code>
+                        <div class="component-img-wrap">
+                            <img src="img/cautin.png" alt="Cautín y estación de soldadura">
                         </div>
                     </div>
                 </div>
@@ -853,10 +867,8 @@
                         </ol>
                     </div>
                     <div class="col-md-5">
-                        <div class="img-slot">
-                            <i class="fas fa-image"></i>
-                            Proceso de soldadura en PCB
-                            <code>electronica/img/soldadura_tht.png</code>
+                        <div class="component-img-wrap">
+                            <img src="img/soldadura_tht.png" alt="Proceso de soldadura en PCB">
                         </div>
                     </div>
                 </div>
@@ -880,10 +892,8 @@
                         </ul>
                     </div>
                 </div>
-                <div class="img-slot mt-3">
-                    <i class="fas fa-image"></i>
-                    Soldadura bien hecha vs soldadura fría (comparación)
-                    <code>electronica/img/soldadura_comparacion.png</code>
+                <div class="component-img-wrap mt-3">
+                    <img src="img/soldadura_comparacion.png" alt="Soldadura bien hecha vs soldadura fría (comparación)">
                 </div>
 
                 <!-- Método 2 -->
@@ -903,10 +913,8 @@
                         </ol>
                     </div>
                     <div class="col-md-5">
-                        <div class="img-slot">
-                            <i class="fas fa-image"></i>
-                            Proceso de estañado y unión de cables
-                            <code>electronica/img/soldadura_cables.png</code>
+                        <div class="component-img-wrap">
+                            <img src="img/soldadura_cables.png" alt="Proceso de estañado y unión de cables">
                         </div>
                     </div>
                 </div>
@@ -941,10 +949,8 @@
                         </ol>
                     </div>
                     <div class="col-md-4">
-                        <div class="img-slot">
-                            <i class="fas fa-image"></i>
-                            Placa de cobre virgen (FR4 o baquelita)
-                            <code>electronica/img/pcb_virgen.png</code>
+                        <div class="component-img-wrap">
+                            <img src="img/pcb_virgen.png" alt="Placa de cobre virgen (FR4 o baquelita)">
                         </div>
                         <div class="img-slot">
                             <i class="fas fa-image"></i>
@@ -1027,7 +1033,7 @@
             </div>
 
             <!-- Calculadora interactiva -->
-            <div class="calc-section">
+            <div class="calc-section" id="calc-colores">
                 <h3><i class="fas fa-calculator"></i> Calculadora de código de colores</h3>
                 <div class="bands-toggle">
                     <button class="toggle-btn active" onclick="setBands(4,this)">4 Bandas</button>
@@ -1240,7 +1246,7 @@
             </div>
 
             <!-- Serie / Paralelo -->
-            <div class="calc-section">
+            <div class="calc-section" id="calc-serie-paralelo">
                 <h3><i class="fas fa-layer-group"></i> Calculadora — Resistencias en Serie y Paralelo</h3>
                 <div class="bands-toggle" id="rp_toggle">
                     <button class="toggle-btn active" onclick="setRPMode('serie',this)">En Serie</button>
@@ -1309,7 +1315,7 @@
             </div>
 
             <!-- Calculadora Serie -->
-            <div class="led-calc-card">
+            <div class="led-calc-card" id="calc-led-serie">
                 <h4><i class="fas fa-arrow-right" style="color:#60a5fa"></i> LEDs en Serie <span class="badge-tipo badge-serie">SERIE</span></h4>
                 <p style="color:var(--text-muted);font-size:.86rem;margin-bottom:8px">Varios LEDs encadenados. La tensión se reparte; la corriente es la misma para todos.</p>
                 <div class="formula-box">R = ( V<sub>fuente</sub> − V<sub>led</sub> × N<sub>serie</sub> ) / I<sub>led</sub></div>
@@ -1328,7 +1334,7 @@
             </div>
 
             <!-- Calculadora Paralelo -->
-            <div class="led-calc-card">
+            <div class="led-calc-card" id="calc-led-paralelo">
                 <h4><i class="fas fa-arrows-left-right" style="color:#34d399"></i> LEDs en Paralelo <span class="badge-tipo badge-paralelo">PARALELO</span></h4>
                 <p style="color:var(--text-muted);font-size:.86rem;margin-bottom:8px">Varios LEDs en paralelo comparten la misma tensión. Un solo resistor para todos.</p>
                 <div class="formula-box">R = ( V<sub>fuente</sub> − V<sub>led</sub> ) / ( I<sub>led</sub> × N<sub>paralelo</sub> )</div>
@@ -1347,7 +1353,7 @@
             </div>
 
             <!-- Calculadora Combinada -->
-            <div class="led-calc-card">
+            <div class="led-calc-card" id="calc-led-combinado">
                 <h4><i class="fas fa-table-cells" style="color:#a78bfa"></i> Combinada: N serie × M paralelo <span class="badge-tipo badge-combinado">COMBINADO</span></h4>
                 <p style="color:var(--text-muted);font-size:.86rem;margin-bottom:8px">M cadenas en paralelo, cada una con N LEDs en serie. Un solo resistor para toda la matriz.</p>
                 <div class="formula-box">R = ( V<sub>fuente</sub> − V<sub>led</sub> × N<sub>serie</sub> ) / ( I<sub>led</sub> × M<sub>paralelo</sub> )</div>
@@ -1404,7 +1410,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
                 <div class="note note-warn"><i class="fas fa-triangle-exclamation"></i><span>Si manejás cargas inductivas (motores, relés) poné un <strong>diodo flyback</strong> (1N4007) en paralelo con la carga, cátodo hacia +V.</span></div>
             </div>
 
-            <div class="info-card">
+            <div class="info-card" id="calc-transistor-base">
                 <h3><i class="fas fa-calculator"></i> Calculadora de resistencia de base</h3>
                 <div class="calc-inputs">
                     <div class="input-group-custom"><label>V control (V)</label><input type="number" id="t_vctrl" value="5" step="0.1"></div>
@@ -1464,7 +1470,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
                 </div>
             </div>
 
-            <div class="info-card">
+            <div class="info-card" id="calc-tau">
                 <h3><i class="fas fa-calculator"></i> Calculadora de constante de tiempo τ = R × C</h3>
                 <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">La constante de tiempo τ indica cuánto tarda el capacitor en cargarse al <strong style="color:#f8fafc">63.2%</strong> de la tensión de alimentación. A los 5τ está cargado al 99.3% (considerado completo).</p>
                 <div class="formula-box">τ = R × C &nbsp;|&nbsp; V(t) = V<sub>max</sub> × (1 − e<sup>−t/τ</sup>)</div>
@@ -1509,7 +1515,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
             </div>
 
             <!-- Frecuencia de corte RC -->
-            <div class="info-card">
+            <div class="info-card" id="calc-rc-fc">
                 <h3><i class="fas fa-filter"></i> Calculadora — Filtro RC: Frecuencia de corte</h3>
                 <p style="color:var(--text-light);font-size:.9rem;margin-bottom:10px">Un resistor y un capacitor en serie forman un filtro. La <strong style="color:#f8fafc">frecuencia de corte</strong> es el punto donde la señal empieza a atenuarse. Por debajo pasa (filtro pasa-bajos), por arriba se bloquea.</p>
                 <div class="formula-box">f<sub>c</sub> = 1 / (2π × R × C)</div>
@@ -1600,7 +1606,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
             </div>
 
             <!-- Driver calculator -->
-            <div class="info-card">
+            <div class="info-card" id="calc-rele-base">
                 <h3><i class="fas fa-calculator"></i> Calculadora — Resistencia de base para driver de relé</h3>
                 <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">Calculá la resistencia de base del transistor NPN que va a activar la bobina del relé.</p>
                 <div class="calc-inputs">
@@ -1657,7 +1663,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
                 </div>
             </div>
 
-            <div class="info-card">
+            <div class="info-card" id="calc-ldr">
                 <h3><i class="fas fa-calculator"></i> Calculadora divisor de tensión con LDR</h3>
                 <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">Se conecta la LDR en serie con una resistencia fija. La tensión en la unión varía con la luz.</p>
                 <div class="formula-box">
@@ -1712,7 +1718,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
                 </div>
             </div>
 
-            <div class="led-calc-card">
+            <div class="led-calc-card" id="calc-ir">
                 <h4><i class="fas fa-calculator" style="color:#a78bfa"></i> Calculadora resistencia LED IR <span class="badge-tipo badge-combinado">IGUAL QUE LED</span></h4>
                 <p style="color:var(--text-muted);font-size:.86rem;margin-bottom:8px">Las mismas fórmulas aplican. Usá V<sub>f</sub> ≈ 1.2V como valor típico.</p>
                 <div class="formula-box">R = ( V<sub>fuente</sub> − V<sub>f</sub> × N ) / I<sub>led</sub></div>
@@ -1752,7 +1758,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
                 </div>
             </div>
 
-            <div class="info-card">
+            <div class="info-card" id="calc-divisor">
                 <h3><i class="fas fa-calculator"></i> Calculadora de divisor de tensión</h3>
                 <div class="bands-toggle">
                     <button class="toggle-btn active" onclick="setDivMode('vout',this)">Calcular V<sub>out</sub></button>
@@ -1846,7 +1852,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
             </div>
 
             <!-- Selector de modo -->
-            <div class="calc-section">
+            <div class="calc-section" id="calc-555">
                 <h3><i class="fas fa-calculator"></i> Calculadoras del 555</h3>
                 <div class="bands-toggle" id="mode555_toggle">
                     <button class="toggle-btn active" onclick="set555Tab('astable',this)"><i class="fas fa-wave-square me-1"></i>Modo Astable (oscilador)</button>
@@ -2029,7 +2035,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
                 <div class="note mt-3"><i class="fas fa-info-circle"></i><span>V<sub>DRM</sub> = tensión máxima de bloqueo directa · I<sub>T</sub> = corriente media en conducción · I<sub>GT</sub> = corriente de Gate mínima para disparar · I<sub>H</sub> = corriente de mantenimiento (si cae por debajo, se apaga)</span></div>
             </div>
 
-            <div class="info-card">
+            <div class="info-card" id="calc-scr-gate">
                 <h3><i class="fas fa-calculator"></i> Calculadora — Resistencia de Gate</h3>
                 <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">El Gate del SCR necesita una corriente mínima (I<sub>GT</sub>) para dispararse. Se coloca una resistencia en serie para limitar esa corriente.</p>
                 <div class="formula-box">R<sub>G</sub> = ( V<sub>control</sub> − V<sub>GT</sub> ) / I<sub>GT</sub></div>
@@ -2107,7 +2113,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
             </div>
 
             <!-- Calculadora 7805 -->
-            <div class="info-card">
+            <div class="info-card" id="calc-78xx">
                 <h3><i class="fas fa-calculator"></i> Calculadora — Disipación del 78xx</h3>
                 <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">Calculá cuánto calor disipa el regulador y si necesita disipador.</p>
                 <div class="calc-inputs">
@@ -2158,7 +2164,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
                 </div>
             </div>
 
-            <div class="info-card">
+            <div class="info-card" id="calc-zener">
                 <h3><i class="fas fa-calculator"></i> Calculadora — Regulador Zener</h3>
                 <div class="calc-inputs">
                     <div class="input-group-custom"><label>V entrada (V)</label><input type="number" id="zen_vin" value="12" step="0.1"></div>
@@ -2178,6 +2184,139 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
     </div><!-- /tab-content -->
 </div><!-- /container -->
 
+<!-- Calculadoras Quick Access FAB -->
+<button class="calcs-fab" id="calcsFab" onclick="openCalcsSheet()" title="Acceso rápido a calculadoras">
+    <i class="fas fa-calculator"></i>
+</button>
+
+<div class="calcs-backdrop" id="calcsBackdrop" onclick="closeCalcsSheet()"></div>
+<div class="calcs-sheet" id="calcsSheet">
+    <div class="calcs-sheet-handle"></div>
+    <div class="calcs-sheet-header">
+        <span class="calcs-sheet-title"><i class="fas fa-calculator"></i> Calculadoras rápidas</span>
+        <button class="calcs-sheet-close" onclick="closeCalcsSheet()"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="calcs-list">
+
+        <div class="calcs-group-label"><i class="fas fa-bolt" style="color:#60a5fa"></i> Electricidad</div>
+        <div class="calcs-item" onclick="goToCalc('electricidad','calc-ohm')">
+            <div class="calcs-item-icon"><i class="fas fa-bolt"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Ley de Ohm</div><div class="calcs-item-desc">V = I × R — calcular voltaje, corriente o resistencia</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+        <div class="calcs-item" onclick="goToCalc('electricidad','calc-potencia')">
+            <div class="calcs-item-icon" style="background:rgba(249,115,22,.12);color:#f97316"><i class="fas fa-plug"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Potencia eléctrica</div><div class="calcs-item-desc">P = V × I — Watts y disipación</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+
+        <div class="calcs-group-label"><i class="fas fa-wave-square" style="color:#f97316"></i> Resistencias</div>
+        <div class="calcs-item" onclick="goToCalc('resistencias','calc-colores')">
+            <div class="calcs-item-icon" style="background:rgba(249,115,22,.12);color:#f97316"><i class="fas fa-palette"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Código de colores</div><div class="calcs-item-desc">4 y 5 bandas — leer valor de resistencia</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+        <div class="calcs-item" onclick="goToCalc('resistencias','calc-serie-paralelo')">
+            <div class="calcs-item-icon" style="background:rgba(249,115,22,.12);color:#f97316"><i class="fas fa-layer-group"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Serie y Paralelo</div><div class="calcs-item-desc">Resistencia equivalente de varias resistencias</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+
+        <div class="calcs-group-label"><i class="fas fa-lightbulb" style="color:#facc15"></i> Diodos y LED</div>
+        <div class="calcs-item" onclick="goToCalc('diodos','calc-led-serie')">
+            <div class="calcs-item-icon" style="background:rgba(250,204,21,.1);color:#facc15"><i class="fas fa-arrow-right"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">LEDs en Serie</div><div class="calcs-item-desc">Resistencia limitadora para N LEDs en serie</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+        <div class="calcs-item" onclick="goToCalc('diodos','calc-led-paralelo')">
+            <div class="calcs-item-icon" style="background:rgba(52,211,153,.1);color:#34d399"><i class="fas fa-arrows-left-right"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">LEDs en Paralelo</div><div class="calcs-item-desc">Resistencia para varias cadenas en paralelo</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+        <div class="calcs-item" onclick="goToCalc('diodos','calc-led-combinado')">
+            <div class="calcs-item-icon" style="background:rgba(167,139,250,.12);color:#a78bfa"><i class="fas fa-table-cells"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">LEDs Combinados</div><div class="calcs-item-desc">N serie × M paralelo — matriz de LEDs</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+
+        <div class="calcs-group-label"><i class="fas fa-microchip" style="color:#818cf8"></i> Transistor</div>
+        <div class="calcs-item" onclick="goToCalc('transistor','calc-transistor-base')">
+            <div class="calcs-item-icon" style="background:rgba(129,140,248,.12);color:#818cf8"><i class="fas fa-microchip"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Resistencia de base NPN</div><div class="calcs-item-desc">Transistor como switch — calcular Rb</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+
+        <div class="calcs-group-label"><i class="fas fa-battery-half" style="color:#34d399"></i> Capacitor</div>
+        <div class="calcs-item" onclick="goToCalc('capacitor','calc-tau')">
+            <div class="calcs-item-icon" style="background:rgba(52,211,153,.1);color:#34d399"><i class="fas fa-clock-rotate-left"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Constante de tiempo τ</div><div class="calcs-item-desc">τ = R × C — tiempo de carga del capacitor</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+        <div class="calcs-item" onclick="goToCalc('capacitor','calc-rc-fc')">
+            <div class="calcs-item-icon" style="background:rgba(52,211,153,.1);color:#34d399"><i class="fas fa-filter"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Filtro RC — Frecuencia de corte</div><div class="calcs-item-desc">fc = 1 / (2π × R × C)</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+
+        <div class="calcs-group-label"><i class="fas fa-toggle-on" style="color:#38bdf8"></i> Relé</div>
+        <div class="calcs-item" onclick="goToCalc('rele','calc-rele-base')">
+            <div class="calcs-item-icon" style="background:rgba(56,189,248,.12);color:#38bdf8"><i class="fas fa-toggle-on"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Driver de base — Relé</div><div class="calcs-item-desc">Rb del transistor NPN que activa la bobina</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+
+        <div class="calcs-group-label"><i class="fas fa-sun" style="color:#fbbf24"></i> LDR</div>
+        <div class="calcs-item" onclick="goToCalc('ldr','calc-ldr')">
+            <div class="calcs-item-icon" style="background:rgba(251,191,36,.12);color:#fbbf24"><i class="fas fa-sun"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Divisor con LDR</div><div class="calcs-item-desc">Tensión de salida según la luz ambiente</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+
+        <div class="calcs-group-label"><i class="fas fa-satellite-dish" style="color:#a78bfa"></i> LED IR</div>
+        <div class="calcs-item" onclick="goToCalc('ir','calc-ir')">
+            <div class="calcs-item-icon" style="background:rgba(167,139,250,.12);color:#a78bfa"><i class="fas fa-satellite-dish"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Resistencia LED IR</div><div class="calcs-item-desc">Igual que LED visible — calcular R serie</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+
+        <div class="calcs-group-label"><i class="fas fa-divide" style="color:#60a5fa"></i> Divisor de tensión</div>
+        <div class="calcs-item" onclick="goToCalc('divisor','calc-divisor')">
+            <div class="calcs-item-icon"><i class="fas fa-divide"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Divisor de tensión</div><div class="calcs-item-desc">Calcular Vout, R1 o R2</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+
+        <div class="calcs-group-label"><i class="fas fa-clock" style="color:#fb923c"></i> 555 Timer</div>
+        <div class="calcs-item" onclick="goToCalc('timer555','calc-555')">
+            <div class="calcs-item-icon" style="background:rgba(251,146,60,.12);color:#fb923c"><i class="fas fa-clock"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">555 — Astable y Monoestable</div><div class="calcs-item-desc">Frecuencia, duty cycle, tiempo de pulso</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+
+        <div class="calcs-group-label"><i class="fas fa-fire-flame-curved" style="color:#ef4444"></i> Tiristor (SCR)</div>
+        <div class="calcs-item" onclick="goToCalc('tiristor','calc-scr-gate')">
+            <div class="calcs-item-icon" style="background:rgba(239,68,68,.12);color:#ef4444"><i class="fas fa-fire-flame-curved"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Resistencia de Gate SCR</div><div class="calcs-item-desc">RG para disparar el tiristor correctamente</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+
+        <div class="calcs-group-label"><i class="fas fa-plug" style="color:#a3e635"></i> Reguladores</div>
+        <div class="calcs-item" onclick="goToCalc('reguladores','calc-78xx')">
+            <div class="calcs-item-icon" style="background:rgba(163,230,53,.1);color:#a3e635"><i class="fas fa-thermometer-half"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Disipación 78xx</div><div class="calcs-item-desc">Calor disipado por el regulador lineal</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+        <div class="calcs-item" onclick="goToCalc('reguladores','calc-zener')">
+            <div class="calcs-item-icon" style="background:rgba(163,230,53,.1);color:#a3e635"><i class="fas fa-bolt"></i></div>
+            <div class="calcs-item-body"><div class="calcs-item-name">Regulador Zener</div><div class="calcs-item-desc">Resistencia serie para regulación con Zener</div></div>
+            <i class="fas fa-chevron-right calcs-item-arr"></i>
+        </div>
+
+    </div>
+</div>
+
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Volver arriba"><i class="fas fa-chevron-up"></i></button>
+
 <!-- Lightbox -->
 <div id="lightbox" onclick="closeLightbox()">
     <span id="lightbox-close" onclick="closeLightbox()">&times;</span>
@@ -2185,7 +2324,8 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
 </div>
 
 <footer class="site-footer">
-    <p>&copy; 2025 Marcos Pirani · <a href="../index.html" style="color:var(--primary);text-decoration:none">Volver al inicio</a></p>
+    <img src="img/logoSP.png" alt="Logo Escuela" style="height:48px;border-radius:12px;opacity:.7;margin-bottom:14px;display:block;margin-left:auto;margin-right:auto;">
+    <p>&copy; <span id="footer-year"></span> Ing. Marcos Pirani &mdash; Taller de Electrónica I</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -2903,6 +3043,45 @@ function calcDivisor(){
         document.getElementById('res_divisor_sub').innerHTML=`Valor E24 cercano: <strong>${formatR(std)}</strong> &nbsp;|&nbsp; Con ese valor: V<sub>out</sub> ≈ <strong>${(vin*r2/(std+r2)).toFixed(3)} V</strong>`;
     }
 }
+
+// Año dinámico en el footer
+document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+// ============================================================
+// CALCULADORAS QUICK ACCESS — BOTTOM SHEET
+// ============================================================
+function openCalcsSheet() {
+    document.getElementById('calcsSheet').classList.add('open');
+    document.getElementById('calcsBackdrop').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeCalcsSheet() {
+    document.getElementById('calcsSheet').classList.remove('open');
+    document.getElementById('calcsBackdrop').classList.remove('open');
+    document.body.style.overflow = '';
+}
+function goToCalc(tabId, calcId) {
+    closeCalcsSheet();
+    const tabBtn = document.querySelector('[data-bs-target="#' + tabId + '"]');
+    if (tabBtn) {
+        bootstrap.Tab.getOrCreateInstance(tabBtn).show();
+        setTimeout(function() {
+            const el = document.getElementById(calcId);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 180);
+    }
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeCalcsSheet();
+});
+
+// Scroll to top button
+(function(){
+    const btn = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll', () => {
+        btn.classList.toggle('visible', window.scrollY > 400);
+    }, {passive:true});
+})();
 </script>
 </body>
 </html>
