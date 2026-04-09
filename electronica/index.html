@@ -272,7 +272,8 @@
 
         /* ======================== IMAGEN DE REFERENCIA EN CALCULADORAS ======================== */
         .calc-ref-img { width:150px; flex-shrink:0; }
-        .calc-ref-img img { max-width:100%; border-radius:10px; border:1px solid var(--border); display:block; }
+        .calc-ref-img img { max-width:100%; border-radius:10px; border:1px solid var(--border); display:block; cursor:zoom-in; transition:opacity .2s; }
+        .calc-ref-img img:hover { opacity:.85; }
         @media(max-width:576px){ .calc-ref-img { display:none; } }
 
         /* ======================== SELECTOR TIPO DE LED ======================== */
@@ -2592,7 +2593,7 @@ populateTolSelect(4);
 updateResistor();
 
 // Lightbox
-document.querySelectorAll('.component-img-wrap img').forEach(img => {
+document.querySelectorAll('.component-img-wrap img, .calc-ref-img img').forEach(img => {
     img.addEventListener('click', () => {
         document.getElementById('lightbox-img').src = img.src;
         document.getElementById('lightbox-img').alt = img.alt;
