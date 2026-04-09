@@ -365,10 +365,10 @@
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#herramientas" type="button"><i class="fas fa-screwdriver-wrench me-1"></i>Herramientas<span class="dif dif-1">★</span></button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#resistencias" type="button"><i class="fas fa-wave-square me-1"></i>Resistencias<span class="dif dif-1">★</span></button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#diodos" type="button"><i class="fas fa-lightbulb me-1"></i>Diodos y LED<span class="dif dif-1">★</span></button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#ldr" type="button"><i class="fas fa-sliders me-1"></i>Res. Variables<span class="dif dif-1">★</span></button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#transistor" type="button"><i class="fas fa-microchip me-1"></i>Transistor<span class="dif dif-2">★★</span></button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#capacitor" type="button"><i class="fas fa-battery-half me-1"></i>Capacitor<span class="dif dif-2">★★</span></button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#rele" type="button"><i class="fas fa-toggle-on me-1"></i>Relé<span class="dif dif-2">★★</span></button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#ldr" type="button"><i class="fas fa-sun me-1"></i>LDR<span class="dif dif-1">★</span></button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#ir" type="button"><i class="fas fa-satellite-dish me-1"></i>LED IR<span class="dif dif-2">★★</span></button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#divisor" type="button"><i class="fas fa-divide me-1"></i>Divisor de V<span class="dif dif-2">★★</span></button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#timer555" type="button"><i class="fas fa-clock me-1"></i>555 Timer<span class="dif dif-2">★★</span></button></li>
@@ -1538,6 +1538,182 @@
         </div><!-- /diodos -->
 
 
+        <!-- ===================== TAB RESISTENCIAS VARIABLES ===================== -->
+        <div class="tab-pane fade" id="ldr" role="tabpanel">
+
+            <div class="info-card">
+                <h3><i class="fas fa-sliders"></i> Resistencias variables</h3>
+                <p>A diferencia de las resistencias comunes (valor fijo), las <strong style="color:#f8fafc">resistencias variables</strong> cambian su valor en respuesta a una magnitud física externa: luz, temperatura, posición, presión. Son la base de los <strong style="color:#60a5fa">sensores analógicos</strong>: convierten una magnitud del mundo real en un valor de resistencia que el circuito puede leer.</p>
+                <p style="margin-top:8px">En general se usan dentro de un <strong style="color:#f8fafc">divisor de tensión</strong>: en serie con una resistencia fija, el voltaje de salida varía según el valor de la resistencia variable. Ese voltaje se lee con un microcontrolador o se compara con un umbral usando un comparador de tensión.</p>
+                <div class="params-grid mt-3">
+                    <div class="param-box"><div class="param-label">Fotorresistencia (LDR)</div><div class="param-value">Varía con la luz</div></div>
+                    <div class="param-box"><div class="param-label">Potenciómetro</div><div class="param-value">Varía con la posición mecánica</div></div>
+                    <div class="param-box"><div class="param-label">NTC (termistor)</div><div class="param-value">Varía con la temperatura (↑T → ↓R)</div></div>
+                    <div class="param-box"><div class="param-label">PTC (termistor)</div><div class="param-value">Varía con la temperatura (↑T → ↑R)</div></div>
+                </div>
+            </div>
+
+            <!-- Potenciómetro -->
+            <div class="info-card">
+                <h3><i class="fas fa-rotate"></i> Potenciómetro</h3>
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-8">
+                        <p>El <strong style="color:#f8fafc">potenciómetro</strong> es una resistencia con un cursor móvil que puede posicionarse entre los dos extremos. Tiene <strong style="color:#f8fafc">3 terminales</strong>: los dos extremos dan el valor total de la resistencia; el terminal central (cursor) da un valor entre 0 y ese máximo según la posición.</p>
+                        <div class="params-grid" style="margin-top:12px">
+                            <div class="param-box"><div class="param-label">Terminal 1 y 3</div><div class="param-value">Extremos — valor total fijo</div></div>
+                            <div class="param-box"><div class="param-label">Terminal 2 (cursor)</div><div class="param-value">Salida variable 0 → R<sub>total</sub></div></div>
+                            <div class="param-box"><div class="param-label">Tipo B (lineal)</div><div class="param-value">Giro uniforme = cambio uniforme de R</div></div>
+                            <div class="param-box"><div class="param-label">Tipo A (logarítmico)</div><div class="param-value">Respuesta logarítmica — audio y volumen</div></div>
+                            <div class="param-box"><div class="param-label">Valores comunes</div><div class="param-value">1KΩ, 5KΩ, 10KΩ, 50KΩ, 100KΩ</div></div>
+                            <div class="param-box"><div class="param-label">Trimpot / Preset</div><div class="param-value">Minipotenciómetro para ajuste en PCB</div></div>
+                        </div>
+                        <div class="note mt-3"><i class="fas fa-lightbulb"></i><span>Usando solo los extremos (terminales 1 y 3), el potenciómetro funciona como resistencia fija. Usando un extremo y el cursor (1+2 o 2+3), funciona como <strong>divisor de tensión ajustable</strong> o como <strong>reóstato</strong>.</span></div>
+                        <div class="extra-toggle mt-2" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Tipos de potenciómetro</div>
+                        <div class="extra-body">
+                            <h5>Rotativo (el más común)</h5>
+                            <p>Tiene un eje que gira. Se encuentra en controles de volumen, brillo, velocidad de motores. Recorrido típico: 270° o 300°. Puede ser de panel (con tuerca) o de montaje superficial.</p>
+                            <h5 style="margin-top:12px">Deslizante (fader)</h5>
+                            <p>El cursor se desplaza en línea recta. Típico en consolas de audio y controles de mezcla. Longitud de recorrido: 30 mm a 100 mm.</p>
+                            <h5 style="margin-top:12px">Trimpot / Preset</h5>
+                            <p>Potenciómetro pequeño ajustable con un destornillador, diseñado para calibración interna de circuitos (no para uso frecuente). Se monta directo en la PCB. Muy comunes en fuentes de alimentación, amplificadores y módulos de sensores.</p>
+                            <h5 style="margin-top:12px">Encoder rotativo (no es un potenciómetro)</h5>
+                            <p>A diferencia del potenciómetro, el encoder puede girar indefinidamente y genera pulsos digitales. No mide posición absoluta sino movimiento relativo. Es lo que usan los menús de muchos equipos electrónicos modernos.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="component-img-wrap">
+                            <img src="img/potenciometro.png" alt="Potenciómetro" onerror="this.closest('.component-img-wrap').innerHTML='<div class=\'img-slot\'><i class=\'fas fa-image\'></i><span>Imagen pendiente</span><code>img/potenciometro.png</code></div>'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LDR -->
+            <div class="info-card">
+                <h3><i class="fas fa-sun"></i> LDR — Fotorresistencia</h3>
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-8">
+                        <p>La <strong style="color:#f8fafc">LDR</strong> (Light Dependent Resistor, o fotorresistencia) es una resistencia cuyo valor <strong style="color:#60a5fa">disminuye cuando recibe más luz</strong>. Está hecha de sulfuro de cadmio (CdS), un semiconductor sensible a la luz visible.</p>
+                        <div class="params-grid" style="margin-top:12px">
+                            <div class="param-box"><div class="param-label">En oscuridad total</div><div class="param-value">≈ 0.5 – 1 MΩ</div></div>
+                            <div class="param-box"><div class="param-label">Con luz ambiente</div><div class="param-value">≈ 10 – 50 KΩ</div></div>
+                            <div class="param-box"><div class="param-label">Con luz brillante</div><div class="param-value">≈ 1 KΩ</div></div>
+                            <div class="param-box"><div class="param-label">Tiempo de respuesta</div><div class="param-value">10 – 100 ms (lenta)</div></div>
+                            <div class="param-box"><div class="param-label">Polarización</div><div class="param-value">No polarizada — cualquier sentido</div></div>
+                            <div class="param-box"><div class="param-label">Corriente máxima</div><div class="param-value">No superar ≈ 50 mA</div></div>
+                        </div>
+                        <div class="note mt-3"><i class="fas fa-lightbulb"></i><span>La LDR es lenta comparada con un fotodiodo o un fototransistor. Para detectar pulsos rápidos (como control remoto IR) no sirve; para encendido automático por luz ambiental es perfecta.</span></div>
+                        <div class="extra-toggle mt-2" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Modelos comunes y aplicaciones</div>
+                        <div class="extra-body">
+                            <h5>Modelos típicos (GL55xx)</h5>
+                            <ul>
+                                <li><strong>GL5516</strong> — R oscuridad: 0.5 MΩ, R luz: 5–10 KΩ. El más común en el taller.</li>
+                                <li><strong>GL5528</strong> — R oscuridad: 1 MΩ, R luz: 10–20 KΩ. Más sensible a niveles intermedios.</li>
+                                <li><strong>GL5537</strong> — R oscuridad: 2 MΩ, R luz: 20–30 KΩ. Mayor rango dinámico.</li>
+                            </ul>
+                            <h5 style="margin-top:12px">Aplicaciones</h5>
+                            <ul>
+                                <li>Encendido automático de luces al oscurecer.</li>
+                                <li>Detección de objetos (barrera de luz con LED y LDR alineados).</li>
+                                <li>Seguidor solar (comparar dos LDRs para orientar un panel).</li>
+                                <li>Alarma de apertura de caja o cajón.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="component-img-wrap">
+                            <img src="img/ldr.png" alt="LDR">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NTC -->
+            <div class="info-card">
+                <h3><i class="fas fa-temperature-half"></i> NTC — Termistor de coeficiente negativo</h3>
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-8">
+                        <p>El <strong style="color:#f8fafc">NTC</strong> (Negative Temperature Coefficient) es un termistor cuya resistencia <strong style="color:#f87171">disminuye cuando sube la temperatura</strong>. Es el tipo más común para medición de temperatura.</p>
+                        <div class="params-grid" style="margin-top:12px">
+                            <div class="param-box"><div class="param-label">Modelo más común</div><div class="param-value">NTC 10KΩ @ 25 °C</div></div>
+                            <div class="param-box"><div class="param-label">A 0 °C</div><div class="param-value">≈ 32 KΩ</div></div>
+                            <div class="param-box"><div class="param-label">A 25 °C</div><div class="param-value">10 KΩ (valor de referencia)</div></div>
+                            <div class="param-box"><div class="param-label">A 50 °C</div><div class="param-value">≈ 3.6 KΩ</div></div>
+                            <div class="param-box"><div class="param-label">A 100 °C</div><div class="param-value">≈ 0.7 KΩ</div></div>
+                            <div class="param-box"><div class="param-label">Polarización</div><div class="param-value">No polarizado</div></div>
+                        </div>
+                        <div class="note mt-3"><i class="fas fa-info-circle"></i><span>La curva del NTC es <strong>no lineal</strong> (exponencial). Para convertir la resistencia a temperatura con precisión se usa la <strong>ecuación de Steinhart-Hart</strong>, pero en proyectos simples alcanza con una tabla de referencia.</span></div>
+                        <div class="extra-toggle mt-2" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Aplicaciones del NTC</div>
+                        <div class="extra-body">
+                            <ul>
+                                <li><strong>Termómetros digitales</strong> con Arduino o microcontroladores.</li>
+                                <li><strong>Protección térmica</strong> de motores, baterías y fuentes de alimentación.</li>
+                                <li><strong>Control de temperatura</strong> en impresoras 3D (sensor del hotend y de la cama caliente).</li>
+                                <li><strong>Compensación de temperatura</strong> en circuitos de referencia de voltaje.</li>
+                                <li><strong>Detección de sobretemperatura</strong> en cargadores y adaptadores.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="component-img-wrap">
+                            <img src="img/ntc.png" alt="NTC termistor" onerror="this.closest('.component-img-wrap').innerHTML='<div class=\'img-slot\'><i class=\'fas fa-image\'></i><span>Imagen pendiente</span><code>img/ntc.png</code></div>'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PTC -->
+            <div class="info-card">
+                <h3><i class="fas fa-temperature-arrow-up"></i> PTC — Termistor de coeficiente positivo</h3>
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-8">
+                        <p>El <strong style="color:#f8fafc">PTC</strong> (Positive Temperature Coefficient) es un termistor cuya resistencia <strong style="color:#34d399">aumenta cuando sube la temperatura</strong>. En su zona de disparo la resistencia sube drásticamente, lo que limita la corriente de forma automática.</p>
+                        <div class="params-grid" style="margin-top:12px">
+                            <div class="param-box"><div class="param-label">Comportamiento</div><div class="param-value">↑ Temperatura → ↑↑ Resistencia</div></div>
+                            <div class="param-box"><div class="param-label">Temperatura de disparo</div><div class="param-value">60 – 120 °C según modelo</div></div>
+                            <div class="param-box"><div class="param-label">Fusible rearmable</div><div class="param-value">Se recupera al enfriarse</div></div>
+                            <div class="param-box"><div class="param-label">También conocido como</div><div class="param-value">Polyfuse / PPTC / Resettable fuse</div></div>
+                        </div>
+                        <div class="note mt-3"><i class="fas fa-lightbulb"></i><span>Un PTC tipo <strong>polyfuse</strong> actúa como fusible que se recupera solo: si la corriente es excesiva, se calienta, su resistencia sube y corta el circuito. Al enfriarse vuelve a conducir. Son ideales para proteger puertos USB, baterías y motores.</span></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="component-img-wrap">
+                            <img src="img/ptc.png" alt="PTC termistor" onerror="this.closest('.component-img-wrap').innerHTML='<div class=\'img-slot\'><i class=\'fas fa-image\'></i><span>Imagen pendiente</span><code>img/ptc.png</code></div>'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculadora LDR -->
+            <div class="info-card" id="calc-ldr">
+                <h3><i class="fas fa-calculator"></i> Calculadora — Divisor de tensión con LDR</h3>
+                <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">La LDR se conecta en serie con una resistencia fija. La tensión en el punto de unión varía según la luz.</p>
+                <div class="formula-box">
+                    LDR arriba: &nbsp; V<sub>out</sub> = V<sub>cc</sub> × R<sub>fija</sub> / ( R<sub>LDR</sub> + R<sub>fija</sub> ) → sube con más luz<br>
+                    LDR abajo: &nbsp;&nbsp; V<sub>out</sub> = V<sub>cc</sub> × R<sub>LDR</sub> / ( R<sub>fija</sub> + R<sub>LDR</sub> ) → baja con más luz
+                </div>
+                <div class="calc-inputs">
+                    <div class="input-group-custom"><label>V<sub>cc</sub> (V)</label><input type="number" id="ldr_vcc" value="5" step="0.1"></div>
+                    <div class="input-group-custom"><label>R fija (KΩ)</label><input type="number" id="ldr_rfija" value="10" step="0.1"></div>
+                    <div class="input-group-custom"><label>R LDR actual (KΩ)</label><input type="number" id="ldr_rldr" value="20" step="0.1"></div>
+                    <div class="input-group-custom">
+                        <label>Configuración</label>
+                        <select id="ldr_conf">
+                            <option value="arriba">LDR arriba (V<sub>out</sub> sube con luz)</option>
+                            <option value="abajo">LDR abajo (V<sub>out</sub> baja con luz)</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="calc-btn" onclick="calcLDR()"><i class="fas fa-calculator"></i> Calcular</button>
+                <div class="led-result" id="res_ldr">
+                    <div class="led-result-value" id="res_ldr_val"></div>
+                    <div class="led-result-sub" id="res_ldr_sub"></div>
+                </div>
+            </div>
+
+        </div><!-- /ldr (resistencias variables) -->
+
+
         <!-- ===================== TAB TRANSISTOR ===================== -->
         <div class="tab-pane fade" id="transistor" role="tabpanel">
 
@@ -1801,56 +1977,6 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
         </div><!-- /rele -->
 
 
-        <!-- ===================== TAB LDR ===================== -->
-        <div class="tab-pane fade" id="ldr" role="tabpanel">
-
-            <div class="info-card">
-                <h3><i class="fas fa-sun"></i> LDR - Fotorresistencia</h3>
-                <div class="row g-3 align-items-start">
-                    <div class="col-md-8">
-                        <p>Una <strong style="color:#f8fafc">LDR</strong> (Light Dependent Resistor) es una resistencia cuyo valor disminuye cuando aumenta la luz que recibe. Se usa para detectar niveles de iluminación.</p>
-                        <div class="params-grid" style="margin-top:12px">
-                            <div class="param-box"><div class="param-label">Resistencia en oscuridad</div><div class="param-value">≈ 1 MΩ</div></div>
-                            <div class="param-box"><div class="param-label">Resistencia con luz brillante</div><div class="param-value">≈ 1 KΩ</div></div>
-                            <div class="param-box"><div class="param-label">Tiempo de respuesta</div><div class="param-value">10 – 100 ms</div></div>
-                            <div class="param-box"><div class="param-label">No es polarizada</div><div class="param-value">Se puede conectar en cualquier sentido</div></div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="component-img-wrap">
-                            <img src="img/ldr.png" alt="LDR">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="info-card" id="calc-ldr">
-                <h3><i class="fas fa-calculator"></i> Calculadora divisor de tensión con LDR</h3>
-                <p style="color:var(--text-light);font-size:.9rem;margin-bottom:14px">Se conecta la LDR en serie con una resistencia fija. La tensión en la unión varía con la luz.</p>
-                <div class="formula-box">
-                    LDR arriba: &nbsp; V<sub>out</sub> = V<sub>cc</sub> × R<sub>fija</sub> / ( R<sub>LDR</sub> + R<sub>fija</sub> ) → sube con más luz<br>
-                    LDR abajo: &nbsp; V<sub>out</sub> = V<sub>cc</sub> × R<sub>LDR</sub> / ( R<sub>fija</sub> + R<sub>LDR</sub> ) → baja con más luz
-                </div>
-                <div class="calc-inputs">
-                    <div class="input-group-custom"><label>V<sub>cc</sub> (V)</label><input type="number" id="ldr_vcc" value="5" step="0.1"></div>
-                    <div class="input-group-custom"><label>R fija (KΩ)</label><input type="number" id="ldr_rfija" value="10" step="0.1"></div>
-                    <div class="input-group-custom"><label>R LDR actual (KΩ)</label><input type="number" id="ldr_rldr" value="20" step="0.1"></div>
-                    <div class="input-group-custom">
-                        <label>Configuración</label>
-                        <select id="ldr_conf">
-                            <option value="arriba">LDR arriba (V<sub>out</sub> sube con luz)</option>
-                            <option value="abajo">LDR abajo (V<sub>out</sub> baja con luz)</option>
-                        </select>
-                    </div>
-                </div>
-                <button class="calc-btn" onclick="calcLDR()"><i class="fas fa-calculator"></i> Calcular</button>
-                <div class="led-result" id="res_ldr">
-                    <div class="led-result-value" id="res_ldr_val"></div>
-                    <div class="led-result-sub" id="res_ldr_sub"></div>
-                </div>
-            </div>
-
-        </div><!-- /ldr -->
 
 
         <!-- ===================== TAB LED IR ===================== -->
