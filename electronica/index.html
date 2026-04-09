@@ -272,8 +272,7 @@
 
         /* ======================== IMAGEN DE REFERENCIA EN CALCULADORAS ======================== */
         .calc-ref-img { width:150px; flex-shrink:0; }
-        .calc-ref-img .img-placeholder { padding:12px 8px; }
-        .calc-ref-img img { max-width:100%; border-radius:10px; border:1px solid var(--border); display:none; }
+        .calc-ref-img img { max-width:100%; border-radius:10px; border:1px solid var(--border); display:block; }
         @media(max-width:576px){ .calc-ref-img { display:none; } }
 
         /* ======================== SELECTOR TIPO DE LED ======================== */
@@ -486,11 +485,7 @@
                         <p style="color:var(--text-light);font-size:.9rem;margin:0">La <strong style="color:#f8fafc">Ley de Ohm</strong> relaciona las tres magnitudes fundamentales: <strong style="color:#60a5fa">V = I × R</strong>. Conociendo dos, podés calcular la tercera.</p>
                     </div>
                     <div class="calc-ref-img">
-                        <div class="img-placeholder" style="padding:12px 8px">
-                            <i class="fas fa-image"></i>
-                            <code>img/calc_ohm.png</code>
-                        </div>
-                        <img src="img/calc_ohm.png" alt="Ley de Ohm" onload="this.style.display='block';this.previousElementSibling.style.display='none'">
+                        <img src="img/calc_ohm.png" alt="Ley de Ohm" onerror="this.parentElement.style.display='none'">
                     </div>
                 </div>
                 <div class="ohm-solve-btns">
@@ -1423,7 +1418,7 @@
                         <p style="color:var(--text-muted);font-size:.86rem;margin:0">Varios LEDs encadenados. La tensión se reparte; la corriente es la misma para todos.</p>
                     </div>
                     <div class="calc-ref-img">
-                        <img src="img/calc_led_serie.png" alt="LEDs en serie">
+                        <img src="img/calc_led_serie.png" alt="LEDs en serie" onerror="this.parentElement.style.display='none'">
                     </div>
                 </div>
                 <div class="led-type-selector">
@@ -1463,7 +1458,7 @@
                         <p style="color:var(--text-muted);font-size:.86rem;margin:0">Varios LEDs en paralelo comparten la misma tensión. Un solo resistor para todos.</p>
                     </div>
                     <div class="calc-ref-img">
-                        <img src="img/calc_led_paralelo.png" alt="LEDs en paralelo">
+                        <img src="img/calc_led_paralelo.png" alt="LEDs en paralelo" onerror="this.parentElement.style.display='none'">
                     </div>
                 </div>
                 <div class="led-type-selector">
@@ -1503,11 +1498,7 @@
                         <p style="color:var(--text-muted);font-size:.86rem;margin:0">M cadenas en paralelo, cada una con N LEDs en serie. Un solo resistor para toda la matriz.</p>
                     </div>
                     <div class="calc-ref-img">
-                        <div class="img-placeholder" style="padding:12px 8px">
-                            <i class="fas fa-image"></i>
-                            <code>img/calc_led_combinado.png</code>
-                        </div>
-                        <img src="img/calc_led_combinado.png" alt="LEDs combinado" onload="this.style.display='block';this.previousElementSibling.style.display='none'">
+                        <img src="img/calc_led_combinado.png" alt="LEDs combinado" onerror="this.parentElement.style.display='none'">
                     </div>
                 </div>
                 <div class="note note-warn mt-2 mb-2" style="font-size:.82rem"><i class="fas fa-triangle-exclamation"></i><span>Esta calculadora requiere <strong>al menos 2 LEDs en serie (N ≥ 2)</strong> y <strong>al menos 2 cadenas en paralelo (M ≥ 2)</strong>. Si solo usás 1 en alguna dimensión, usá la calculadora de Serie o Paralelo directamente.</span></div>
