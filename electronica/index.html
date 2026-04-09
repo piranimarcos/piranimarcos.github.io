@@ -270,6 +270,18 @@
         .safety-card h5 { color:#f87171; font-size:.9rem; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
         .safety-card li { font-size:.85rem; color:var(--text-light); }
 
+        /* ======================== IMAGEN DE REFERENCIA EN CALCULADORAS ======================== */
+        .calc-ref-img { width:150px; flex-shrink:0; }
+        .calc-ref-img .img-placeholder { padding:12px 8px; }
+        .calc-ref-img img { max-width:100%; border-radius:10px; border:1px solid var(--border); display:none; }
+        @media(max-width:576px){ .calc-ref-img { display:none; } }
+
+        /* ======================== SERIES E24 / E48 ======================== */
+        .e-series-grid { display:flex; flex-wrap:wrap; gap:6px; margin:12px 0; }
+        .e-val { background:#0d0d18; border:1px solid var(--border-light); border-radius:7px; padding:5px 10px; font-family:'Courier New',monospace; font-size:.85rem; font-weight:600; color:var(--text); min-width:46px; text-align:center; }
+        .e-val.e24 { border-color:rgba(59,130,246,.4); }
+        .e-val.e48-only { border-color:rgba(139,92,246,.35); color:#a78bfa; }
+
         /* ======================== TIRISTOR ======================== */
         .scr-body { background:#1a1a2e; border:2px solid var(--border-light); border-radius:10px; padding:16px; max-width:200px; margin:0 auto; }
         .scr-pin { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid rgba(255,255,255,.06); font-size:.82rem; }
@@ -461,8 +473,19 @@
 
             <!-- Ley de Ohm -->
             <div class="calc-section" id="calc-ohm">
-                <h3><i class="fas fa-calculator"></i> Calculadora — Ley de Ohm</h3>
-                <p style="color:var(--text-light);font-size:.9rem;margin-bottom:20px">La <strong style="color:#f8fafc">Ley de Ohm</strong> relaciona las tres magnitudes fundamentales: <strong style="color:#60a5fa">V = I × R</strong>. Conociendo dos, podés calcular la tercera.</p>
+                <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px">
+                    <div style="flex:1;min-width:0">
+                        <h3 style="margin-bottom:10px"><i class="fas fa-calculator"></i> Calculadora — Ley de Ohm</h3>
+                        <p style="color:var(--text-light);font-size:.9rem;margin:0">La <strong style="color:#f8fafc">Ley de Ohm</strong> relaciona las tres magnitudes fundamentales: <strong style="color:#60a5fa">V = I × R</strong>. Conociendo dos, podés calcular la tercera.</p>
+                    </div>
+                    <div class="calc-ref-img">
+                        <div class="img-placeholder" style="padding:12px 8px">
+                            <i class="fas fa-image"></i>
+                            <code>img/calc_ohm.png</code>
+                        </div>
+                        <img src="img/calc_ohm.png" alt="Ley de Ohm" onload="this.style.display='block';this.previousElementSibling.style.display='none'">
+                    </div>
+                </div>
                 <div class="ohm-solve-btns">
                     <button class="ohm-solve-btn" onclick="setOhmMode('V',this)">Calcular <strong>V</strong> (voltaje)</button>
                     <button class="ohm-solve-btn active" onclick="setOhmMode('R',this)">Calcular <strong>R</strong> (resistencia)</button>
@@ -1255,6 +1278,42 @@
                 </div>
             </div>
 
+            <!-- Series E24 / E48 -->
+            <div class="info-card">
+                <h3><i class="fas fa-list-ol"></i> Series de valores estándar: E24 y E48</h3>
+                <p>Las resistencias <strong style="color:#f8fafc">no se fabrican en todos los valores posibles</strong>. Los fabricantes producen solo ciertos valores predefinidos llamados <strong style="color:#60a5fa">series normalizadas</strong>. Si calculás que necesitás 237 Ω, no la vas a encontrar; buscás el valor de la serie más cercano: 240 Ω.</p>
+                <p style="margin-top:8px">El número de la serie indica cuántos valores distintos hay por cada <strong style="color:#f8fafc">década</strong> (potencia de 10). La serie <strong style="color:#60a5fa">E24</strong> tiene 24 valores × 1 Ω, × 10 Ω, × 100 Ω, × 1 KΩ, y así. La serie <strong style="color:#a78bfa">E48</strong> tiene 48 valores: más precisa, tolerancia ±2% o mejor.</p>
+
+                <div class="note mt-3"><i class="fas fa-lightbulb"></i><span>En el taller usamos casi siempre resistencias <strong>E24 ±5%</strong> (dorado). Para proyectos que requieren más precisión (filtros de audio, referencias de tensión, etc.) se usan <strong>E48 o E96</strong>.</span></div>
+
+                <h5 style="margin:20px 0 6px;color:#60a5fa"><i class="fas fa-circle-dot" style="font-size:.8rem"></i> Serie E24 — 24 valores por década (tolerancia ±5%)</h5>
+                <p style="color:var(--text-muted);font-size:.83rem;margin-bottom:10px">Multiplicá cada valor × 1 Ω · × 10 Ω · × 100 Ω · × 1 KΩ · × 10 KΩ · × 100 KΩ · × 1 MΩ</p>
+                <div class="e-series-grid">
+                    <span class="e-val e24">10</span><span class="e-val e24">11</span><span class="e-val e24">12</span><span class="e-val e24">13</span><span class="e-val e24">15</span><span class="e-val e24">16</span>
+                    <span class="e-val e24">18</span><span class="e-val e24">20</span><span class="e-val e24">22</span><span class="e-val e24">24</span><span class="e-val e24">27</span><span class="e-val e24">30</span>
+                    <span class="e-val e24">33</span><span class="e-val e24">36</span><span class="e-val e24">39</span><span class="e-val e24">43</span><span class="e-val e24">47</span><span class="e-val e24">51</span>
+                    <span class="e-val e24">56</span><span class="e-val e24">62</span><span class="e-val e24">68</span><span class="e-val e24">75</span><span class="e-val e24">82</span><span class="e-val e24">91</span>
+                </div>
+                <p style="color:var(--text-muted);font-size:.8rem;margin-top:4px"><strong style="color:var(--text)">Ejemplo:</strong> 22 → 22 Ω / 220 Ω / 2.2 KΩ / 22 KΩ / 220 KΩ / 2.2 MΩ</p>
+
+                <div class="extra-toggle mt-3" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Ver serie E48 (48 valores — mayor precisión)</div>
+                <div class="extra-body">
+                    <h5 style="color:#a78bfa">Serie E48 — 48 valores por década (tolerancia ±2%)</h5>
+                    <p style="color:var(--text-muted);font-size:.82rem;margin-bottom:10px">Igual que E24, multiplicá cada valor por la potencia de 10 que necesites. Los valores de E24 también están en E48 (marcados en azul).</p>
+                    <div class="e-series-grid">
+                        <span class="e-val e24">10.0</span><span class="e-val e48-only">10.5</span><span class="e-val e24">11.0</span><span class="e-val e48-only">11.5</span><span class="e-val e24">12.1</span><span class="e-val e48-only">12.7</span>
+                        <span class="e-val e24">13.3</span><span class="e-val e48-only">14.0</span><span class="e-val e24">14.7</span><span class="e-val e48-only">15.4</span><span class="e-val e24">16.2</span><span class="e-val e48-only">16.9</span>
+                        <span class="e-val e24">17.8</span><span class="e-val e48-only">18.7</span><span class="e-val e24">19.6</span><span class="e-val e48-only">20.5</span><span class="e-val e24">21.5</span><span class="e-val e48-only">22.6</span>
+                        <span class="e-val e24">23.7</span><span class="e-val e48-only">24.9</span><span class="e-val e24">26.1</span><span class="e-val e48-only">27.4</span><span class="e-val e24">28.7</span><span class="e-val e48-only">30.1</span>
+                        <span class="e-val e24">31.6</span><span class="e-val e48-only">33.2</span><span class="e-val e24">34.8</span><span class="e-val e48-only">36.5</span><span class="e-val e24">38.3</span><span class="e-val e48-only">40.2</span>
+                        <span class="e-val e24">42.2</span><span class="e-val e48-only">44.2</span><span class="e-val e24">46.4</span><span class="e-val e48-only">48.7</span><span class="e-val e24">51.1</span><span class="e-val e48-only">53.6</span>
+                        <span class="e-val e24">56.2</span><span class="e-val e48-only">59.0</span><span class="e-val e24">61.9</span><span class="e-val e48-only">64.9</span><span class="e-val e24">68.1</span><span class="e-val e48-only">71.5</span>
+                        <span class="e-val e24">75.0</span><span class="e-val e48-only">78.7</span><span class="e-val e24">82.5</span><span class="e-val e48-only">86.6</span><span class="e-val e24">90.9</span><span class="e-val e48-only">95.3</span>
+                    </div>
+                    <p style="margin-top:10px;font-size:.8rem;color:var(--text-muted)"><span style="color:#60a5fa;font-weight:600;">Azul</span> = valor compartido con E24 &nbsp;·&nbsp; <span style="color:#a78bfa;font-weight:600;">Violeta</span> = valor exclusivo de E48</p>
+                </div>
+            </div>
+
             <!-- Serie / Paralelo -->
             <div class="calc-section" id="calc-serie-paralelo">
                 <h3><i class="fas fa-layer-group"></i> Calculadora — Resistencias en Serie y Paralelo</h3>
@@ -1305,16 +1364,20 @@
 
             <div class="info-card">
                 <h3><i class="fas fa-lightbulb"></i> El LED (Light Emitting Diode)</h3>
-                <div class="row g-3 align-items-center">
+                <div class="row g-3 align-items-start">
                     <div class="col-md-8">
-                        <p>El LED emite luz al conducir corriente. Necesita siempre una <strong style="color:#f8fafc">resistencia limitadora</strong> para no quemarse.</p>
-                        <div class="params-grid" style="margin-top:12px">
-                            <div class="param-box"><div class="param-label">LED Rojo / Amarillo</div><div class="param-value">Vf ≈ 1.8 – 2.2 V</div></div>
-                            <div class="param-box"><div class="param-label">LED Verde</div><div class="param-value">Vf ≈ 2.0 – 2.5 V</div></div>
-                            <div class="param-box"><div class="param-label">LED Azul / Blanco</div><div class="param-value">Vf ≈ 3.0 – 3.5 V</div></div>
-                            <div class="param-box"><div class="param-label">Corriente típica</div><div class="param-value">10 – 20 mA</div></div>
+                        <p>El LED emite luz al conducir corriente. A diferencia de una lamparita incandescente, <strong style="color:#f8fafc">convierte la electricidad directamente en luz</strong> sin filamento caliente, lo que lo hace más eficiente y duradero. Necesita siempre una <strong style="color:#f8fafc">resistencia limitadora</strong> para no quemarse.</p>
+                        <div class="note mt-2"><i class="fas fa-info-circle"></i><span>Pata <strong>larga = ánodo (+)</strong>, pata <strong>corta = cátodo (–)</strong>. El encapsulado tiene una marca plana en el lado del cátodo.</span></div>
+
+                        <h5 style="margin:16px 0 8px">Tensión directa (Vf) según color</h5>
+                        <div class="params-grid">
+                            <div class="param-box"><div class="param-label">Rojo / Naranja</div><div class="param-value">Vf ≈ 1.8 – 2.1 V</div></div>
+                            <div class="param-box"><div class="param-label">Amarillo</div><div class="param-value">Vf ≈ 2.0 – 2.2 V</div></div>
+                            <div class="param-box"><div class="param-label">Verde (estándar)</div><div class="param-value">Vf ≈ 2.0 – 2.4 V</div></div>
+                            <div class="param-box"><div class="param-label">Verde (brillante)</div><div class="param-value">Vf ≈ 3.0 – 3.5 V</div></div>
+                            <div class="param-box"><div class="param-label">Azul / Blanco</div><div class="param-value">Vf ≈ 3.0 – 3.5 V</div></div>
+                            <div class="param-box"><div class="param-label">IR (infrarrojo)</div><div class="param-value">Vf ≈ 1.1 – 1.5 V</div></div>
                         </div>
-                        <div class="note mt-3"><i class="fas fa-info-circle"></i><span>Pata <strong>larga = ánodo (+)</strong>, pata <strong>corta = cátodo (–)</strong>. El encapsulado tiene una marca plana en el lado del cátodo.</span></div>
                     </div>
                     <div class="col-md-4">
                         <div class="component-img-wrap">
@@ -1322,13 +1385,45 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="extra-toggle mt-3" onclick="toggleExtra(this)"><i class="fas fa-chevron-right arr"></i> Tipos de LED: encapsulados, RGB, alta potencia</div>
+                <div class="extra-body">
+                    <h5>LED 5mm y 3mm (through-hole)</h5>
+                    <p>Son los LEDs clásicos del taller, con patas para insertar en protoboard o PCB. El de 5mm es el más común. Corriente típica: <strong style="color:#f8fafc">10 – 20 mA</strong>, potencia ≈ 0.06 – 0.07 W por LED. Ideales para señalización e indicadores.</p>
+
+                    <h5 style="margin-top:14px">LED SMD (Surface Mount Device)</h5>
+                    <p>Son los LEDs de montaje superficial que se sueldan directamente sobre la PCB sin patas. Son muy pequeños (0402, 0603, 0805, 5050…). Los del tipo <strong style="color:#f8fafc">5050</strong> son los que se usan en las tiras LED y suelen tener 3 chips dentro. Corriente por chip: 20 mA; por LED 5050 completo: hasta 60 mA.</p>
+
+                    <h5 style="margin-top:14px">LED RGB</h5>
+                    <p>Contiene tres LEDs (Rojo, Verde, Azul) en un mismo encapsulado. Combinando la intensidad de cada color se puede obtener cualquier tono. Hay de <strong>cátodo común</strong> (todos los cátodos van a GND) y de <strong>ánodo común</strong> (todos los ánodos van a +V). Cada color tiene su propio Vf y necesita su propia resistencia limitadora.</p>
+                    <div class="params-grid" style="margin-top:8px">
+                        <div class="param-box"><div class="param-label">R (rojo)</div><div class="param-value">Vf ≈ 1.9 – 2.1 V</div></div>
+                        <div class="param-box"><div class="param-label">G (verde)</div><div class="param-value">Vf ≈ 3.0 – 3.4 V</div></div>
+                        <div class="param-box"><div class="param-label">B (azul)</div><div class="param-value">Vf ≈ 3.0 – 3.5 V</div></div>
+                    </div>
+
+                    <h5 style="margin-top:14px">LED de alta potencia (1W, 3W, 5W…)</h5>
+                    <p>Son LEDs diseñados para iluminar. Manejan corrientes de <strong style="color:#f8fafc">350 mA a 1000 mA</strong> o más. Esa corriente alta genera mucho calor, por lo que <strong style="color:#f87171">requieren disipador térmico</strong> para no quemarse. No se conectan directamente con una resistencia: necesitan un driver de corriente constante (como el LM317 o módulos específicos).</p>
+                    <div class="note note-warn" style="margin-top:8px"><i class="fas fa-triangle-exclamation"></i><span>Un LED de 1W sin disipador puede quemarse en segundos. No los confundir con los LEDs comunes del taller.</span></div>
+                </div>
             </div>
 
             <!-- Calculadora Serie -->
             <div class="led-calc-card" id="calc-led-serie">
-                <h4><i class="fas fa-arrow-right" style="color:#60a5fa"></i> LEDs en Serie <span class="badge-tipo badge-serie">SERIE</span></h4>
-                <p style="color:var(--text-muted);font-size:.86rem;margin-bottom:8px">Varios LEDs encadenados. La tensión se reparte; la corriente es la misma para todos.</p>
-                <div class="formula-box">R = ( V<sub>fuente</sub> − V<sub>led</sub> × N<sub>serie</sub> ) / I<sub>led</sub></div>
+                <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:4px">
+                    <div style="flex:1;min-width:0">
+                        <h4 style="margin-bottom:4px"><i class="fas fa-arrow-right" style="color:#60a5fa"></i> LEDs en Serie <span class="badge-tipo badge-serie">SERIE</span></h4>
+                        <p style="color:var(--text-muted);font-size:.86rem;margin:0">Varios LEDs encadenados. La tensión se reparte; la corriente es la misma para todos.</p>
+                    </div>
+                    <div class="calc-ref-img">
+                        <div class="img-placeholder" style="padding:12px 8px">
+                            <i class="fas fa-image"></i>
+                            <code>img/calc_led_serie.png</code>
+                        </div>
+                        <img src="img/calc_led_serie.png" alt="LEDs en serie" onload="this.style.display='block';this.previousElementSibling.style.display='none'">
+                    </div>
+                </div>
+                <div class="formula-box" style="margin-top:12px">R = ( V<sub>fuente</sub> − V<sub>led</sub> × N<sub>serie</sub> ) / I<sub>led</sub></div>
                 <div class="calc-inputs">
                     <div class="input-group-custom"><label>V fuente (V)</label><input type="number" id="s_vf" value="12" min="0" step="0.1"></div>
                     <div class="input-group-custom"><label>V LED (V)</label><input type="number" id="s_vled" value="2.0" min="0" step="0.1"></div>
@@ -1345,9 +1440,20 @@
 
             <!-- Calculadora Paralelo -->
             <div class="led-calc-card" id="calc-led-paralelo">
-                <h4><i class="fas fa-arrows-left-right" style="color:#34d399"></i> LEDs en Paralelo <span class="badge-tipo badge-paralelo">PARALELO</span></h4>
-                <p style="color:var(--text-muted);font-size:.86rem;margin-bottom:8px">Varios LEDs en paralelo comparten la misma tensión. Un solo resistor para todos.</p>
-                <div class="formula-box">R = ( V<sub>fuente</sub> − V<sub>led</sub> ) / ( I<sub>led</sub> × N<sub>paralelo</sub> )</div>
+                <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:4px">
+                    <div style="flex:1;min-width:0">
+                        <h4 style="margin-bottom:4px"><i class="fas fa-arrows-left-right" style="color:#34d399"></i> LEDs en Paralelo <span class="badge-tipo badge-paralelo">PARALELO</span></h4>
+                        <p style="color:var(--text-muted);font-size:.86rem;margin:0">Varios LEDs en paralelo comparten la misma tensión. Un solo resistor para todos.</p>
+                    </div>
+                    <div class="calc-ref-img">
+                        <div class="img-placeholder" style="padding:12px 8px">
+                            <i class="fas fa-image"></i>
+                            <code>img/calc_led_paralelo.png</code>
+                        </div>
+                        <img src="img/calc_led_paralelo.png" alt="LEDs en paralelo" onload="this.style.display='block';this.previousElementSibling.style.display='none'">
+                    </div>
+                </div>
+                <div class="formula-box" style="margin-top:12px">R = ( V<sub>fuente</sub> − V<sub>led</sub> ) / ( I<sub>led</sub> × N<sub>paralelo</sub> )</div>
                 <div class="calc-inputs">
                     <div class="input-group-custom"><label>V fuente (V)</label><input type="number" id="p_vf" value="5" min="0" step="0.1"></div>
                     <div class="input-group-custom"><label>V LED (V)</label><input type="number" id="p_vled" value="2.0" min="0" step="0.1"></div>
@@ -1364,9 +1470,21 @@
 
             <!-- Calculadora Combinada -->
             <div class="led-calc-card" id="calc-led-combinado">
-                <h4><i class="fas fa-table-cells" style="color:#a78bfa"></i> Combinada: N serie × M paralelo <span class="badge-tipo badge-combinado">COMBINADO</span></h4>
-                <p style="color:var(--text-muted);font-size:.86rem;margin-bottom:8px">M cadenas en paralelo, cada una con N LEDs en serie. Un solo resistor para toda la matriz.</p>
-                <div class="formula-box">R = ( V<sub>fuente</sub> − V<sub>led</sub> × N<sub>serie</sub> ) / ( I<sub>led</sub> × M<sub>paralelo</sub> )</div>
+                <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:4px">
+                    <div style="flex:1;min-width:0">
+                        <h4 style="margin-bottom:4px"><i class="fas fa-table-cells" style="color:#a78bfa"></i> Combinada: N serie × M paralelo <span class="badge-tipo badge-combinado">COMBINADO</span></h4>
+                        <p style="color:var(--text-muted);font-size:.86rem;margin:0">M cadenas en paralelo, cada una con N LEDs en serie. Un solo resistor para toda la matriz.</p>
+                    </div>
+                    <div class="calc-ref-img">
+                        <div class="img-placeholder" style="padding:12px 8px">
+                            <i class="fas fa-image"></i>
+                            <code>img/calc_led_combinado.png</code>
+                        </div>
+                        <img src="img/calc_led_combinado.png" alt="LEDs combinado" onload="this.style.display='block';this.previousElementSibling.style.display='none'">
+                    </div>
+                </div>
+                <div class="note note-warn mt-2 mb-2" style="font-size:.82rem"><i class="fas fa-triangle-exclamation"></i><span>Esta calculadora requiere <strong>al menos 2 LEDs en serie (N ≥ 2)</strong> y <strong>al menos 2 cadenas en paralelo (M ≥ 2)</strong>. Si solo usás 1 en alguna dimensión, usá la calculadora de Serie o Paralelo directamente.</span></div>
+                <div class="formula-box" style="margin-top:8px">R = ( V<sub>fuente</sub> − V<sub>led</sub> × N<sub>serie</sub> ) / ( I<sub>led</sub> × M<sub>paralelo</sub> )</div>
                 <div class="calc-inputs">
                     <div class="input-group-custom"><label>V fuente (V)</label><input type="number" id="c_vf" value="12" min="0" step="0.1"></div>
                     <div class="input-group-custom"><label>V LED (V)</label><input type="number" id="c_vled" value="2.0" min="0" step="0.1"></div>
@@ -2509,6 +2627,17 @@ function calcCombinado(){
     const vf=+document.getElementById('c_vf').value,vled=+document.getElementById('c_vled').value,
           ns=+document.getElementById('c_serie').value,mp=+document.getElementById('c_paralelo').value,
           i=+document.getElementById('c_iled').value;
+    const el=document.getElementById('res_combinado');
+    if(ns<2||mp<2){
+        el.classList.add('show');
+        document.getElementById('res_combinado_val').textContent='';
+        document.getElementById('res_combinado_sub').innerHTML=
+            '<span style="color:#f97316"><i class="fas fa-triangle-exclamation"></i> '+
+            (ns<2&&mp<2?'N y M deben ser ≥ 2.':ns<2?'Los LEDs en serie (N) deben ser ≥ 2.':'Las cadenas en paralelo (M) deben ser ≥ 2.')+
+            ' Usá la calculadora de Serie o Paralelo para un solo grupo.</span>';
+        document.getElementById('res_combinado_warn').style.display='none';
+        return;
+    }
     showLedResult('res_combinado',(vf-vled*ns)/((i/1000)*mp),vf-vled*ns,i*mp,ns*mp);
 }
 function calcIR(){
