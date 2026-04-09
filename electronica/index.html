@@ -276,6 +276,13 @@
         .calc-ref-img img { max-width:100%; border-radius:10px; border:1px solid var(--border); display:none; }
         @media(max-width:576px){ .calc-ref-img { display:none; } }
 
+        /* ======================== SELECTOR TIPO DE LED ======================== */
+        .led-type-selector { margin:12px 0 6px; }
+        .led-type-selector label { font-size:.78rem; color:var(--text-muted); font-weight:500; display:block; margin-bottom:5px; }
+        .led-type-selector select { background:#0d0d18; border:1px solid var(--border-light); border-radius:8px; color:var(--text); padding:9px 28px 9px 9px; font-size:.86rem; cursor:pointer; transition:border-color .3s,box-shadow .3s; width:100%; max-width:400px; appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-repeat:no-repeat; background-position:right 7px center; background-size:15px; }
+        .led-type-selector select:focus { outline:none; border-color:var(--primary); }
+        .led-field-flash { border-color:var(--primary) !important; box-shadow:0 0 0 3px rgba(59,130,246,.18) !important; transition:border-color .1s,box-shadow .1s; }
+
         /* ======================== SERIES E24 / E48 ======================== */
         .e-series-grid { display:flex; flex-wrap:wrap; gap:6px; margin:12px 0; }
         .e-val { background:#0d0d18; border:1px solid var(--border-light); border-radius:7px; padding:5px 10px; font-family:'Courier New',monospace; font-size:.85rem; font-weight:600; color:var(--text); min-width:46px; text-align:center; }
@@ -1423,12 +1430,26 @@
                         <img src="img/calc_led_serie.png" alt="LEDs en serie" onload="this.style.display='block';this.previousElementSibling.style.display='none'">
                     </div>
                 </div>
-                <div class="formula-box" style="margin-top:12px">R = ( V<sub>fuente</sub> − V<sub>led</sub> × N<sub>serie</sub> ) / I<sub>led</sub></div>
+                <div class="led-type-selector">
+                    <label><i class="fas fa-circle-dot" style="color:var(--primary);font-size:.75rem;margin-right:4px"></i>Tipo de LED <span style="font-weight:400">(completa V<sub>led</sub> e I con los valores mínimos seguros para no quemar el LED)</span></label>
+                    <select onchange="setLedType('s', this.value)">
+                        <option value="">— Seleccioná el tipo de LED —</option>
+                        <option value="rojo">Rojo (Vf mín 1.8 V · 10 mA)</option>
+                        <option value="naranja">Naranja (Vf mín 1.9 V · 10 mA)</option>
+                        <option value="amarillo">Amarillo (Vf mín 2.0 V · 10 mA)</option>
+                        <option value="verde">Verde estándar (Vf mín 2.0 V · 10 mA)</option>
+                        <option value="verde_b">Verde brillante / alta eficiencia (Vf mín 3.0 V · 10 mA)</option>
+                        <option value="azul">Azul (Vf mín 3.0 V · 10 mA)</option>
+                        <option value="blanco">Blanco (Vf mín 3.0 V · 10 mA)</option>
+                        <option value="ir">IR — Infrarrojo (Vf mín 1.1 V · 20 mA)</option>
+                    </select>
+                </div>
+                <div class="formula-box">R = ( V<sub>fuente</sub> − V<sub>led</sub> × N<sub>serie</sub> ) / I<sub>led</sub></div>
                 <div class="calc-inputs">
                     <div class="input-group-custom"><label>V fuente (V)</label><input type="number" id="s_vf" value="12" min="0" step="0.1"></div>
-                    <div class="input-group-custom"><label>V LED (V)</label><input type="number" id="s_vled" value="2.0" min="0" step="0.1"></div>
+                    <div class="input-group-custom"><label>V LED (Vf mín)</label><input type="number" id="s_vled" value="2.0" min="0" step="0.1"></div>
                     <div class="input-group-custom"><label>Cant. LEDs en serie</label><input type="number" id="s_cant" value="3" min="1" step="1"></div>
-                    <div class="input-group-custom"><label>I LED (mA)</label><input type="number" id="s_iled" value="20" min="1" step="1"></div>
+                    <div class="input-group-custom"><label>I LED (mA)</label><input type="number" id="s_iled" value="10" min="1" step="1"></div>
                 </div>
                 <button class="calc-btn" onclick="calcSerie()"><i class="fas fa-calculator"></i> Calcular</button>
                 <div class="led-result" id="res_serie">
@@ -1453,12 +1474,26 @@
                         <img src="img/calc_led_paralelo.png" alt="LEDs en paralelo" onload="this.style.display='block';this.previousElementSibling.style.display='none'">
                     </div>
                 </div>
-                <div class="formula-box" style="margin-top:12px">R = ( V<sub>fuente</sub> − V<sub>led</sub> ) / ( I<sub>led</sub> × N<sub>paralelo</sub> )</div>
+                <div class="led-type-selector">
+                    <label><i class="fas fa-circle-dot" style="color:var(--primary);font-size:.75rem;margin-right:4px"></i>Tipo de LED <span style="font-weight:400">(completa V<sub>led</sub> e I con los valores mínimos seguros para no quemar el LED)</span></label>
+                    <select onchange="setLedType('p', this.value)">
+                        <option value="">— Seleccioná el tipo de LED —</option>
+                        <option value="rojo">Rojo (Vf mín 1.8 V · 10 mA)</option>
+                        <option value="naranja">Naranja (Vf mín 1.9 V · 10 mA)</option>
+                        <option value="amarillo">Amarillo (Vf mín 2.0 V · 10 mA)</option>
+                        <option value="verde">Verde estándar (Vf mín 2.0 V · 10 mA)</option>
+                        <option value="verde_b">Verde brillante / alta eficiencia (Vf mín 3.0 V · 10 mA)</option>
+                        <option value="azul">Azul (Vf mín 3.0 V · 10 mA)</option>
+                        <option value="blanco">Blanco (Vf mín 3.0 V · 10 mA)</option>
+                        <option value="ir">IR — Infrarrojo (Vf mín 1.1 V · 20 mA)</option>
+                    </select>
+                </div>
+                <div class="formula-box">R = ( V<sub>fuente</sub> − V<sub>led</sub> ) / ( I<sub>led</sub> × N<sub>paralelo</sub> )</div>
                 <div class="calc-inputs">
                     <div class="input-group-custom"><label>V fuente (V)</label><input type="number" id="p_vf" value="5" min="0" step="0.1"></div>
-                    <div class="input-group-custom"><label>V LED (V)</label><input type="number" id="p_vled" value="2.0" min="0" step="0.1"></div>
+                    <div class="input-group-custom"><label>V LED (Vf mín)</label><input type="number" id="p_vled" value="2.0" min="0" step="0.1"></div>
                     <div class="input-group-custom"><label>Cant. LEDs en paralelo</label><input type="number" id="p_cant" value="3" min="1" step="1"></div>
-                    <div class="input-group-custom"><label>I LED (mA)</label><input type="number" id="p_iled" value="20" min="1" step="1"></div>
+                    <div class="input-group-custom"><label>I LED (mA)</label><input type="number" id="p_iled" value="10" min="1" step="1"></div>
                 </div>
                 <button class="calc-btn" onclick="calcParalelo()"><i class="fas fa-calculator"></i> Calcular</button>
                 <div class="led-result" id="res_paralelo">
@@ -1484,13 +1519,27 @@
                     </div>
                 </div>
                 <div class="note note-warn mt-2 mb-2" style="font-size:.82rem"><i class="fas fa-triangle-exclamation"></i><span>Esta calculadora requiere <strong>al menos 2 LEDs en serie (N ≥ 2)</strong> y <strong>al menos 2 cadenas en paralelo (M ≥ 2)</strong>. Si solo usás 1 en alguna dimensión, usá la calculadora de Serie o Paralelo directamente.</span></div>
-                <div class="formula-box" style="margin-top:8px">R = ( V<sub>fuente</sub> − V<sub>led</sub> × N<sub>serie</sub> ) / ( I<sub>led</sub> × M<sub>paralelo</sub> )</div>
+                <div class="led-type-selector" style="margin-top:10px">
+                    <label><i class="fas fa-circle-dot" style="color:var(--primary);font-size:.75rem;margin-right:4px"></i>Tipo de LED <span style="font-weight:400">(completa V<sub>led</sub> e I con los valores mínimos seguros para no quemar el LED)</span></label>
+                    <select onchange="setLedType('c', this.value)">
+                        <option value="">— Seleccioná el tipo de LED —</option>
+                        <option value="rojo">Rojo (Vf mín 1.8 V · 10 mA)</option>
+                        <option value="naranja">Naranja (Vf mín 1.9 V · 10 mA)</option>
+                        <option value="amarillo">Amarillo (Vf mín 2.0 V · 10 mA)</option>
+                        <option value="verde">Verde estándar (Vf mín 2.0 V · 10 mA)</option>
+                        <option value="verde_b">Verde brillante / alta eficiencia (Vf mín 3.0 V · 10 mA)</option>
+                        <option value="azul">Azul (Vf mín 3.0 V · 10 mA)</option>
+                        <option value="blanco">Blanco (Vf mín 3.0 V · 10 mA)</option>
+                        <option value="ir">IR — Infrarrojo (Vf mín 1.1 V · 20 mA)</option>
+                    </select>
+                </div>
+                <div class="formula-box">R = ( V<sub>fuente</sub> − V<sub>led</sub> × N<sub>serie</sub> ) / ( I<sub>led</sub> × M<sub>paralelo</sub> )</div>
                 <div class="calc-inputs">
                     <div class="input-group-custom"><label>V fuente (V)</label><input type="number" id="c_vf" value="12" min="0" step="0.1"></div>
-                    <div class="input-group-custom"><label>V LED (V)</label><input type="number" id="c_vled" value="2.0" min="0" step="0.1"></div>
+                    <div class="input-group-custom"><label>V LED (Vf mín)</label><input type="number" id="c_vled" value="2.0" min="0" step="0.1"></div>
                     <div class="input-group-custom"><label>LEDs en serie (N)</label><input type="number" id="c_serie" value="3" min="1" step="1"></div>
                     <div class="input-group-custom"><label>Cadenas en paralelo (M)</label><input type="number" id="c_paralelo" value="2" min="1" step="1"></div>
-                    <div class="input-group-custom"><label>I LED (mA)</label><input type="number" id="c_iled" value="20" min="1" step="1"></div>
+                    <div class="input-group-custom"><label>I LED (mA)</label><input type="number" id="c_iled" value="10" min="1" step="1"></div>
                 </div>
                 <button class="calc-btn" onclick="calcCombinado()"><i class="fas fa-calculator"></i> Calcular</button>
                 <div class="led-result" id="res_combinado">
@@ -2611,6 +2660,33 @@ function showLedResult(id,r,vdrop,iled_ma,totalLeds){
         if(vdrop<0.5){warn.style.display='flex';warnTxt.textContent='Caída en el resistor muy baja. El circuito es sensible a variaciones de temperatura.';}
         else warn.style.display='none';
     }
+}
+
+// ============================================================
+// LED TYPE SELECTOR
+// ============================================================
+const LED_TYPES = {
+    'rojo':    { vf: 1.8, i: 10 },
+    'naranja': { vf: 1.9, i: 10 },
+    'amarillo':{ vf: 2.0, i: 10 },
+    'verde':   { vf: 2.0, i: 10 },
+    'verde_b': { vf: 3.0, i: 10 },
+    'azul':    { vf: 3.0, i: 10 },
+    'blanco':  { vf: 3.0, i: 10 },
+    'ir':      { vf: 1.1, i: 20 },
+};
+function setLedType(prefix, type) {
+    if (!type) return;
+    const d = LED_TYPES[type];
+    if (!d) return;
+    const vledEl = document.getElementById(prefix + '_vled');
+    const iledEl = document.getElementById(prefix + '_iled');
+    [vledEl, iledEl].forEach((el, idx) => {
+        if (!el) return;
+        el.value = idx === 0 ? d.vf : d.i;
+        el.classList.add('led-field-flash');
+        setTimeout(() => el.classList.remove('led-field-flash'), 1400);
+    });
 }
 
 function calcSerie(){
