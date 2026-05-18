@@ -322,7 +322,7 @@
     Cada <span style="color:#6bffb0">punto verde</span> representa electrones moviéndose por el cable.
     Aumentá la <span style="color:#f7c948">tensión</span> y verás más electrones circulando más rápido.
     Aumentá la <span style="color:#ff6b6b">resistencia</span> y verás cómo la corriente disminuye: la resistencia frena a los electrones.
-    La <span style="color:#f7c948">pila</span> (lado izquierdo) es la fuente de tensión. El <span style="color:#ff6b6b">rectángulo rojo</span> es la resistencia del circuito.
+    La <span style="color:#f7c948">pila</span> (lado izquierdo) es la fuente de tensión. El <span style="color:#ff6b6b">rectángulo rojo</span> es la resistencia del circuito. La <span style="color:#f7a830">lámpara</span> (lado derecho) brilla más a mayor corriente: con poca corriente apenas se enciende, con mucha corriente, brilla al máximo.
   </div>
 
   <div class="leyenda">
@@ -330,6 +330,7 @@
     <div class="leyenda-item"><span class="dot" style="background:#ff6b6b;"></span> Resistencia</div>
     <div class="leyenda-item"><span class="dot" style="background:#6bffb0;"></span> Electrones (corriente)</div>
     <div class="leyenda-item"><span class="dot" style="background:#5599ff;"></span> Cable conductor</div>
+    <div class="leyenda-item"><span class="dot" style="background:#f7a830;"></span> Lámpara (brillo ∝ corriente)</div>
   </div>
 
 <script>
@@ -519,6 +520,61 @@ function drawArrows() {
   ctx.restore();
 }
 
+function drawLampara() {
+  const cx = circuit.x2;
+  const midY = (circuit.y1 + circuit.y2) / 2;
+  const I = corriente();
+  const brightness = Math.min(I / 30, 1);
+
+  ctx.save();
+
+  // Halo exterior proporcional a la corriente
+  if (brightness > 0.01) {
+    const glowR = 22 + brightness * 32;
+    const glow = ctx.createRadialGradient(cx, midY, 4, cx, midY, glowR);
+    glow.addColorStop(0, `rgba(255, 210, 50, ${brightness * 0.55})`);
+    glow.addColorStop(1, 'rgba(255,140,0,0)');
+    ctx.beginPath();
+    ctx.arc(cx, midY, glowR, 0, Math.PI * 2);
+    ctx.fillStyle = glow;
+    ctx.fill();
+  }
+
+  // Bulbo
+  const bulbR = 18;
+  ctx.beginPath();
+  ctx.arc(cx, midY, bulbR, 0, Math.PI * 2);
+  ctx.fillStyle = `rgba(${Math.round(30 + brightness * 220)},${Math.round(20 + brightness * 170)},5,0.92)`;
+  ctx.strokeStyle = brightness > 0.05
+    ? `rgba(255,${Math.round(180 + brightness * 70)},50,0.9)`
+    : '#3a3020';
+  ctx.lineWidth = 2.5;
+  ctx.fill();
+  ctx.stroke();
+
+  // Filamento en zigzag
+  ctx.strokeStyle = brightness > 0.03
+    ? `rgba(255,${Math.round(160 + brightness * 90)},50,${0.5 + brightness * 0.5})`
+    : '#553322';
+  ctx.lineWidth = 1.8;
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(cx - 7, midY + 6);
+  ctx.lineTo(cx - 3, midY - 4);
+  ctx.lineTo(cx + 1, midY + 4);
+  ctx.lineTo(cx + 5, midY - 4);
+  ctx.lineTo(cx + 7, midY + 6);
+  ctx.stroke();
+
+  // Etiqueta
+  ctx.fillStyle = brightness > 0.05 ? '#f7c948' : '#665530';
+  ctx.font = 'bold 12px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('Lámpara', cx, midY + bulbR + 16);
+
+  ctx.restore();
+}
+
 function drawLabels() {
   ctx.save();
   ctx.font = '11px Segoe UI';
@@ -543,6 +599,7 @@ function animate(ts) {
   drawArrows();
   drawResistencia();
   drawPila();
+  drawLampara();
   drawLabels();
 
   // Electrones equidistantes moviéndose en sincronía
