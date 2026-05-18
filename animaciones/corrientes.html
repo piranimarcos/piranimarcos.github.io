@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Corriente Alterna vs Continua</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',sans-serif;background:#0d1b2a;color:#e0e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px}
+    nav{width:100%;max-width:860px;display:flex;gap:12px;margin-bottom:20px}
+    nav a{padding:8px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;border:1px solid #2a3f5a;color:#8da8c0;transition:all .2s}
+    nav a:hover,nav a.active{background:#1a3a5a;color:#7ecfff;border-color:#7ecfff}
+    h1{font-size:1.6rem;color:#7ecfff;margin-bottom:4px;text-align:center}
+    .subtitle{font-size:0.92rem;color:#8da8c0;margin-bottom:22px;text-align:center}
+
+    .toggle-row{display:flex;gap:0;border-radius:10px;overflow:hidden;border:1px solid #2a3f5a;margin-bottom:24px}
+    .toggle-btn{padding:12px 40px;font-size:1rem;font-weight:700;cursor:pointer;border:none;background:#162235;color:#8da8c0;transition:all .2s;letter-spacing:1px}
+    .toggle-btn.active-dc{background:#1a4060;color:#f7c948}
+    .toggle-btn.active-ac{background:#1a2e1a;color:#6bffb0}
+
+    .wire-section{width:100%;max-width:860px;margin-bottom:22px}
+    .panel{background:#111e2e;border-radius:12px;border:1px solid #2a3f5a;padding:14px}
+    .panel h3{font-size:0.85rem;color:#8da8c0;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+    canvas{border-radius:8px;display:block;width:100%}
+
+    .controls{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;max-width:860px;width:100%;margin-bottom:22px}
+    .ctrl-card{background:#162235;border:1px solid #2a3f5a;border-radius:12px;padding:14px 20px;min-width:200px;text-align:center;flex:1}
+    .ctrl-card label{display:block;font-size:0.9rem;font-weight:600;margin-bottom:8px}
+    .ctrl-card input[type=range]{width:100%;accent-color:#7ecfff;cursor:pointer}
+    .val{font-size:1.5rem;font-weight:700;margin-top:6px}
+
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:860px;width:100%;margin-bottom:20px}
+    .info-card{background:#162235;border-radius:10px;padding:14px 16px;border-left:4px solid #2a3f5a}
+    .info-card.dc-card{border-color:#f7c948}
+    .info-card.ac-card{border-color:#6bffb0}
+    .info-card h4{font-size:0.9rem;margin-bottom:8px}
+    .info-card ul{font-size:0.82rem;color:#a0b8d0;list-style:none;line-height:1.9}
+    .info-card ul li::before{content:"→ "}
+
+    .explicacion{background:#162235;border-left:4px solid #7ecfff;border-radius:8px;padding:14px 18px;max-width:860px;width:100%;font-size:0.9rem;line-height:1.7;color:#c5ddf0;margin-bottom:20px}
+    .explicacion strong{color:#7ecfff}
+    .dato-curioso{background:rgba(107,255,176,0.06);border:1px solid rgba(107,255,176,0.2);border-radius:10px;padding:12px 18px;max-width:860px;width:100%;font-size:0.85rem;color:#90c8a8;line-height:1.65;margin-bottom:20px}
+    .dato-curioso strong{color:#6bffb0}
+    .brand-bar{display:flex;align-items:center;gap:12px;width:100%;max-width:860px;margin-bottom:14px;padding:10px 16px;background:#111e2e;border-radius:10px;border:1px solid #2a3f5a}
+    .brand-bar img{height:38px;border-radius:8px;object-fit:contain}
+    .brand-name{font-size:0.95rem;font-weight:700;color:#e0e8f0}
+    .brand-sub{font-size:0.74rem;color:#8da8c0;margin-top:1px}
+  </style>
+</head>
+<body>
+
+<div class="brand-bar">
+  <img src="../electronica/img/logoSP.png" alt="Logo Escuela" onerror="this.style.display='none'">
+  <div>
+    <div class="brand-name">Ing. Marcos Pirani</div>
+    <div class="brand-sub">Taller de Electrónica I</div>
+  </div>
+</div>
+
+<nav>
+  <a href="index.html">⚡ Circuito Básico (V, I, R)</a>
+  <a href="corrientes.html" class="active">〜 Corriente Alterna vs Continua</a>
+</nav>
+
+<h1>〜 Corriente Alterna &amp; Continua</h1>
+<p class="subtitle">Explorá la diferencia entre corriente continua y corriente alterna</p>
+
+<div class="toggle-row">
+  <button class="toggle-btn active-dc" id="btn-dc" onclick="setMode('DC')">⎓ DC — Continua</button>
+  <button class="toggle-btn" id="btn-ac" onclick="setMode('AC')">〜 AC — Alterna</button>
+</div>
+
+<div class="wire-section">
+  <div class="panel">
+    <h3>🔬 Cable conductor — Movimiento de electrones</h3>
+    <canvas id="wire" height="150"></canvas>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="ctrl-card">
+    <label style="color:#f7c948">⚡ Tensión</label>
+    <input type="range" id="sl-volt" min="1" max="20" value="10" step="1"/>
+    <div class="val" style="color:#f7c948" id="v-val">10 V</div>
+  </div>
+  <div class="ctrl-card" id="freq-card" style="display:none">
+    <label style="color:#6bffb0">〜 Frecuencia</label>
+    <input type="range" id="sl-freq" min="1" max="50" value="1" step="1" oninput="setFreq(this.value)"/>
+    <div class="val" style="color:#6bffb0" id="f-val">1 Hz</div>
+    <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:#4a8060;margin-top:2px"><span>lento</span><span>rápido</span></div>
+  </div>
+  <div class="ctrl-card" style="background:#101e2e;border-color:#1a3a2a;max-width:260px">
+    <label style="color:#a0b8d0">⚛️ Electrones en el cable</label>
+    <div style="height:10px"></div>
+    <div class="val" id="elec-val" style="color:#a0b8d0;font-size:2rem">16</div>
+    <div id="trillones-val" style="font-size:0.75rem;color:#6bffb0;margin-top:5px;line-height:1.5">≈ 60 trillones de e⁻/seg</div>
+    <div style="font-size:0.65rem;color:#4a8060;margin-top:2px">(asumiendo 1 A por cada Volt)</div>
+  </div>
+</div>
+
+<div class="info-grid">
+  <div class="info-card dc-card">
+    <h4 style="color:#f7c948">⎓ Corriente Continua (CC / DC)</h4>
+    <ul>
+      <li>Los electrones siempre van en la misma dirección</li>
+      <li>La tensión es constante en el tiempo</li>
+      <li>Gran ventaja: <strong style="color:#f7c948">se puede almacenar</strong> en baterías y pilas</li>
+      <li><strong>¿Dónde se genera?</strong> Pilas, baterías recargables (Li-ion), paneles solares, fuentes de alimentación (adaptadores), dínamos, generadores portátiles</li>
+      <li>Usos: celulares, laptops, linternas, autos eléctricos, drones</li>
+    </ul>
+  </div>
+  <div class="info-card ac-card">
+    <h4 style="color:#6bffb0">〜 Corriente Alterna (CA / AC)</h4>
+    <ul>
+      <li>Los electrones van y vuelven continuamente</li>
+      <li>La tensión cambia de dirección muchas veces por segundo</li>
+      <li>Gran ventaja: <strong style="color:#6bffb0">se puede transformar</strong> para enviarla a cientos de km</li>
+      <li><strong>¿Qué hace girar el generador?</strong><br>
+        💨 Viento → Central eólica<br>
+        💧 Agua (represa) → Central hidroeléctrica<br>
+        ☢️ Calor nuclear → Central nuclear<br>
+        🔥 Vapor por combustión → Central térmica<br>
+        🌋 Calor de la tierra → Central geotérmica
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="dato-curioso">
+  ⚛️ <strong>¿Sabías que...?</strong> 1 ampere equivale a aproximadamente <strong>6 trillones</strong> de electrones pasando por un punto del cable cada segundo (6 × 10<sup>18</sup> electrones/seg). Es una cantidad imposible de imaginar, pero así de pequeños son los electrones.
+</div>
+
+<div class="explicacion" id="explicacion">
+  <strong>Corriente Continua (DC):</strong> los electrones se mueven siempre en la misma dirección, como el agua en un río. Las pilas y baterías producen este tipo de corriente. Su gran ventaja es que <strong>se puede almacenar</strong>: por eso los celulares, las laptops y los autos eléctricos usan baterías. A mayor tensión, más electrones circulan y más rápido se mueven.
+</div>
+
+<script>
+const VOLT_MAX = 20;
+let mode = 'DC';
+let volt = 10;
+let freq = 1;
+
+function formatElectrones(I) {
+  const t = I * 6;
+  if (t >= 1) {
+    const display = t >= 10 ? Math.round(t) : t.toFixed(1).replace('.', ',');
+    return '≈ ' + display + ' trillones de e⁻/seg';
+  }
+  return '≈ ' + Math.round(t * 1000) + ' mil billones de e⁻/seg';
+}
+let t = 0;
+let dcPhase = 0;
+
+const wireCanvas = document.getElementById('wire');
+const wctx = wireCanvas.getContext('2d');
+
+function getElectronCount() {
+  // volt=1 → 3 electrones, volt=20 → 30 electrones
+  return Math.round(3 + (volt - 1) * 27 / 19);
+}
+
+function drawArrow(ctx, x, y, dir) {
+  ctx.save();
+  ctx.fillStyle = 'rgba(100,180,255,0.3)';
+  ctx.translate(x, y);
+  ctx.scale(dir, 1);
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(-9, -5);
+  ctx.lineTo(-9, 5);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawElectron(ctx, px, py, r, glowPhase, coreColor, glowR, glowG, glowB) {
+  const alpha = 0.38 + 0.22 * Math.sin(glowPhase);
+  const gl = ctx.createRadialGradient(px, py, 1, px, py, r * 3.2);
+  gl.addColorStop(0, `rgba(${glowR},${glowG},${glowB},${alpha})`);
+  gl.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.beginPath();
+  ctx.arc(px, py, r * 3.2, 0, Math.PI * 2);
+  ctx.fillStyle = gl;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(px, py, r, 0, Math.PI * 2);
+  ctx.fillStyle = coreColor;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(px, py, r * 0.4, 0, Math.PI * 2);
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+}
+
+function drawWire(dt) {
+  const W = wireCanvas.width;
+  const H = wireCanvas.height;
+  wctx.clearRect(0, 0, W, H);
+
+  const wireY = H / 2;
+  const wireX1 = 44;
+  const wireX2 = W - 44;
+  const cableWidth = wireX2 - wireX1;
+
+  // Cable
+  wctx.save();
+  wctx.strokeStyle = '#3a6aaa';
+  wctx.lineWidth = 10;
+  wctx.lineCap = 'round';
+  wctx.beginPath();
+  wctx.moveTo(wireX1, wireY);
+  wctx.lineTo(wireX2, wireY);
+  wctx.stroke();
+  wctx.restore();
+
+  // Flechas de dirección (DC)
+  if (mode === 'DC') {
+    const nArrows = 5;
+    for (let i = 0; i < nArrows; i++) {
+      const ax = wireX1 + (i + 1) * cableWidth / (nArrows + 1);
+      drawArrow(wctx, ax, wireY, 1);
+    }
+  }
+
+  // Etiquetas + y −
+  wctx.font = 'bold 16px Segoe UI';
+  wctx.textAlign = 'center';
+  wctx.fillStyle = '#f7c948';
+  wctx.fillText('+', wireX1 - 22, wireY + 5);
+  wctx.fillStyle = '#aaa';
+  wctx.fillText('−', wireX2 + 22, wireY + 5);
+
+  const nElec = getElectronCount();
+
+  if (mode === 'DC') {
+    // Todos avanzan juntos en fila india
+    const speed = 0.04 + 0.14 * (volt / VOLT_MAX);
+    dcPhase = (dcPhase + dt * speed) % 1;
+
+    for (let i = 0; i < nElec; i++) {
+      const frac = (i / nElec + dcPhase) % 1;
+      const px = wireX1 + frac * cableWidth;
+      const r = 4.8 + (i % 3) * 0.4;
+      drawElectron(wctx, px, wireY, r, t * 3 + i * 2 * Math.PI / nElec,
+        '#f7c948', 247, 201, 72);
+    }
+  } else {
+    // Frecuencia visual: mapea 1Hz→0.4Hz y 50Hz→4Hz para que sea legible
+    const visualFreq = 0.4 + (freq - 1) / 49 * 3.6;
+    const normV = Math.sin(2 * Math.PI * visualFreq * t);
+    const maxDisp = 8 + (volt / VOLT_MAX) * 44;
+
+    for (let i = 0; i < nElec; i++) {
+      const frac = (i + 0.5) / nElec;
+      const centerX = wireX1 + frac * cableWidth;
+      const px = Math.max(wireX1 + 6, Math.min(wireX2 - 6, centerX + normV * maxDisp));
+      const r = 4.8 + (i % 3) * 0.4;
+      drawElectron(wctx, px, wireY, r, t * 3 + i * 2 * Math.PI / nElec,
+        '#6bffb0', 107, 255, 176);
+    }
+  }
+
+  // Etiqueta inferior
+  wctx.font = 'bold 12px Segoe UI';
+  wctx.fillStyle = mode === 'DC' ? '#f7c948' : '#6bffb0';
+  wctx.textAlign = 'left';
+  wctx.fillText(mode === 'DC'
+    ? '→ Los electrones avanzan siempre en la misma dirección'
+    : '↔ Los electrones van y vuelven (oscilan)', wireX1, H - 8);
+}
+
+function resize() {
+  wireCanvas.width = wireCanvas.parentElement.clientWidth - 28;
+}
+
+let lastTs = 0;
+function loop(ts) {
+  const dt = Math.min((ts - lastTs) / 1000, 0.05);
+  lastTs = ts;
+  t += dt;
+  drawWire(dt);
+  requestAnimationFrame(loop);
+}
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('btn-dc').className = 'toggle-btn' + (m === 'DC' ? ' active-dc' : '');
+  document.getElementById('btn-ac').className = 'toggle-btn' + (m === 'AC' ? ' active-ac' : '');
+  document.getElementById('freq-card').style.display = m === 'AC' ? '' : 'none';
+  t = 0;
+  dcPhase = 0;
+  updateInfo();
+}
+
+function setFreq(v) {
+  freq = parseInt(v);
+  document.getElementById('f-val').textContent = freq + ' Hz';
+  t = 0;
+  updateInfo();
+}
+
+function updateInfo() {
+  document.getElementById('v-val').textContent = volt + ' V';
+  document.getElementById('elec-val').textContent = getElectronCount();
+  document.getElementById('trillones-val').textContent = formatElectrones(volt);
+
+  const expl = document.getElementById('explicacion');
+  if (mode === 'DC') {
+    expl.innerHTML = `<strong>Corriente Continua (DC):</strong> los electrones se mueven siempre en la misma dirección, como el agua en un río. Las pilas y baterías producen este tipo de corriente. Su gran ventaja es que <strong>se puede almacenar</strong>: por eso los celulares, las laptops y los autos eléctricos usan baterías. A mayor tensión, más electrones circulan y más rápido se mueven.`;
+  } else {
+    expl.innerHTML = `<strong>Corriente Alterna (AC):</strong> los electrones no se mueven siempre para el mismo lado: van hacia un extremo y luego vuelven, una y otra vez. Con <strong>${freq} Hz</strong>, cambian de sentido <strong>${freq} veces por segundo</strong>. En los enchufes de tu casa la frecuencia es 50 Hz. Su gran ventaja es que <strong>se puede transformar</strong> fácilmente: los transformadores la convierten a tensiones muy altas para transportarla a cientos de kilómetros desde la central eléctrica, y luego la reducen para que llegue segura a los hogares.`;
+  }
+}
+
+document.getElementById('sl-volt').addEventListener('input', e => {
+  volt = parseInt(e.target.value);
+  updateInfo();
+});
+
+resize();
+window.addEventListener('resize', resize);
+updateInfo();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

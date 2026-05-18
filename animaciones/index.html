@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Circuito Eléctrico - Tensión, Corriente y Resistencia</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0d1b2a;
+      color: #e0e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      color: #7ecfff;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #8da8c0;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .circuit-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 680px;
+      margin-bottom: 28px;
+    }
+
+    canvas#circuito {
+      border-radius: 12px;
+      background: #111e2e;
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .controls {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 28px;
+      width: 100%;
+      max-width: 680px;
+    }
+
+    .control-card {
+      background: #162235;
+      border: 1px solid #2a3f5a;
+      border-radius: 12px;
+      padding: 16px 22px;
+      flex: 1;
+      min-width: 180px;
+      text-align: center;
+    }
+
+    .control-card label {
+      display: block;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .control-card input[type=range] {
+      width: 100%;
+      accent-color: #7ecfff;
+      cursor: pointer;
+    }
+
+    .value-display {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .tension-color  { color: #f7c948; }
+    .resistencia-color { color: #ff6b6b; }
+    .corriente-color { color: #6bffb0; }
+
+    .ohm-box {
+      background: #162235;
+      border: 1px solid #2a3f5a;
+      border-radius: 12px;
+      padding: 16px 28px;
+      text-align: center;
+      margin-bottom: 24px;
+      width: 100%;
+      max-width: 680px;
+    }
+
+    .ohm-box h2 {
+      font-size: 1rem;
+      color: #8da8c0;
+      margin-bottom: 8px;
+    }
+
+    .ohm-formula {
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .ohm-formula span.v { color: #f7c948; }
+    .ohm-formula span.i { color: #6bffb0; }
+    .ohm-formula span.r { color: #ff6b6b; }
+
+    .ohm-calculo {
+      margin-top: 6px;
+      font-size: 1.1rem;
+      color: #a0c0e0;
+    }
+
+    .ohm-elec {
+      margin-top: 6px;
+      font-size: 0.82rem;
+      color: #6bffb0;
+      opacity: 0.9;
+    }
+
+    .corriente-elec {
+      font-size: 0.75rem;
+      color: #6bffb0;
+      margin-top: 4px;
+      opacity: 0.85;
+      line-height: 1.4;
+    }
+
+    /* Sección de magnitudes */
+    .magnitudes-section {
+      width: 100%;
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .magnitudes-section h2 {
+      font-size: 1.05rem;
+      color: #7ecfff;
+      margin-bottom: 14px;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    .mag-grid {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .mag-card {
+      flex: 1;
+      min-width: 170px;
+      background: #162235;
+      border-left: 4px solid;
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .mag-symbol {
+      font-size: 2rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .mag-card h3 {
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .mag-card p {
+      font-size: 0.82rem;
+      color: #a0b8d0;
+      line-height: 1.65;
+    }
+
+    .mag-ejemplo {
+      margin-top: 8px;
+      font-style: italic;
+      font-size: 0.78rem !important;
+      color: #728aa0 !important;
+    }
+
+    .explicacion {
+      background: #162235;
+      border-left: 4px solid #7ecfff;
+      border-radius: 8px;
+      padding: 14px 18px;
+      max-width: 680px;
+      width: 100%;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: #c5ddf0;
+      margin-bottom: 20px;
+    }
+
+    .explicacion strong { color: #7ecfff; }
+
+    .leyenda {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: #8da8c0;
+    }
+
+    .leyenda-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .brand-bar{display:flex;align-items:center;gap:12px;width:100%;max-width:680px;margin-bottom:14px;padding:10px 16px;background:#111e2e;border-radius:10px;border:1px solid #2a3f5a}
+    .brand-bar img{height:38px;border-radius:8px;object-fit:contain}
+    .brand-name{font-size:0.95rem;font-weight:700;color:#e0e8f0}
+    .brand-sub{font-size:0.74rem;color:#8da8c0;margin-top:1px}
+  </style>
+</head>
+<body>
+
+  <div class="brand-bar">
+    <img src="../electronica/img/logoSP.png" alt="Logo Escuela" onerror="this.style.display='none'">
+    <div>
+      <div class="brand-name">Ing. Marcos Pirani</div>
+      <div class="brand-sub">Taller de Electrónica I</div>
+    </div>
+  </div>
+
+  <nav style="width:100%;max-width:680px;display:flex;gap:12px;margin-bottom:18px">
+    <a href="index.html" style="padding:8px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.9rem;background:#1a3a5a;color:#7ecfff;border:1px solid #7ecfff">⚡ Circuito Básico (V, I, R)</a>
+    <a href="corrientes.html" style="padding:8px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.9rem;border:1px solid #2a3f5a;color:#8da8c0">〜 Corriente Alterna vs Continua</a>
+  </nav>
+
+  <h1>⚡ Circuito Eléctrico Interactivo</h1>
+  <p class="subtitle">Explorá cómo la tensión, la corriente y la resistencia se relacionan</p>
+
+  <div class="circuit-wrapper">
+    <canvas id="circuito" width="680" height="320"></canvas>
+  </div>
+
+  <div class="ohm-box">
+    <h2>Ley de Ohm</h2>
+    <div class="ohm-formula">
+      <span class="i">I</span> = <span class="v">V</span> / <span class="r">R</span>
+    </div>
+    <div class="ohm-calculo" id="calculo">I = 6V / 2Ω = 3.00 A</div>
+    <div class="ohm-elec" id="ohm-elec">≈ 18 trillones de electrones por segundo</div>
+  </div>
+
+  <div class="controls">
+    <div class="control-card">
+      <label class="tension-color">⚡ Tensión (Voltaje)</label>
+      <input type="range" id="tension" min="1" max="220" value="6" step="1"/>
+      <div class="value-display tension-color" id="tension-val">6 V</div>
+    </div>
+
+    <div class="control-card">
+      <label class="resistencia-color">🧱 Resistencia</label>
+      <input type="range" id="resistencia" min="1" max="200" value="2" step="1"/>
+      <div class="value-display resistencia-color" id="resistencia-val">2 Ω</div>
+    </div>
+
+    <div class="control-card" style="background:#101e2e; border-color:#1a3a2a;">
+      <label class="corriente-color">🔵 Corriente (calculada)</label>
+      <div style="height:10px;"></div>
+      <div class="value-display corriente-color" id="corriente-val">3.00 A</div>
+      <div class="corriente-elec" id="corriente-elec">≈ 18 trillones de e⁻/seg</div>
+    </div>
+  </div>
+
+  <!-- Explicación de las 3 magnitudes -->
+  <div class="magnitudes-section">
+    <h2>Las 3 magnitudes fundamentales de la electricidad</h2>
+    <div class="mag-grid">
+
+      <div class="mag-card" style="border-color:#f7c948">
+        <div class="mag-symbol" style="color:#f7c948">V</div>
+        <h3 style="color:#f7c948">Tensión (Voltaje)</h3>
+        <p>Es la "fuerza" que empuja a los electrones a través del cable. Sin tensión, los electrones no se mueven. Cuanta más tensión, más fuerte el empuje.</p>
+        <p class="mag-ejemplo">🔋 Pila AA = 1,5 V &nbsp;|&nbsp; Celular = 3,7 V &nbsp;|&nbsp; Enchufe de casa = 220 V</p>
+      </div>
+
+      <div class="mag-card" style="border-color:#6bffb0">
+        <div class="mag-symbol" style="color:#6bffb0">I</div>
+        <h3 style="color:#6bffb0">Corriente</h3>
+        <p>Es la cantidad de electrones que circulan por el cable en cada momento. A mayor tensión o menor resistencia, más electrones pasan: más corriente.</p>
+        <p class="mag-ejemplo">💡 LED = 0,02 A &nbsp;|&nbsp; Celular cargando = 1 A &nbsp;|&nbsp; Lavarropas = 10 A</p>
+      </div>
+
+      <div class="mag-card" style="border-color:#ff6b6b">
+        <div class="mag-symbol" style="color:#ff6b6b">R</div>
+        <h3 style="color:#ff6b6b">Resistencia</h3>
+        <p>Es lo que se opone al paso de los electrones, como apretar una manguera. A mayor resistencia, menos electrones pasan con la misma tensión.</p>
+        <p class="mag-ejemplo">🔌 Cable de cobre = muy baja &nbsp;|&nbsp; Resistor típico = 220 Ω &nbsp;|&nbsp; Filamento lamparita = miles de Ω</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="explicacion">
+    <strong>¿Qué ves en la animación?</strong><br>
+    Cada <span style="color:#6bffb0">punto verde</span> representa electrones moviéndose por el cable.
+    Aumentá la <span style="color:#f7c948">tensión</span> y verás más electrones circulando más rápido.
+    Aumentá la <span style="color:#ff6b6b">resistencia</span> y verás cómo la corriente disminuye: la resistencia frena a los electrones.
+    La <span style="color:#f7c948">pila</span> (lado izquierdo) es la fuente de tensión. El <span style="color:#ff6b6b">rectángulo rojo</span> es la resistencia del circuito.
+  </div>
+
+  <div class="leyenda">
+    <div class="leyenda-item"><span class="dot" style="background:#f7c948;"></span> Pila / Fuente de tensión</div>
+    <div class="leyenda-item"><span class="dot" style="background:#ff6b6b;"></span> Resistencia</div>
+    <div class="leyenda-item"><span class="dot" style="background:#6bffb0;"></span> Electrones (corriente)</div>
+    <div class="leyenda-item"><span class="dot" style="background:#5599ff;"></span> Cable conductor</div>
+  </div>
+
+<script>
+const canvas = document.getElementById('circuito');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+
+const PAD = 60;
+const circuit = { x1: PAD, y1: PAD, x2: W - PAD, y2: H - PAD };
+
+const path = [
+  { x: circuit.x1, y: circuit.y2 },
+  { x: circuit.x1, y: circuit.y1 },
+  { x: circuit.x2, y: circuit.y1 },
+  { x: circuit.x2, y: circuit.y2 },
+];
+
+const segments = [
+  { from: path[0], to: path[1] },
+  { from: path[1], to: path[2] },
+  { from: path[2], to: path[3] },
+  { from: path[3], to: path[0] },
+];
+
+function segLen(a, b) { return Math.hypot(b.x - a.x, b.y - a.y); }
+const segLengths = segments.map(s => segLen(s.from, s.to));
+const totalLen = segLengths.reduce((a, b) => a + b, 0);
+
+let tension = 6, resistencia = 2;
+let circPhase = 0, t = 0;
+
+function corriente() { return tension / resistencia; }
+
+function getN() {
+  const I = corriente();
+  if (I <= 0.01) return 2;
+  if (I <= 1) return Math.round(2 + I * 6);   // 2→8 para I de 0 a 1A
+  return Math.min(30, Math.round(8 + (I - 1) / 199 * 22)); // 8→30 lineal de 1A a 200A
+}
+
+function getSpeed() {
+  const I = corriente();
+  if (I <= 1) return 40;                        // lento pero visible en 1A
+  return Math.min(350, 40 + (I - 1) / 199 * 310); // 40→350 lineal de 1A a 200A
+}
+
+function formatElectrones(I) {
+  const t = I * 6;
+  if (t >= 1) {
+    const display = t >= 10 ? Math.round(t) : t.toFixed(1).replace('.', ',');
+    return '≈ ' + display + ' trillones de electrones por segundo';
+  }
+  return '≈ ' + Math.round(t * 1000) + ' mil billones de electrones por segundo';
+}
+
+function posOnPath(dist) {
+  dist = ((dist % totalLen) + totalLen) % totalLen;
+  let acc = 0;
+  for (let i = 0; i < segments.length; i++) {
+    const sl = segLengths[i];
+    if (dist <= acc + sl) {
+      const local = (dist - acc) / sl;
+      const s = segments[i];
+      return {
+        x: s.from.x + (s.to.x - s.from.x) * local,
+        y: s.from.y + (s.to.y - s.from.y) * local,
+      };
+    }
+    acc += sl;
+  }
+  return path[0];
+}
+
+function drawCable() {
+  ctx.save();
+  ctx.strokeStyle = '#3a6aaa';
+  ctx.lineWidth = 8;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(path[0].x, path[0].y);
+  for (let i = 1; i < path.length; i++) ctx.lineTo(path[i].x, path[i].y);
+  ctx.lineTo(path[0].x, path[0].y);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawPila() {
+  const cx = circuit.x1;
+  const midY = (circuit.y1 + circuit.y2) / 2;
+  const bw = 22, bh = 54;
+
+  ctx.save();
+  ctx.fillStyle = '#1a1a2e';
+  ctx.strokeStyle = '#f7c948';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.roundRect(cx - bw / 2, midY - bh / 2, bw, bh, 4);
+  ctx.fill();
+  ctx.stroke();
+
+  const lineW = 14;
+  ctx.strokeStyle = '#f7c948';
+  ctx.lineWidth = 3;
+  for (let i = 0; i < 3; i++) {
+    const y = midY - 18 + i * 6;
+    ctx.beginPath();
+    ctx.moveTo(cx - lineW / 2, y);
+    ctx.lineTo(cx + lineW / 2, y);
+    ctx.stroke();
+  }
+
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = '#aaa';
+  ctx.beginPath();
+  ctx.moveTo(cx - lineW / 2 + 2, midY + 12);
+  ctx.lineTo(cx + lineW / 2 - 2, midY + 12);
+  ctx.stroke();
+
+  ctx.fillStyle = '#f7c948';
+  ctx.font = 'bold 13px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText(tension + 'V', cx, midY + bh / 2 + 18);
+  ctx.fillStyle = '#ffdd88';
+  ctx.font = '10px Segoe UI';
+  ctx.fillText('+', cx, midY - bh / 2 - 6);
+  ctx.restore();
+}
+
+function drawResistencia() {
+  const midX = (circuit.x1 + circuit.x2) / 2;
+  const cy = circuit.y1;
+  const rw = 70, rh = 22;
+
+  ctx.save();
+  ctx.fillStyle = '#2a0a0a';
+  ctx.strokeStyle = '#ff6b6b';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.roundRect(midX - rw / 2, cy - rh / 2, rw, rh, 4);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.strokeStyle = '#ff8888';
+  ctx.lineWidth = 1.5;
+  const steps = 6;
+  const sw = rw - 12;
+  const startX = midX - sw / 2;
+  ctx.beginPath();
+  ctx.moveTo(startX, cy);
+  for (let i = 0; i <= steps; i++) {
+    const px = startX + (i / steps) * sw;
+    const py = cy + (i % 2 === 0 ? -6 : 6);
+    ctx.lineTo(px, py);
+  }
+  ctx.lineTo(midX + sw / 2, cy);
+  ctx.stroke();
+
+  ctx.fillStyle = '#ff6b6b';
+  ctx.font = 'bold 13px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText(resistencia + ' Ω', midX, cy - rh / 2 - 8);
+  ctx.restore();
+}
+
+function drawArrows() {
+  ctx.save();
+  ctx.fillStyle = 'rgba(100,180,255,0.35)';
+  const arrowsPerSeg = 3;
+  segments.forEach(seg => {
+    for (let j = 1; j <= arrowsPerSeg; j++) {
+      const frac = j / (arrowsPerSeg + 1);
+      const x = seg.from.x + (seg.to.x - seg.from.x) * frac;
+      const y = seg.from.y + (seg.to.y - seg.from.y) * frac;
+      const angle = Math.atan2(seg.to.y - seg.from.y, seg.to.x - seg.from.x);
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-8, -5);
+      ctx.lineTo(-8, 5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+  });
+  ctx.restore();
+}
+
+function drawLabels() {
+  ctx.save();
+  ctx.font = '11px Segoe UI';
+  ctx.fillStyle = '#5599ff';
+  ctx.textAlign = 'center';
+  ctx.fillText('cable conductor', (circuit.x1 + circuit.x2) / 2, circuit.y2 + 22);
+  ctx.restore();
+}
+
+let lastTime = 0;
+
+function animate(ts) {
+  const dt = Math.min((ts - lastTime) / 1000, 0.05);
+  lastTime = ts;
+  t += dt;
+
+  // Avanza la fase del circuito (fila india)
+  circPhase = (circPhase + dt * getSpeed()) % totalLen;
+
+  ctx.clearRect(0, 0, W, H);
+  drawCable();
+  drawArrows();
+  drawResistencia();
+  drawPila();
+  drawLabels();
+
+  // Electrones equidistantes moviéndose en sincronía
+  const n = getN();
+  const r = 5;
+  for (let i = 0; i < n; i++) {
+    const dist = (circPhase + (i / n) * totalLen) % totalLen;
+    const pos = posOnPath(dist);
+    const glowAlpha = 0.4 + 0.3 * Math.sin(t * 3 + i * 2 * Math.PI / n);
+
+    ctx.save();
+    const grad = ctx.createRadialGradient(pos.x, pos.y, 1, pos.x, pos.y, r * 3);
+    grad.addColorStop(0, `rgba(80,230,160,${glowAlpha})`);
+    grad.addColorStop(1, 'rgba(80,230,160,0)');
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, r * 3, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#6bffb0';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, r * 0.4, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  requestAnimationFrame(animate);
+}
+
+function syncEstado() {
+  tension = parseInt(document.getElementById('tension').value);
+  resistencia = parseInt(document.getElementById('resistencia').value);
+  const I = corriente();
+  document.getElementById('tension-val').textContent = tension + ' V';
+  document.getElementById('resistencia-val').textContent = resistencia + ' Ω';
+  document.getElementById('corriente-val').textContent = I.toFixed(2) + ' A';
+  document.getElementById('calculo').textContent =
+    `I = ${tension}V / ${resistencia}Ω = ${I.toFixed(2)} A`;
+  const elecTxt = formatElectrones(I);
+  document.getElementById('ohm-elec').textContent = elecTxt;
+  document.getElementById('corriente-elec').textContent = elecTxt.replace('por segundo', 'por seg');
+}
+
+document.getElementById('tension').addEventListener('input', syncEstado);
+document.getElementById('resistencia').addEventListener('input', syncEstado);
+
+syncEstado();
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>

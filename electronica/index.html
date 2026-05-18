@@ -160,6 +160,16 @@
         .pinout-table td { padding:9px 12px; border-bottom:1px solid var(--border); color:var(--text); }
         .pinout-table tr:last-child td { border-bottom:none; }
 
+        /* Botón Animaciones en header */
+        .anim-nav-btn { background:rgba(59,130,246,.15); border:1px solid rgba(59,130,246,.35); color:#60a5fa; border-radius:10px; padding:8px 16px; font-size:.88rem; font-weight:600; cursor:pointer; transition:all .3s; display:inline-flex; align-items:center; gap:7px; font-family:'Inter',sans-serif; }
+        .anim-nav-btn:hover { background:rgba(59,130,246,.28); border-color:#3b82f6; }
+        .anim-link { display:flex; align-items:center; gap:16px; padding:16px 18px; background:#0d0d18; border:1px solid var(--border); border-radius:12px; text-decoration:none; color:var(--text); transition:all .25s; margin-bottom:10px; }
+        .anim-link:last-child { margin-bottom:0; }
+        .anim-link:hover { border-color:var(--primary); background:rgba(59,130,246,.07); }
+        .anim-link i { font-size:1.5rem; color:var(--primary); width:30px; text-align:center; flex-shrink:0; }
+        .anim-title { font-weight:700; font-size:.95rem; color:#f8fafc; margin-bottom:3px; }
+        .anim-sub { font-size:.8rem; color:var(--text-muted); }
+
         /* Site footer */
         .site-footer { text-align:center; padding:28px 0; color:var(--text-muted); font-size:.85rem; border-top:1px solid var(--border); margin-top:50px; }
 
@@ -326,6 +336,9 @@
 <header class="site-header">
     <div class="container d-flex justify-content-between align-items-center">
         <a href="../index.html" class="brand"><i class="fas fa-bolt" style="color:#f97316"></i><span>Ing.</span>Marcos Pirani</a>
+        <button class="anim-nav-btn" data-bs-toggle="modal" data-bs-target="#modalAnimaciones">
+            <i class="fas fa-play-circle"></i> Animaciones
+        </button>
         <img src="img/logoSP.png" alt="Logo Escuela" style="height:42px;border-radius:10px;opacity:.9;">
     </div>
 </header>
@@ -3410,5 +3423,39 @@ document.addEventListener('keydown', function(e) {
     }
 })();
 </script>
+
+<!-- Modal Animaciones -->
+<div class="modal fade" id="modalAnimaciones" tabindex="-1" aria-labelledby="modalAnimLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:#12121a;border:1px solid #1e293b;border-radius:16px;color:#e2e8f0;">
+            <div class="modal-header" style="border-bottom:1px solid #1e293b;padding:18px 22px;">
+                <h5 class="modal-title" id="modalAnimLabel" style="font-family:'Poppins',sans-serif;font-size:1.1rem;color:#f8fafc;display:flex;align-items:center;gap:10px;">
+                    <i class="fas fa-play-circle" style="color:#3b82f6;"></i> Animaciones Interactivas
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" style="padding:22px;">
+                <p style="color:#64748b;font-size:.88rem;margin-bottom:18px;">
+                    Visualizaciones interactivas para entender los conceptos básicos de electrónica.
+                </p>
+                <a href="../animaciones/index.html" class="anim-link">
+                    <i class="fas fa-bolt"></i>
+                    <div>
+                        <div class="anim-title">Magnitudes fundamentales</div>
+                        <div class="anim-sub">Tensión, corriente y resistencia · Ley de Ohm · electrones en movimiento</div>
+                    </div>
+                </a>
+                <a href="../animaciones/corrientes.html" class="anim-link">
+                    <i class="fas fa-wave-square"></i>
+                    <div>
+                        <div class="anim-title">Tipos de corrientes</div>
+                        <div class="anim-sub">Corriente continua vs corriente alterna · fuentes de energía</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
