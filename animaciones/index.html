@@ -364,16 +364,15 @@ let circPhase = 0, t = 0;
 function corriente() { return tension / resistencia; }
 
 function getN() {
-  const I = corriente();
-  if (I <= 0.01) return 2;
-  if (I <= 1) return Math.round(2 + I * 6);   // 2→8 para I de 0 a 1A
-  return Math.min(30, Math.round(8 + (I - 1) / 199 * 22)); // 8→30 lineal de 1A a 200A
+  const I = Math.min(corriente(), 200);
+  if (I < 0.01) return 2;
+  return Math.max(2, Math.min(30, Math.round(2 + 28 * Math.log(3 * I + 1) / Math.log(601))));
 }
 
 function getSpeed() {
-  const I = corriente();
-  if (I <= 1) return 40;                        // lento pero visible en 1A
-  return Math.min(350, 40 + (I - 1) / 199 * 310); // 40→350 lineal de 1A a 200A
+  const I = Math.min(corriente(), 200);
+  if (I < 0.01) return 20;
+  return Math.max(20, Math.min(350, Math.round(20 + 330 * Math.log(3 * I + 1) / Math.log(601))));
 }
 
 function formatElectrones(I) {

@@ -228,9 +228,9 @@ function drawWire(dt) {
   wctx.font = 'bold 16px Segoe UI';
   wctx.textAlign = 'center';
   wctx.fillStyle = '#f7c948';
-  wctx.fillText('+', wireX1 - 22, wireY + 5);
+  wctx.fillText(mode === 'AC' ? 'fase' : '+', wireX1 - 22, wireY + 5);
   wctx.fillStyle = '#aaa';
-  wctx.fillText('−', wireX2 + 22, wireY + 5);
+  wctx.fillText(mode === 'AC' ? 'neutro' : '−', wireX2 + 22, wireY + 5);
 
   const nElec = getElectronCount();
 
