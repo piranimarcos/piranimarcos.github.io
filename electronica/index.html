@@ -334,9 +334,8 @@
         .pdf-btn { background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.35); color:#4ade80; border-radius:10px; padding:8px 16px; font-size:.88rem; font-weight:600; cursor:pointer; transition:all .3s; display:inline-flex; align-items:center; gap:7px; font-family:'Inter',sans-serif; }
         .pdf-btn:hover { background:rgba(34,197,94,.22); border-color:#22c55e; }
 
+        #pdf-print-wrapper { display:none; }
         #pdf-render {
-          position:fixed; left:-9999px; top:0;
-          width:794px;
           background:#ffffff;
           font-family:'Inter',sans-serif;
           --primary:#1d4ed8; --bg-dark:#f8fafc; --bg-darker:#f1f5f9; --bg-card:#ffffff;
@@ -399,7 +398,22 @@
         .pdf-block { padding:0 30px 20px; }
         .pdf-section-title { font-family:'Poppins',sans-serif; font-size:1.15rem; font-weight:700; color:#1d4ed8; border-bottom:1px solid #e2e8f0; padding-bottom:7px; margin-bottom:16px; display:flex; align-items:center; gap:9px; }
         .pdf-section-title i { color:#1d4ed8; font-size:1rem; }
-        .pdf-break { page-break-before:always; }
+        .pdf-break { page-break-before:always; break-before:page; }
+
+        @media print {
+          @page { margin:14mm 16mm 16mm 16mm; size:A4; }
+          body > *:not(#pdf-print-wrapper) { display:none !important; }
+          #pdf-print-wrapper { display:block !important; }
+          #pdf-render { display:block !important; background:white; }
+          .info-card { page-break-inside:avoid; break-inside:avoid; }
+          .component-img-wrap { page-break-inside:avoid; break-inside:avoid; }
+          .params-grid { page-break-inside:avoid; break-inside:avoid; }
+          .row { page-break-inside:avoid; break-inside:avoid; }
+          .note { page-break-inside:avoid; break-inside:avoid; }
+          .color-table-wrap { page-break-inside:avoid; break-inside:avoid; }
+          .ic-body { page-break-inside:avoid; break-inside:avoid; }
+          .pdf-doc-header { page-break-inside:avoid; break-inside:avoid; }
+        }
     </style>
 </head>
 <body>
@@ -2697,7 +2711,6 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
 // ============================================================
 // RESISTOR COLOR CODE CALCULATOR
@@ -3521,79 +3534,57 @@ function toggleAllPdf(val) {
   document.querySelectorAll('.pdf-chk').forEach(c => c.checked = val);
 }
 
-async function generarPDF() {
+function generarPDF() {
   const selected = [...document.querySelectorAll('.pdf-chk:checked')].map(c => c.value);
   if (!selected.length) { alert('Seleccioná al menos una sección.'); return; }
 
-  const btn = document.getElementById('pdf-gen-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
-
-  const render = document.getElementById('pdf-render');
-  render.innerHTML = '';
-
-  // Header del documento
-  const hdr = document.createElement('div');
-  hdr.className = 'pdf-doc-header';
-  hdr.innerHTML = '<img src="img/logoSP.png" alt="Logo" class="pdf-logo"><div><h1 class="pdf-title">Taller de Electrónica I</h1><p class="pdf-subtitle">Material de referencia del curso</p></div>';
-  render.appendChild(hdr);
-
-  selected.forEach(function(id, idx) {
-    const pane = document.getElementById(id);
-    if (!pane) return;
-    const meta = PDF_SECTIONS.find(s => s.id === id);
-
-    const block = document.createElement('div');
-    block.className = 'pdf-block' + (idx > 0 ? ' pdf-break' : '');
-
-    const ttl = document.createElement('h2');
-    ttl.className = 'pdf-section-title';
-    ttl.innerHTML = '<i class="fas ' + meta.icon + '"></i> ' + meta.label;
-    block.appendChild(ttl);
-
-    const clone = pane.cloneNode(true);
-    // Quitar clases Bootstrap de tab-pane para que no quede hidden
-    clone.classList.remove('tab-pane', 'fade', 'show', 'active');
-    // Eliminar calculadoras y controles interactivos
-    clone.querySelectorAll('.calc-section, .led-calc-card, .extra-toggle, .bands-toggle, .ohm-solve-btns, .led-type-selector, .calcs-fab, .scroll-top').forEach(function(el){ el.remove(); });
-    // Expandir secciones "Saber más"
-    clone.querySelectorAll('.extra-body').forEach(function(el){
-      el.style.display = 'block';
-      el.classList.add('open');
-    });
-
-    block.appendChild(clone);
-    render.appendChild(block);
-  });
-
-  try {
-    await html2pdf()
-      .set({
-        margin: [12, 12, 14, 12],
-        filename: 'Taller-Electronica-I.pdf',
-        image: { type: 'jpeg', quality: 0.92 },
-        html2canvas: {
-          scale: 2, useCORS: true, allowTaint: true, logging: false,
-          onclone: function(doc) {
-            var el = doc.getElementById('pdf-render');
-            if (el) { el.style.position = 'absolute'; el.style.left = '0'; el.style.top = '0'; }
-          }
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.pdf-break' }
-      })
-      .from(render)
-      .save();
-  } catch(e) {
-    console.error('Error al generar PDF:', e);
-  }
-
-  render.innerHTML = '';
-  btn.disabled = false;
-  btn.innerHTML = '<i class="fas fa-file-pdf"></i> Generar PDF';
+  // Cerrar modal primero y esperar que termine la animación
   const modalEl = document.getElementById('modalPDF');
   const modal = bootstrap.Modal.getInstance(modalEl);
   if (modal) modal.hide();
+
+  setTimeout(function() {
+    const render = document.getElementById('pdf-render');
+    render.innerHTML = '';
+
+    // Header del documento
+    const hdr = document.createElement('div');
+    hdr.className = 'pdf-doc-header';
+    hdr.innerHTML = '<img src="img/logoSP.png" alt="Logo" class="pdf-logo"><div><h1 class="pdf-title">Taller de Electrónica I</h1><p class="pdf-subtitle">Material de referencia del curso</p></div>';
+    render.appendChild(hdr);
+
+    selected.forEach(function(id, idx) {
+      const pane = document.getElementById(id);
+      if (!pane) return;
+      const meta = PDF_SECTIONS.find(s => s.id === id);
+
+      const block = document.createElement('div');
+      block.className = 'pdf-block' + (idx > 0 ? ' pdf-break' : '');
+
+      const ttl = document.createElement('h2');
+      ttl.className = 'pdf-section-title';
+      ttl.innerHTML = '<i class="fas ' + meta.icon + '"></i> ' + meta.label;
+      block.appendChild(ttl);
+
+      const clone = pane.cloneNode(true);
+      clone.classList.remove('tab-pane', 'fade', 'show', 'active');
+      clone.querySelectorAll('.calc-section, .led-calc-card, .extra-toggle, .bands-toggle, .ohm-solve-btns, .led-type-selector, .calcs-fab, .scroll-top').forEach(function(el){ el.remove(); });
+      clone.querySelectorAll('.extra-body').forEach(function(el){
+        el.style.display = 'block';
+        el.classList.add('open');
+      });
+
+      block.appendChild(clone);
+      render.appendChild(block);
+    });
+
+    // Limpiar el contenido después de imprimir
+    window.addEventListener('afterprint', function() {
+      render.innerHTML = '';
+    }, { once: true });
+
+    window.print();
+  }, 400);
 }
 </script>
 
@@ -3636,12 +3627,12 @@ async function generarPDF() {
         <div class="modal-content" style="background:#12121a;border:1px solid #1e293b;border-radius:16px;color:#e2e8f0;">
             <div class="modal-header" style="border-bottom:1px solid #1e293b;padding:18px 22px;">
                 <h5 class="modal-title" id="modalPDFLabel" style="font-family:'Poppins',sans-serif;font-size:1.1rem;color:#f8fafc;display:flex;align-items:center;gap:10px;">
-                    <i class="fas fa-file-pdf" style="color:#4ade80;"></i> Exportar a PDF
+                    <i class="fas fa-print" style="color:#4ade80;"></i> Imprimir / Guardar PDF
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body" style="padding:20px 22px;">
-                <p style="color:#64748b;font-size:.85rem;margin-bottom:14px;">Seleccioná las secciones que querés incluir. Las calculadoras no se incluyen, solo el contenido teórico.</p>
+                <p style="color:#64748b;font-size:.85rem;margin-bottom:14px;">Seleccioná las secciones que querés incluir. Se abre el diálogo de impresión del navegador — desde ahí podés imprimir o guardar como PDF. Las calculadoras no se incluyen, solo el contenido teórico.</p>
                 <div style="display:flex;gap:8px;margin-bottom:16px;">
                     <button onclick="toggleAllPdf(true)" style="background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);color:#60a5fa;border-radius:8px;padding:5px 14px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Todas</button>
                     <button onclick="toggleAllPdf(false)" style="background:rgba(255,255,255,.05);border:1px solid #1e293b;color:#64748b;border-radius:8px;padding:5px 14px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Ninguna</button>
@@ -3704,15 +3695,17 @@ async function generarPDF() {
             <div class="modal-footer" style="border-top:1px solid #1e293b;padding:14px 22px;gap:10px;">
                 <button type="button" data-bs-dismiss="modal" style="background:rgba(255,255,255,.06);border:1px solid #1e293b;color:#94a3b8;border-radius:10px;padding:9px 20px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Cancelar</button>
                 <button id="pdf-gen-btn" onclick="generarPDF()" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;color:white;border-radius:10px;padding:9px 22px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:8px;">
-                    <i class="fas fa-file-pdf"></i> Generar PDF
+                    <i class="fas fa-print"></i> Imprimir
                 </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Contenedor oculto para render del PDF -->
-<div id="pdf-render" aria-hidden="true"></div>
+<!-- Contenedor para impresión PDF -->
+<div id="pdf-print-wrapper">
+  <div id="pdf-render"></div>
+</div>
 
 </body>
 </html>
