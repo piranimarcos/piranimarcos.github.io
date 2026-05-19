@@ -329,6 +329,77 @@
         .calcs-item-name { font-weight:600; color:#f8fafc; font-size:.88rem; line-height:1.3; }
         .calcs-item-desc { font-size:.72rem; color:var(--text-muted); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
         .calcs-item-arr { color:var(--border-light); font-size:.72rem; flex-shrink:0; }
+
+        /* ======================== PDF EXPORT ======================== */
+        .pdf-btn { background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.35); color:#4ade80; border-radius:10px; padding:8px 16px; font-size:.88rem; font-weight:600; cursor:pointer; transition:all .3s; display:inline-flex; align-items:center; gap:7px; font-family:'Inter',sans-serif; }
+        .pdf-btn:hover { background:rgba(34,197,94,.22); border-color:#22c55e; }
+
+        #pdf-render {
+          position:fixed; left:-9999px; top:0;
+          width:794px;
+          background:#ffffff;
+          font-family:'Inter',sans-serif;
+          --primary:#1d4ed8; --bg-dark:#f8fafc; --bg-darker:#f1f5f9; --bg-card:#ffffff;
+          --text:#1e293b; --text-light:#334155; --text-muted:#64748b;
+          --border:#e2e8f0; --border-light:#cbd5e1;
+          --gradient:linear-gradient(135deg,#1d4ed8 0%,#7c3aed 50%,#db2777 100%);
+        }
+        #pdf-render, #pdf-render p, #pdf-render li, #pdf-render span { color:#1e293b; }
+        #pdf-render h1, #pdf-render h2, #pdf-render h3, #pdf-render h4, #pdf-render h5 { color:#0f172a; }
+        #pdf-render .info-card h3 i { color:#1d4ed8 !important; background:none !important; -webkit-text-fill-color:#1d4ed8 !important; }
+        #pdf-render .gradient-text, #pdf-render .calcs-sheet-title i { background:none !important; -webkit-text-fill-color:#1d4ed8 !important; color:#1d4ed8 !important; }
+        #pdf-render .note { background:rgba(29,78,216,.06); border-color:rgba(29,78,216,.2); }
+        #pdf-render .note i { color:#1d4ed8; }
+        #pdf-render .note-warn { background:rgba(234,88,12,.06); border-color:rgba(234,88,12,.2); }
+        #pdf-render .param-box { background:#f1f5f9; border-color:#e2e8f0; }
+        #pdf-render .extra-body { background:#f1f5f9; border-color:#e2e8f0; }
+        #pdf-render .extra-body p, #pdf-render .extra-body li { color:#334155; }
+        #pdf-render .formula-box { background:#eef2ff; border-color:#c7d2fe; border-left-color:#1d4ed8; color:#1e40af; }
+        #pdf-render .ic-body { background:#f1f5f9; border-color:#cbd5e1; }
+        #pdf-render .ic-header { background:#e2e8f0; color:#0f172a; }
+        #pdf-render .ic-name { color:#0f172a; }
+        #pdf-render .ic-func { color:#64748b; }
+        #pdf-render .ic-row { border-color:rgba(0,0,0,.06); }
+        #pdf-render .color-table th, #pdf-render .pinout-table th, #pdf-render .reg-table th { background:#f1f5f9; color:#334155; }
+        #pdf-render .color-table td, #pdf-render .pinout-table td, #pdf-render .reg-table td { color:#1e293b; border-color:#e2e8f0; }
+        #pdf-render .color-table-wrap { border-color:#e2e8f0; }
+        #pdf-render .step-list li { color:#334155; border-color:#e2e8f0; }
+        #pdf-render .step-num { background:#1d4ed8; }
+        #pdf-render .solder-good { background:rgba(21,128,61,.06); border-color:rgba(21,128,61,.2); }
+        #pdf-render .solder-bad  { background:rgba(220,38,38,.06);  border-color:rgba(220,38,38,.2); }
+        #pdf-render .solder-good h5 { color:#15803d; }
+        #pdf-render .solder-bad  h5 { color:#dc2626; }
+        #pdf-render .solder-good li, #pdf-render .solder-bad li, #pdf-render .safety-card li { color:#334155; }
+        #pdf-render .safety-card { background:rgba(220,38,38,.05); border-color:rgba(220,38,38,.2); }
+        #pdf-render .safety-card h5 { color:#dc2626; }
+        #pdf-render .example-card { background:#f1f5f9; border-color:#e2e8f0; }
+        #pdf-render .example-card.five-bands { background:rgba(29,78,216,.05); border-color:rgba(29,78,216,.2); }
+        #pdf-render .example-val { color:#0f172a; }
+        #pdf-render .example-desc { color:#64748b; }
+        #pdf-render .anim-link, #pdf-render .toggle-btn { display:none; }
+        #pdf-render .img-placeholder { border-color:#cbd5e1; color:#64748b; background:#f8fafc; }
+        #pdf-render .img-placeholder i { color:#cbd5e1; }
+        #pdf-render .img-placeholder code { color:#1d4ed8; }
+        #pdf-render .component-img-wrap img { cursor:default; }
+        #pdf-render .scr-body { background:#f1f5f9; border-color:#cbd5e1; }
+        #pdf-render .scr-pin { border-color:rgba(0,0,0,.06); }
+        #pdf-render .badge-serie { background:rgba(29,78,216,.1); color:#1d4ed8; }
+        #pdf-render .badge-paralelo { background:rgba(21,128,61,.1); color:#15803d; }
+        #pdf-render .badge-combinado { background:rgba(109,40,217,.1); color:#6d28d9; }
+        #pdf-render .e-val { background:#f1f5f9; border-color:#e2e8f0; color:#1e293b; }
+        #pdf-render .e-val.e24 { border-color:rgba(29,78,216,.4); }
+        #pdf-render .e-val.e48-only { border-color:rgba(109,40,217,.35); color:#6d28d9; }
+        #pdf-render .method-badge { color:white; }
+        #pdf-render .dif { opacity:.7; }
+
+        .pdf-doc-header { display:flex; align-items:center; gap:20px; padding:20px 30px 16px; border-bottom:3px solid #1d4ed8; margin-bottom:22px; }
+        .pdf-logo { height:54px; border-radius:10px; }
+        .pdf-title { font-family:'Poppins',sans-serif; font-size:1.65rem; font-weight:800; color:#0f172a; margin:0; line-height:1.15; }
+        .pdf-subtitle { color:#64748b; font-size:.83rem; margin:3px 0 0; }
+        .pdf-block { padding:0 30px 20px; }
+        .pdf-section-title { font-family:'Poppins',sans-serif; font-size:1.15rem; font-weight:700; color:#1d4ed8; border-bottom:1px solid #e2e8f0; padding-bottom:7px; margin-bottom:16px; display:flex; align-items:center; gap:9px; }
+        .pdf-section-title i { color:#1d4ed8; font-size:1rem; }
+        .pdf-break { page-break-before:always; }
     </style>
 </head>
 <body>
@@ -336,9 +407,14 @@
 <header class="site-header">
     <div class="container d-flex justify-content-between align-items-center">
         <a href="../index.html" class="brand"><i class="fas fa-bolt" style="color:#f97316"></i><span>Ing.</span>Marcos Pirani</a>
-        <button class="anim-nav-btn" data-bs-toggle="modal" data-bs-target="#modalAnimaciones">
-            <i class="fas fa-play-circle"></i> Animaciones
-        </button>
+        <div style="display:flex;align-items:center;gap:8px;">
+            <button class="anim-nav-btn" data-bs-toggle="modal" data-bs-target="#modalAnimaciones">
+                <i class="fas fa-play-circle"></i> Animaciones
+            </button>
+            <button class="pdf-btn" data-bs-toggle="modal" data-bs-target="#modalPDF">
+                <i class="fas fa-file-pdf"></i> Exportar PDF
+            </button>
+        </div>
         <img src="img/logoSP.png" alt="Logo Escuela" style="height:42px;border-radius:10px;opacity:.9;">
     </div>
 </header>
@@ -2621,6 +2697,7 @@ R<sub>B</sub> = ( V<sub>control</sub> − V<sub>BE</sub> ) / I<sub>B</sub></div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
 // ============================================================
 // RESISTOR COLOR CODE CALCULATOR
@@ -3422,6 +3499,96 @@ document.addEventListener('keydown', function(e) {
         if (btn) { bootstrap.Tab.getOrCreateInstance(btn).show(); }
     }
 })();
+
+// ======================== PDF EXPORT ========================
+const PDF_SECTIONS = [
+  { id:'electricidad', label:'Electricidad',      icon:'fa-bolt' },
+  { id:'herramientas', label:'Herramientas',       icon:'fa-screwdriver-wrench' },
+  { id:'resistencias', label:'Resistencias',       icon:'fa-wave-square' },
+  { id:'diodos',       label:'Diodos y LED',       icon:'fa-lightbulb' },
+  { id:'ldr',          label:'Res. Variables',     icon:'fa-sliders' },
+  { id:'transistor',   label:'Transistor',         icon:'fa-microchip' },
+  { id:'capacitor',    label:'Capacitor',          icon:'fa-battery-half' },
+  { id:'rele',         label:'Relé',               icon:'fa-toggle-on' },
+  { id:'ir',           label:'LED IR',             icon:'fa-satellite-dish' },
+  { id:'divisor',      label:'Divisor de Tensión', icon:'fa-divide' },
+  { id:'timer555',     label:'555 Timer',          icon:'fa-clock' },
+  { id:'tiristor',     label:'Tiristor (SCR)',     icon:'fa-fire-flame-curved' },
+  { id:'reguladores',  label:'Reguladores',        icon:'fa-plug' }
+];
+
+function toggleAllPdf(val) {
+  document.querySelectorAll('.pdf-chk').forEach(c => c.checked = val);
+}
+
+async function generarPDF() {
+  const selected = [...document.querySelectorAll('.pdf-chk:checked')].map(c => c.value);
+  if (!selected.length) { alert('Seleccioná al menos una sección.'); return; }
+
+  const btn = document.getElementById('pdf-gen-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
+
+  const render = document.getElementById('pdf-render');
+  render.innerHTML = '';
+
+  // Header del documento
+  const hdr = document.createElement('div');
+  hdr.className = 'pdf-doc-header';
+  hdr.innerHTML = '<img src="img/logoSP.png" alt="Logo" class="pdf-logo"><div><h1 class="pdf-title">Taller de Electrónica I</h1><p class="pdf-subtitle">Material de referencia del curso</p></div>';
+  render.appendChild(hdr);
+
+  selected.forEach(function(id, idx) {
+    const pane = document.getElementById(id);
+    if (!pane) return;
+    const meta = PDF_SECTIONS.find(s => s.id === id);
+
+    const block = document.createElement('div');
+    block.className = 'pdf-block' + (idx > 0 ? ' pdf-break' : '');
+
+    const ttl = document.createElement('h2');
+    ttl.className = 'pdf-section-title';
+    ttl.innerHTML = '<i class="fas ' + meta.icon + '"></i> ' + meta.label;
+    block.appendChild(ttl);
+
+    const clone = pane.cloneNode(true);
+    // Quitar clases Bootstrap de tab-pane para que no quede hidden
+    clone.classList.remove('tab-pane', 'fade', 'show', 'active');
+    // Eliminar calculadoras y controles interactivos
+    clone.querySelectorAll('.calc-section, .led-calc-card, .extra-toggle, .bands-toggle, .ohm-solve-btns, .led-type-selector, .calcs-fab, .scroll-top').forEach(function(el){ el.remove(); });
+    // Expandir secciones "Saber más"
+    clone.querySelectorAll('.extra-body').forEach(function(el){
+      el.style.display = 'block';
+      el.classList.add('open');
+    });
+
+    block.appendChild(clone);
+    render.appendChild(block);
+  });
+
+  try {
+    await html2pdf()
+      .set({
+        margin: [12, 12, 14, 12],
+        filename: 'Taller-Electronica-I.pdf',
+        image: { type: 'jpeg', quality: 0.92 },
+        html2canvas: { scale: 2, useCORS: true, allowTaint: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.pdf-break' }
+      })
+      .from(render)
+      .save();
+  } catch(e) {
+    console.error('Error al generar PDF:', e);
+  }
+
+  render.innerHTML = '';
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-file-pdf"></i> Generar PDF';
+  const modalEl = document.getElementById('modalPDF');
+  const modal = bootstrap.Modal.getInstance(modalEl);
+  if (modal) modal.hide();
+}
 </script>
 
 <!-- Modal Animaciones -->
@@ -3456,6 +3623,90 @@ document.addEventListener('keydown', function(e) {
         </div>
     </div>
 </div>
+
+<!-- Modal PDF Export -->
+<div class="modal fade" id="modalPDF" tabindex="-1" aria-labelledby="modalPDFLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width:520px">
+        <div class="modal-content" style="background:#12121a;border:1px solid #1e293b;border-radius:16px;color:#e2e8f0;">
+            <div class="modal-header" style="border-bottom:1px solid #1e293b;padding:18px 22px;">
+                <h5 class="modal-title" id="modalPDFLabel" style="font-family:'Poppins',sans-serif;font-size:1.1rem;color:#f8fafc;display:flex;align-items:center;gap:10px;">
+                    <i class="fas fa-file-pdf" style="color:#4ade80;"></i> Exportar a PDF
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" style="padding:20px 22px;">
+                <p style="color:#64748b;font-size:.85rem;margin-bottom:14px;">Seleccioná las secciones que querés incluir. Las calculadoras no se incluyen, solo el contenido teórico.</p>
+                <div style="display:flex;gap:8px;margin-bottom:16px;">
+                    <button onclick="toggleAllPdf(true)" style="background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);color:#60a5fa;border-radius:8px;padding:5px 14px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Todas</button>
+                    <button onclick="toggleAllPdf(false)" style="background:rgba(255,255,255,.05);border:1px solid #1e293b;color:#64748b;border-radius:8px;padding:5px 14px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Ninguna</button>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <label style="display:flex;align-items:center;gap:9px;background:#0d0d18;border:1px solid #1e293b;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:.85rem;color:#e2e8f0;transition:border-color .2s;" onmouseover="this.style.borderColor='#334155'" onmouseout="this.style.borderColor='#1e293b'">
+                        <input type="checkbox" class="pdf-chk" value="electricidad" checked style="accent-color:#3b82f6;width:15px;height:15px;flex-shrink:0;">
+                        <i class="fas fa-bolt" style="color:#3b82f6;width:14px;text-align:center;"></i> Electricidad
+                    </label>
+                    <label style="display:flex;align-items:center;gap:9px;background:#0d0d18;border:1px solid #1e293b;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:.85rem;color:#e2e8f0;transition:border-color .2s;" onmouseover="this.style.borderColor='#334155'" onmouseout="this.style.borderColor='#1e293b'">
+                        <input type="checkbox" class="pdf-chk" value="herramientas" checked style="accent-color:#3b82f6;width:15px;height:15px;flex-shrink:0;">
+                        <i class="fas fa-screwdriver-wrench" style="color:#3b82f6;width:14px;text-align:center;"></i> Herramientas
+                    </label>
+                    <label style="display:flex;align-items:center;gap:9px;background:#0d0d18;border:1px solid #1e293b;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:.85rem;color:#e2e8f0;transition:border-color .2s;" onmouseover="this.style.borderColor='#334155'" onmouseout="this.style.borderColor='#1e293b'">
+                        <input type="checkbox" class="pdf-chk" value="resistencias" checked style="accent-color:#3b82f6;width:15px;height:15px;flex-shrink:0;">
+                        <i class="fas fa-wave-square" style="color:#3b82f6;width:14px;text-align:center;"></i> Resistencias
+                    </label>
+                    <label style="display:flex;align-items:center;gap:9px;background:#0d0d18;border:1px solid #1e293b;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:.85rem;color:#e2e8f0;transition:border-color .2s;" onmouseover="this.style.borderColor='#334155'" onmouseout="this.style.borderColor='#1e293b'">
+                        <input type="checkbox" class="pdf-chk" value="diodos" checked style="accent-color:#3b82f6;width:15px;height:15px;flex-shrink:0;">
+                        <i class="fas fa-lightbulb" style="color:#3b82f6;width:14px;text-align:center;"></i> Diodos y LED
+                    </label>
+                    <label style="display:flex;align-items:center;gap:9px;background:#0d0d18;border:1px solid #1e293b;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:.85rem;color:#e2e8f0;transition:border-color .2s;" onmouseover="this.style.borderColor='#334155'" onmouseout="this.style.borderColor='#1e293b'">
+                        <input type="checkbox" class="pdf-chk" value="ldr" checked style="accent-color:#3b82f6;width:15px;height:15px;flex-shrink:0;">
+                        <i class="fas fa-sliders" style="color:#3b82f6;width:14px;text-align:center;"></i> Res. Variables
+                    </label>
+                    <label style="display:flex;align-items:center;gap:9px;background:#0d0d18;border:1px solid #1e293b;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:.85rem;color:#e2e8f0;transition:border-color .2s;" onmouseover="this.style.borderColor='#334155'" onmouseout="this.style.borderColor='#1e293b'">
+                        <input type="checkbox" class="pdf-chk" value="transistor" checked style="accent-color:#3b82f6;width:15px;height:15px;flex-shrink:0;">
+                        <i class="fas fa-microchip" style="color:#3b82f6;width:14px;text-align:center;"></i> Transistor
+                    </label>
+                    <label style="display:flex;align-items:center;gap:9px;background:#0d0d18;border:1px solid #1e293b;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:.85rem;color:#e2e8f0;transition:border-color .2s;" onmouseover="this.style.borderColor='#334155'" onmouseout="this.style.borderColor='#1e293b'">
+                        <input type="checkbox" class="pdf-chk" value="capacitor" checked style="accent-color:#3b82f6;width:15px;height:15px;flex-shrink:0;">
+                        <i class="fas fa-battery-half" style="color:#3b82f6;width:14px;text-align:center;"></i> Capacitor
+                    </label>
+                    <label style="display:flex;align-items:center;gap:9px;background:#0d0d18;border:1px solid #1e293b;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:.85rem;color:#e2e8f0;transition:border-color .2s;" onmouseover="this.style.borderColor='#334155'" onmouseout="this.style.borderColor='#1e293b'">
+                        <input type="checkbox" class="pdf-chk" value="rele" checked style="accent-color:#3b82f6;width:15px;height:15px;flex-shrink:0;">
+                        <i class="fas fa-toggle-on" style="color:#3b82f6;width:14px;text-align:center;"></i> Relé
+                    </label>
+                    <label style="display:flex;align-items:center;gap:9px;background:#0d0d18;border:1px solid #1e293b;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:.85rem;color:#e2e8f0;transition:border-color .2s;" onmouseover="this.style.borderColor='#334155'" onmouseout="this.style.borderColor='#1e293b'">
+                        <input type="checkbox" class="pdf-chk" value="ir" checked style="accent-color:#3b82f6;width:15px;height:15px;flex-shrink:0;">
+                        <i class="fas fa-satellite-dish" style="color:#3b82f6;width:14px;text-align:center;"></i> LED IR
+                    </label>
+                    <label style="display:flex;align-items:center;gap:9px;background:#0d0d18;border:1px solid #1e293b;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:.85rem;color:#e2e8f0;transition:border-color .2s;" onmouseover="this.style.borderColor='#334155'" onmouseout="this.style.borderColor='#1e293b'">
+                        <input type="checkbox" class="pdf-chk" value="divisor" checked style="accent-color:#3b82f6;width:15px;height:15px;flex-shrink:0;">
+                        <i class="fas fa-divide" style="color:#3b82f6;width:14px;text-align:center;"></i> Divisor de Tensión
+                    </label>
+                    <label style="display:flex;align-items:center;gap:9px;background:#0d0d18;border:1px solid #1e293b;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:.85rem;color:#e2e8f0;transition:border-color .2s;" onmouseover="this.style.borderColor='#334155'" onmouseout="this.style.borderColor='#1e293b'">
+                        <input type="checkbox" class="pdf-chk" value="timer555" checked style="accent-color:#3b82f6;width:15px;height:15px;flex-shrink:0;">
+                        <i class="fas fa-clock" style="color:#3b82f6;width:14px;text-align:center;"></i> 555 Timer
+                    </label>
+                    <label style="display:flex;align-items:center;gap:9px;background:#0d0d18;border:1px solid #1e293b;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:.85rem;color:#e2e8f0;transition:border-color .2s;" onmouseover="this.style.borderColor='#334155'" onmouseout="this.style.borderColor='#1e293b'">
+                        <input type="checkbox" class="pdf-chk" value="tiristor" checked style="accent-color:#3b82f6;width:15px;height:15px;flex-shrink:0;">
+                        <i class="fas fa-fire-flame-curved" style="color:#3b82f6;width:14px;text-align:center;"></i> Tiristor (SCR)
+                    </label>
+                    <label style="display:flex;align-items:center;gap:9px;background:#0d0d18;border:1px solid #1e293b;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:.85rem;color:#e2e8f0;transition:border-color .2s;" onmouseover="this.style.borderColor='#334155'" onmouseout="this.style.borderColor='#1e293b'">
+                        <input type="checkbox" class="pdf-chk" value="reguladores" checked style="accent-color:#3b82f6;width:15px;height:15px;flex-shrink:0;">
+                        <i class="fas fa-plug" style="color:#3b82f6;width:14px;text-align:center;"></i> Reguladores
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top:1px solid #1e293b;padding:14px 22px;gap:10px;">
+                <button type="button" data-bs-dismiss="modal" style="background:rgba(255,255,255,.06);border:1px solid #1e293b;color:#94a3b8;border-radius:10px;padding:9px 20px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Cancelar</button>
+                <button id="pdf-gen-btn" onclick="generarPDF()" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;color:white;border-radius:10px;padding:9px 22px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:8px;">
+                    <i class="fas fa-file-pdf"></i> Generar PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contenedor oculto para render del PDF -->
+<div id="pdf-render" aria-hidden="true"></div>
 
 </body>
 </html>
