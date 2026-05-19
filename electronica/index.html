@@ -3572,7 +3572,13 @@ async function generarPDF() {
         margin: [12, 12, 14, 12],
         filename: 'Taller-Electronica-I.pdf',
         image: { type: 'jpeg', quality: 0.92 },
-        html2canvas: { scale: 2, useCORS: true, allowTaint: true, logging: false },
+        html2canvas: {
+          scale: 2, useCORS: true, allowTaint: true, logging: false,
+          onclone: function(doc) {
+            var el = doc.getElementById('pdf-render');
+            if (el) { el.style.position = 'absolute'; el.style.left = '0'; el.style.top = '0'; }
+          }
+        },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.pdf-break' }
       })
