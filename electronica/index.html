@@ -398,21 +398,86 @@
         .pdf-block { padding:0 30px 20px; }
         .pdf-section-title { font-family:'Poppins',sans-serif; font-size:1.15rem; font-weight:700; color:#1d4ed8; border-bottom:1px solid #e2e8f0; padding-bottom:7px; margin-bottom:16px; display:flex; align-items:center; gap:9px; }
         .pdf-section-title i { color:#1d4ed8; font-size:1rem; }
-        .pdf-break { page-break-before:always; break-before:page; }
+        .pdf-break { border-top:2px solid #e2e8f0; margin-top:4px; padding-top:2px; }
 
         @media print {
-          @page { margin:14mm 16mm 16mm 16mm; size:A4; }
+          @page { margin:12mm 14mm 14mm 14mm; size:A4 portrait; }
+
           body > *:not(#pdf-print-wrapper) { display:none !important; }
           #pdf-print-wrapper { display:block !important; }
-          #pdf-render { display:block !important; background:white; }
-          .info-card { page-break-inside:avoid; break-inside:avoid; }
-          .component-img-wrap { page-break-inside:avoid; break-inside:avoid; }
-          .params-grid { page-break-inside:avoid; break-inside:avoid; }
-          .row { page-break-inside:avoid; break-inside:avoid; }
-          .note { page-break-inside:avoid; break-inside:avoid; }
-          .color-table-wrap { page-break-inside:avoid; break-inside:avoid; }
-          .ic-body { page-break-inside:avoid; break-inside:avoid; }
-          .pdf-doc-header { page-break-inside:avoid; break-inside:avoid; }
+          #pdf-render { display:block !important; background:white; font-size:.88rem; }
+
+          /* Bloques y títulos compactos */
+          .pdf-doc-header { padding:10px 0 8px !important; margin-bottom:12px !important; }
+          .pdf-logo { height:44px !important; }
+          .pdf-title { font-size:1.35rem !important; }
+          .pdf-block { padding:0 0 6px !important; }
+          .pdf-section-title { font-size:1rem !important; padding-bottom:5px !important; margin-bottom:10px !important; margin-top:6px !important; }
+          .pdf-break { border-top:2px solid #cbd5e1; margin-top:10px !important; padding-top:8px !important; }
+
+          /* Cards compactas */
+          .info-card { padding:10px 12px !important; margin-bottom:8px !important; break-inside:avoid; }
+          .info-card h3 { font-size:.95rem !important; margin-bottom:7px !important; }
+          .info-card p, .info-card li { font-size:.82rem !important; line-height:1.55 !important; }
+
+          /* Grids compactos */
+          .params-grid { gap:5px !important; margin-top:6px !important; break-inside:avoid; }
+          .param-box { padding:5px 8px !important; }
+          .param-label { font-size:.68rem !important; }
+          .param-value { font-size:.85rem !important; }
+
+          /* Notas compactas */
+          .note { padding:6px 10px !important; margin-top:6px !important; font-size:.8rem !important; break-inside:avoid; }
+
+          /* Saber más expandido */
+          .extra-body { padding:8px 12px !important; margin-top:4px !important; }
+          .extra-body p, .extra-body li { font-size:.8rem !important; line-height:1.5 !important; }
+          .extra-body h5 { font-size:.82rem !important; margin-top:8px !important; }
+
+          /* Forzar columnas Bootstrap en papel */
+          .col-md-4 { flex:0 0 auto !important; width:33.33% !important; }
+          .col-md-6 { flex:0 0 auto !important; width:50% !important; }
+          .col-md-3 { flex:0 0 auto !important; width:25% !important; }
+          .col-md-8 { flex:0 0 auto !important; width:66.66% !important; }
+          .row.g-3 { --bs-gutter-x:8px !important; --bs-gutter-y:6px !important; margin-bottom:8px !important; break-inside:avoid; }
+
+          /* Imágenes más chicas */
+          .component-img-wrap img { max-height:160px !important; break-inside:avoid; }
+          .component-img-wrap { margin:8px 0 !important; break-inside:avoid; }
+
+          /* Tablas compactas */
+          .color-table-wrap { break-inside:avoid; }
+          .color-table th, .color-table td { padding:5px 8px !important; font-size:.76rem !important; }
+          .pinout-table th, .pinout-table td { padding:5px 8px !important; font-size:.78rem !important; }
+          .reg-table th, .reg-table td { padding:5px 8px !important; font-size:.78rem !important; }
+
+          /* 555 Pinout IC */
+          .ic-body { max-width:220px !important; break-inside:avoid; }
+          .ic-header { padding:6px !important; font-size:.9rem !important; }
+          .ic-num { width:18px !important; height:18px !important; font-size:.62rem !important; }
+          .ic-name { font-size:.7rem !important; }
+          .ic-func { font-size:.6rem !important; }
+          .ic-pin { padding:5px 8px !important; }
+
+          /* Step list herramientas */
+          .step-list li { font-size:.8rem !important; padding:6px 0 !important; }
+          .step-num { width:20px !important; height:20px !important; font-size:.68rem !important; flex-shrink:0; }
+          .solder-compare { gap:8px !important; }
+          .solder-good, .solder-bad { padding:8px 12px !important; }
+          .solder-good li, .solder-bad li { font-size:.78rem !important; }
+
+          /* Evitar cortar títulos solos al pie de página */
+          h3, h4, h5, .pdf-section-title { break-after:avoid; }
+
+          /* Ocultar elementos innecesarios en impresión */
+          .pdf-doc-header .pdf-subtitle { font-size:.76rem !important; }
+          .formula-box { padding:7px 12px !important; font-size:.8rem !important; }
+          .example-card { padding:8px 10px !important; }
+          .example-val { font-size:.85rem !important; }
+          .safety-card { padding:8px 12px !important; }
+          .safety-card li { font-size:.78rem !important; }
+          .method-header { margin:10px 0 6px !important; }
+          .dif { display:none; }
         }
     </style>
 </head>
