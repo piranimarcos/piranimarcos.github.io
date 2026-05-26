@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Potenciómetro – Control de LED</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0d1b2a; color: #e0e8f0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+    h1 { font-size: 1.5rem; color: #7ecfff; margin-bottom: 6px; text-align: center; }
+    .subtitle { font-size: 0.92rem; color: #8da8c0; margin-bottom: 20px; text-align: center; }
+    .circuit-wrapper { width: 100%; max-width: 680px; margin-bottom: 18px; }
+    canvas#circuito { border-radius: 12px; background: #111e2e; display: block; width: 100%; height: auto; }
+    .knob-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 18px; width: 100%; max-width: 680px; }
+    .knob-label { font-size: 0.85rem; color: #8da8c0; margin-bottom: 6px; font-weight: 600; }
+    canvas#knob { cursor: grab; touch-action: none; display: block; }
+    canvas#knob:active { cursor: grabbing; }
+    .range-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+    .range-row label { font-size: 0.82rem; color: #8da8c0; }
+    .range-row input[type=range] { width: 220px; accent-color: #a78bfa; cursor: pointer; }
+    .info-grid { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 680px; margin-bottom: 18px; }
+    .info-card { background: #162235; border: 1px solid #2a3f5a; border-radius: 12px; padding: 12px 16px; text-align: center; flex: 1; min-width: 130px; }
+    .info-card label { display: block; font-size: 0.78rem; color: #8da8c0; margin-bottom: 5px; font-weight: 600; }
+    .info-val { font-size: 1.3rem; font-weight: 700; }
+    .explicacion { background: #162235; border-left: 4px solid #a78bfa; border-radius: 8px; padding: 14px 18px; max-width: 680px; width: 100%; font-size: 0.88rem; line-height: 1.65; color: #c5ddf0; margin-bottom: 16px; }
+    .explicacion strong { color: #a78bfa; }
+    .brand-bar { display:flex; align-items:center; gap:12px; width:100%; max-width:680px; margin-bottom:14px; padding:10px 16px; background:#111e2e; border-radius:10px; border:1px solid #2a3f5a; }
+    .brand-bar img { height:38px; border-radius:8px; object-fit:contain; }
+    .brand-name { font-size:0.95rem; font-weight:700; color:#e0e8f0; }
+    .brand-sub { font-size:0.74rem; color:#8da8c0; margin-top:1px; }
+  </style>
+</head>
+<body>
+
+<div class="brand-bar">
+  <img src="../electronica/img/logoSP.png" alt="Logo" onerror="this.style.display='none'">
+  <div>
+    <div class="brand-name">Ing. Marcos Pirani</div>
+    <div class="brand-sub">Taller de Electrónica I</div>
+  </div>
+</div>
+
+<nav style="width:100%;max-width:680px;display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+  <a href="index.html" style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;border:1px solid #2a3f5a;color:#8da8c0">⚡ Ley de Ohm</a>
+  <a href="corrientes.html" style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;border:1px solid #2a3f5a;color:#8da8c0">〜 CC vs CA</a>
+  <a href="potenciometro.html" style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;background:#1a2a4a;color:#a78bfa;border:1px solid #a78bfa">🎛️ Potenciómetro</a>
+</nav>
+
+<h1>🎛️ Potenciómetro — Control de brillo de un LED</h1>
+<p class="subtitle">Girá el potenciómetro y observá cómo cambia la corriente y el brillo del LED</p>
+
+<div class="circuit-wrapper">
+  <canvas id="circuito" width="680" height="300"></canvas>
+</div>
+
+<div class="knob-section">
+  <div class="knob-label">🎛️ Girá el potenciómetro (arrastrá o usá el slider)</div>
+  <canvas id="knob" width="280" height="210"></canvas>
+  <div class="range-row">
+    <label>0 Ω</label>
+    <input type="range" id="slider" min="0" max="1000" value="500" step="10"/>
+    <label>1000 Ω</label>
+  </div>
+</div>
+
+<div class="info-grid">
+  <div class="info-card">
+    <label>🔋 Tensión</label>
+    <div class="info-val" style="color:#f7c948">9 V</div>
+  </div>
+  <div class="info-card">
+    <label>🎛️ Potenciómetro</label>
+    <div class="info-val" style="color:#a78bfa" id="val-pot">500 Ω</div>
+  </div>
+  <div class="info-card">
+    <label>🧱 Resistencia fija</label>
+    <div class="info-val" style="color:#ff6b6b">330 Ω</div>
+  </div>
+  <div class="info-card">
+    <label>💡 Corriente LED</label>
+    <div class="info-val" style="color:#6bffb0" id="val-corriente">—</div>
+  </div>
+</div>
+
+<div class="explicacion">
+  <strong>¿Cómo funciona?</strong><br>
+  El <strong>potenciómetro</strong> es una resistencia variable en serie con el LED.
+  Al girar al <strong style="color:#6bffb0">mínimo</strong> (0 Ω), la resistencia total es solo 330 Ω → máxima corriente → LED brillante.
+  Al girar al <strong style="color:#ff6b6b">máximo</strong> (1000 Ω), la resistencia total es 1330 Ω → mínima corriente → LED tenue.<br>
+  <strong>I = (9V − 2V) / (R<sub>pot</sub> + 330 Ω)</strong> &nbsp;·&nbsp; La resistencia fija protege al LED de quemarse cuando el pot está en cero.
+</div>
+
+<script>
+// ─── Estado ────────────────────────────────────────────────────────────────
+let potValue = 500;
+const VOLT = 9, R_FIXED = 330, LED_VF = 2;
+const I_MAX = (VOLT - LED_VF) / R_FIXED;         // ~21.2 mA
+const I_MIN = (VOLT - LED_VF) / (1000 + R_FIXED); // ~5.3 mA
+
+function current() { return (VOLT - LED_VF) / (potValue + R_FIXED); }
+function brightness() { return Math.max(0, Math.min(1, (current() - I_MIN) / (I_MAX - I_MIN))); }
+
+// ─── Circuit canvas ────────────────────────────────────────────────────────
+const circ = document.getElementById('circuito');
+const ctx = circ.getContext('2d');
+const CW = circ.width, CH = circ.height;
+
+const X1 = 78, Y1 = 52, X2 = 602, Y2 = 248;
+const midY = (Y1 + Y2) / 2;
+
+// Component positions on top wire
+const POT_X1 = 140, POT_X2 = 295;
+const RES_X1 = 365, RES_X2 = 500;
+
+const path = [{x:X1,y:Y2},{x:X1,y:Y1},{x:X2,y:Y1},{x:X2,y:Y2}];
+const segs = [
+  {from:path[0],to:path[1]},
+  {from:path[1],to:path[2]},
+  {from:path[2],to:path[3]},
+  {from:path[3],to:path[0]},
+];
+const segL = segs.map(s => Math.hypot(s.to.x-s.from.x, s.to.y-s.from.y));
+const totalL = segL.reduce((a,b)=>a+b,0);
+
+function posOnPath(dist) {
+  dist = ((dist % totalL) + totalL) % totalL;
+  let acc = 0;
+  for (let i = 0; i < segs.length; i++) {
+    if (dist <= acc + segL[i]) {
+      const t = (dist - acc) / segL[i];
+      return {x: segs[i].from.x + (segs[i].to.x - segs[i].from.x)*t,
+              y: segs[i].from.y + (segs[i].to.y - segs[i].from.y)*t};
+    }
+    acc += segL[i];
+  }
+  return path[0];
+}
+
+function drawWires() {
+  ctx.save();
+  ctx.strokeStyle = '#3a6aaa';
+  ctx.lineWidth = 7;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(path[0].x, path[0].y);
+  path.forEach(p => ctx.lineTo(p.x, p.y));
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
+}
+
+// Battery: left side, IEC multi-cell
+function drawBattery() {
+  const bx = X1;
+  ctx.save();
+  ctx.fillStyle = '#111e2e';
+  ctx.fillRect(bx - 24, midY - 38, 48, 72);
+  const cells = [
+    {y: midY-24, long: true},
+    {y: midY-14, long: false},
+    {y: midY-2,  long: true},
+    {y: midY+8,  long: false},
+    {y: midY+20, long: true},
+  ];
+  cells.forEach(c => {
+    ctx.beginPath();
+    ctx.moveTo(bx - (c.long ? 18 : 10), c.y);
+    ctx.lineTo(bx + (c.long ? 18 : 10), c.y);
+    ctx.strokeStyle = '#f7c948';
+    ctx.lineWidth = c.long ? 1.8 : 4;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  });
+  ctx.fillStyle = '#f7c948';
+  ctx.font = 'bold 12px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('+', bx, midY - 42);
+  ctx.fillText('−', bx, midY + 42);
+  ctx.fillText('9V', bx, midY + 58);
+  ctx.restore();
+}
+
+// Potentiometer: top wire, x from POT_X1 to POT_X2
+function drawPot() {
+  const py = Y1;
+  const rw = POT_X2 - POT_X1, rh = 20;
+  const mx = (POT_X1 + POT_X2) / 2;
+  const frac = potValue / 1000;
+  const wiperX = POT_X1 + frac * rw;
+
+  ctx.save();
+  // Body
+  ctx.fillStyle = '#111e2e';
+  ctx.fillRect(POT_X1, py - rh/2, rw, rh);
+  ctx.fillStyle = '#1a0f3a';
+  ctx.strokeStyle = '#a78bfa';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.roundRect(POT_X1, py - rh/2, rw, rh, 4);
+  ctx.fill(); ctx.stroke();
+
+  // Zigzag inside
+  ctx.strokeStyle = '#c4b5fd'; ctx.lineWidth = 1.5;
+  const steps = 9, sw = rw - 16, sx = POT_X1 + 8;
+  ctx.beginPath(); ctx.moveTo(sx, py);
+  for (let i = 1; i <= steps; i++) ctx.lineTo(sx + (i/steps)*sw, py + (i%2===0?-5:5));
+  ctx.lineTo(sx + sw, py); ctx.stroke();
+
+  // Wiper arrow (from below pointing up to zigzag)
+  const ay = py + rh/2;
+  ctx.strokeStyle = '#a78bfa'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(wiperX, ay+22); ctx.lineTo(wiperX, ay+1); ctx.stroke();
+  ctx.fillStyle = '#a78bfa';
+  ctx.beginPath();
+  ctx.moveTo(wiperX, ay);
+  ctx.lineTo(wiperX-5, ay+8); ctx.lineTo(wiperX+5, ay+8);
+  ctx.closePath(); ctx.fill();
+  // Contact dot on track
+  ctx.beginPath(); ctx.arc(wiperX, py, 3, 0, Math.PI*2);
+  ctx.fillStyle = '#ffffff'; ctx.fill();
+
+  // Label
+  ctx.fillStyle = '#a78bfa'; ctx.font = 'bold 11px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('Potenciómetro  ' + potValue + ' Ω', mx, py - rh/2 - 10);
+  ctx.restore();
+}
+
+// Resistor: top wire, x from RES_X1 to RES_X2
+function drawResistor() {
+  const ry = Y1;
+  const rw = RES_X2 - RES_X1, rh = 20;
+  const mx = (RES_X1 + RES_X2) / 2;
+
+  ctx.save();
+  ctx.fillStyle = '#111e2e';
+  ctx.fillRect(RES_X1, ry - rh/2, rw, rh);
+  ctx.fillStyle = '#2a0a0a';
+  ctx.strokeStyle = '#ff6b6b'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.roundRect(RES_X1, ry - rh/2, rw, rh, 4);
+  ctx.fill(); ctx.stroke();
+
+  ctx.strokeStyle = '#ff8888'; ctx.lineWidth = 1.5;
+  const steps = 6, sw = rw - 12, sx = RES_X1 + 6;
+  ctx.beginPath(); ctx.moveTo(sx, ry);
+  for (let i = 1; i <= steps; i++) ctx.lineTo(sx + (i/steps)*sw, ry + (i%2===0?-5:5));
+  ctx.lineTo(sx + sw, ry); ctx.stroke();
+
+  ctx.fillStyle = '#ff6b6b'; ctx.font = 'bold 11px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('330 Ω', mx, ry - rh/2 - 10);
+  ctx.restore();
+}
+
+// LED: right side
+function drawLED() {
+  const lx = X2;
+  const br = brightness();
+  const triH = 22, triW = 18;
+  const top = midY - triH/2, bot = midY + triH/2;
+
+  ctx.save();
+  ctx.fillStyle = '#111e2e';
+  ctx.fillRect(lx - 24, midY - 34, 48, 68);
+
+  // Glow
+  if (br > 0.05) {
+    const glowR = 18 + br * 34;
+    const g = ctx.createRadialGradient(lx, midY, 3, lx, midY, glowR);
+    g.addColorStop(0, `rgba(80,255,80,${br*0.55})`);
+    g.addColorStop(1, 'rgba(0,255,0,0)');
+    ctx.beginPath(); ctx.arc(lx, midY, glowR, 0, Math.PI*2);
+    ctx.fillStyle = g; ctx.fill();
+  }
+
+  // Diode triangle (conventional current flows downward on right side)
+  // Anode at top, cathode at bottom
+  const ledFill = br > 0.08
+    ? `rgba(${Math.round(40+br*210)},${Math.round(180+br*75)},30,0.95)`
+    : '#1a2a1a';
+  const ledStroke = br > 0.08 ? `rgba(100,255,100,${0.4+br*0.6})` : '#2a3a2a';
+
+  ctx.beginPath();
+  ctx.moveTo(lx, bot);             // bottom tip (pointing down)
+  ctx.lineTo(lx - triW/2, top);   // top-left
+  ctx.lineTo(lx + triW/2, top);   // top-right
+  ctx.closePath();
+  ctx.fillStyle = ledFill; ctx.fill();
+  ctx.strokeStyle = ledStroke; ctx.lineWidth = 1.8; ctx.stroke();
+
+  // Cathode bar at bottom
+  ctx.beginPath();
+  ctx.moveTo(lx - triW/2, bot); ctx.lineTo(lx + triW/2, bot);
+  ctx.strokeStyle = ledStroke; ctx.lineWidth = 3; ctx.stroke();
+
+  // Light rays
+  if (br > 0.25) {
+    const rayAlpha = br * 0.75;
+    ctx.strokeStyle = `rgba(100,255,100,${rayAlpha})`;
+    ctx.lineWidth = 1.8;
+    [-50, -35, -20].forEach(angleDeg => {
+      const a = angleDeg * Math.PI / 180;
+      const r1 = 20, r2 = 32 + br * 12;
+      const ox = lx + Math.cos(a)*r1, oy = midY + Math.sin(a)*r1;
+      const ex = lx + Math.cos(a)*r2, ey = midY + Math.sin(a)*r2;
+      ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ex, ey); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(ex, ey);
+      ctx.lineTo(ex - Math.cos(a-0.45)*5, ey - Math.sin(a-0.45)*5);
+      ctx.lineTo(ex - Math.cos(a+0.45)*5, ey - Math.sin(a+0.45)*5);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(100,255,100,${rayAlpha})`; ctx.fill();
+    });
+  }
+
+  // Label
+  ctx.fillStyle = br > 0.1 ? '#88ff88' : '#3a5a3a';
+  ctx.font = 'bold 12px Segoe UI'; ctx.textAlign = 'center';
+  ctx.fillText('LED', lx, bot + 18);
+  ctx.restore();
+}
+
+// ─── Electron animation ────────────────────────────────────────────────────
+let circPhase = 0, animT = 0, lastTS = 0;
+
+function getN() {
+  const I = current()*1000;
+  return Math.max(2, Math.min(20, Math.round(2 + 18*(I-I_MIN*1000)/((I_MAX-I_MIN)*1000))));
+}
+function getSpeed() {
+  const I = current()*1000;
+  return Math.max(40, Math.min(220, Math.round(40 + 180*(I-I_MIN*1000)/((I_MAX-I_MIN)*1000))));
+}
+
+function animate(ts) {
+  const dt = Math.min((ts - lastTS) / 1000, 0.05);
+  lastTS = ts;
+  animT += dt;
+  circPhase = (circPhase + dt * getSpeed()) % totalL;
+
+  ctx.clearRect(0, 0, CW, CH);
+  drawWires();
+  drawBattery();
+  drawPot();
+  drawResistor();
+  drawLED();
+
+  const n = getN(), r = 5;
+  for (let i = 0; i < n; i++) {
+    const dist = (circPhase + (i/n)*totalL) % totalL;
+    const pos = posOnPath(dist);
+    const gA = 0.4 + 0.3*Math.sin(animT*3 + i*2*Math.PI/n);
+    ctx.save();
+    const grad = ctx.createRadialGradient(pos.x,pos.y,1,pos.x,pos.y,r*3);
+    grad.addColorStop(0, `rgba(80,230,160,${gA})`);
+    grad.addColorStop(1, 'rgba(80,230,160,0)');
+    ctx.beginPath(); ctx.arc(pos.x,pos.y,r*3,0,Math.PI*2);
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.beginPath(); ctx.arc(pos.x,pos.y,r,0,Math.PI*2);
+    ctx.fillStyle = '#6bffb0'; ctx.fill();
+    ctx.beginPath(); ctx.arc(pos.x,pos.y,r*0.4,0,Math.PI*2);
+    ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.restore();
+  }
+  requestAnimationFrame(animate);
+}
+
+// ─── Info update ───────────────────────────────────────────────────────────
+function updateInfo() {
+  const I = current()*1000;
+  document.getElementById('val-pot').textContent = potValue + ' Ω';
+  document.getElementById('val-corriente').textContent = I.toFixed(1) + ' mA';
+}
+
+// ─── Knob canvas ───────────────────────────────────────────────────────────
+const knobEl = document.getElementById('knob');
+const kCtx = knobEl.getContext('2d');
+const KW = knobEl.width, KH = knobEl.height;
+const KCX = KW / 2, KCY = 118;
+const KR = 65;
+
+// 7 o'clock = 120° in canvas coords (canvas: 0°=right, clockwise positive)
+// 5 o'clock = 60°, extended: 60°+360°=420° = 120°+300° → use 300° sweep
+const K_START_DEG = 120;
+const K_SWEEP_DEG = 300;
+const K_START = K_START_DEG * Math.PI / 180;
+const K_SWEEP = K_SWEEP_DEG * Math.PI / 180;
+const K_END = K_START + K_SWEEP; // 120°+300° = 420°
+
+function drawKnob() {
+  kCtx.clearRect(0, 0, KW, KH);
+  const frac = potValue / 1000;
+  const curAngle = K_START + frac * K_SWEEP;
+
+  // Background track
+  kCtx.beginPath();
+  kCtx.arc(KCX, KCY, KR, K_START, K_END);
+  kCtx.strokeStyle = '#2a3f5a'; kCtx.lineWidth = 11; kCtx.lineCap = 'round';
+  kCtx.stroke();
+
+  // Active track
+  if (frac > 0) {
+    kCtx.beginPath();
+    kCtx.arc(KCX, KCY, KR, K_START, curAngle);
+    kCtx.strokeStyle = '#a78bfa'; kCtx.lineWidth = 11; kCtx.lineCap = 'round';
+    kCtx.stroke();
+  }
+
+  // Tick marks
+  for (let i = 0; i <= 10; i++) {
+    const ta = K_START + (i/10)*K_SWEEP;
+    const major = i % 5 === 0;
+    const r1 = KR + 6, r2 = KR + (major ? 16 : 11);
+    kCtx.beginPath();
+    kCtx.moveTo(KCX + Math.cos(ta)*r1, KCY + Math.sin(ta)*r1);
+    kCtx.lineTo(KCX + Math.cos(ta)*r2, KCY + Math.sin(ta)*r2);
+    kCtx.strokeStyle = major ? '#5a7a9a' : '#2a3f5a';
+    kCtx.lineWidth = major ? 2 : 1.5; kCtx.lineCap = 'round';
+    kCtx.stroke();
+    if (major) {
+      const lr = KR + 30;
+      kCtx.fillStyle = '#5a7a9a';
+      kCtx.font = '9px Segoe UI'; kCtx.textAlign = 'center'; kCtx.textBaseline = 'middle';
+      kCtx.fillText((i*100)+'Ω', KCX + Math.cos(ta)*lr, KCY + Math.sin(ta)*lr);
+    }
+  }
+
+  // Knob body
+  kCtx.beginPath(); kCtx.arc(KCX, KCY, KR*0.68, 0, Math.PI*2);
+  kCtx.fillStyle = '#162235'; kCtx.strokeStyle = '#334466'; kCtx.lineWidth = 3;
+  kCtx.fill(); kCtx.stroke();
+  kCtx.beginPath(); kCtx.arc(KCX, KCY, KR*0.55, 0, Math.PI*2);
+  kCtx.fillStyle = '#0f1c2e'; kCtx.fill();
+
+  // Indicator line
+  const ir = KR*0.52;
+  const ix = KCX + Math.cos(curAngle)*ir, iy = KCY + Math.sin(curAngle)*ir;
+  kCtx.beginPath(); kCtx.moveTo(KCX, KCY); kCtx.lineTo(ix, iy);
+  kCtx.strokeStyle = '#ddeeff'; kCtx.lineWidth = 2.5; kCtx.lineCap = 'round'; kCtx.stroke();
+  kCtx.beginPath(); kCtx.arc(ix, iy, 4, 0, Math.PI*2);
+  kCtx.fillStyle = '#a78bfa'; kCtx.fill();
+
+  // Center dot
+  kCtx.beginPath(); kCtx.arc(KCX, KCY, 4, 0, Math.PI*2);
+  kCtx.fillStyle = '#3a5070'; kCtx.fill();
+
+  // Value inside knob
+  kCtx.fillStyle = '#a78bfa'; kCtx.font = 'bold 13px Segoe UI';
+  kCtx.textAlign = 'center'; kCtx.textBaseline = 'middle';
+  kCtx.fillText(potValue + ' Ω', KCX, KCY + 24);
+
+  // MIN / MÁX labels
+  const minA = K_START, maxA = K_END;
+  kCtx.fillStyle = '#6bffb0'; kCtx.font = '10px Segoe UI';
+  kCtx.fillText('MIN', KCX + Math.cos(minA)*(KR+38), KCY + Math.sin(minA)*(KR+38));
+  kCtx.fillText('MÁX', KCX + Math.cos(maxA)*(KR+38), KCY + Math.sin(maxA)*(KR+38));
+}
+
+// ─── Knob interaction ─────────────────────────────────────────────────────
+// K_START_DEG=120°, K_SWEEP_DEG=300°
+// Dead zone: from 60° (5 o'clock / MAX) to 120° (7 o'clock / MIN) going clockwise = 60° gap
+function angleToFraction(mouseAngle) {
+  let deg = mouseAngle * 180 / Math.PI;
+  if (deg < 0) deg += 360;
+  // Distance from K_START_DEG (120°) going clockwise
+  let dist = deg - K_START_DEG;
+  if (dist < 0) dist += 360;
+  // Dead zone is 60° (360 - 300 = 60), centered at 120° + 300° + 30° = 90°...
+  // If dist > K_SWEEP_DEG + 30 → closer to MIN end
+  if (dist > K_SWEEP_DEG + 30) return 0;
+  if (dist > K_SWEEP_DEG) return 1;
+  return dist / K_SWEEP_DEG;
+}
+
+function knobPos(e) {
+  const rect = knobEl.getBoundingClientRect();
+  const sx = KW / rect.width, sy = KH / rect.height;
+  const cx = e.touches ? e.touches[0].clientX : e.clientX;
+  const cy = e.touches ? e.touches[0].clientY : e.clientY;
+  return {x: (cx - rect.left)*sx, y: (cy - rect.top)*sy};
+}
+
+let dragging = false;
+function onKnobMove(pos) {
+  const angle = Math.atan2(pos.y - KCY, pos.x - KCX);
+  const frac = angleToFraction(angle);
+  potValue = Math.round(frac * 1000);
+  document.getElementById('slider').value = potValue;
+  drawKnob();
+  updateInfo();
+}
+
+knobEl.addEventListener('mousedown', e => { dragging = true; onKnobMove(knobPos(e)); });
+knobEl.addEventListener('mousemove', e => { if (dragging) onKnobMove(knobPos(e)); });
+knobEl.addEventListener('mouseup', () => dragging = false);
+knobEl.addEventListener('mouseleave', () => dragging = false);
+knobEl.addEventListener('touchstart', e => { e.preventDefault(); dragging = true; onKnobMove(knobPos(e)); }, {passive:false});
+knobEl.addEventListener('touchmove', e => { e.preventDefault(); if (dragging) onKnobMove(knobPos(e)); }, {passive:false});
+knobEl.addEventListener('touchend', () => dragging = false);
+
+document.getElementById('slider').addEventListener('input', function() {
+  potValue = parseInt(this.value);
+  drawKnob();
+  updateInfo();
+});
+
+// ─── Init ─────────────────────────────────────────────────────────────────
+drawKnob();
+updateInfo();
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>
