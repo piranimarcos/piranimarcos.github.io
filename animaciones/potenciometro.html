@@ -18,10 +18,10 @@
     .range-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
     .range-row label { font-size: 0.82rem; color: #8da8c0; }
     .range-row input[type=range] { width: 220px; accent-color: #a78bfa; cursor: pointer; }
-    .info-grid { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 680px; margin-bottom: 18px; }
-    .info-card { background: #162235; border: 1px solid #2a3f5a; border-radius: 12px; padding: 12px 16px; text-align: center; flex: 1; min-width: 130px; }
-    .info-card label { display: block; font-size: 0.78rem; color: #8da8c0; margin-bottom: 5px; font-weight: 600; }
-    .info-val { font-size: 1.3rem; font-weight: 700; }
+    .info-grid { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 680px; margin-bottom: 18px; }
+    .info-card { background: #162235; border: 1px solid #2a3f5a; border-radius: 12px; padding: 12px 14px; text-align: center; flex: 1; min-width: 120px; }
+    .info-card label { display: block; font-size: 0.75rem; color: #8da8c0; margin-bottom: 5px; font-weight: 600; }
+    .info-val { font-size: 1.25rem; font-weight: 700; }
     .explicacion { background: #162235; border-left: 4px solid #a78bfa; border-radius: 8px; padding: 14px 18px; max-width: 680px; width: 100%; font-size: 0.88rem; line-height: 1.65; color: #c5ddf0; margin-bottom: 16px; }
     .explicacion strong { color: #a78bfa; }
     .brand-bar { display:flex; align-items:center; gap:12px; width:100%; max-width:680px; margin-bottom:14px; padding:10px 16px; background:#111e2e; border-radius:10px; border:1px solid #2a3f5a; }
@@ -69,8 +69,12 @@
     <div class="info-val" style="color:#f7c948">9 V</div>
   </div>
   <div class="info-card">
-    <label>🎛️ Potenciómetro</label>
-    <div class="info-val" style="color:#a78bfa" id="val-pot">500 Ω</div>
+    <label>🟣 R₁ pin1→cursor</label>
+    <div class="info-val" style="color:#a78bfa" id="val-r1">500 Ω</div>
+  </div>
+  <div class="info-card">
+    <label>🟠 R₂ cursor→pin3</label>
+    <div class="info-val" style="color:#ff9f43" id="val-r2">500 Ω</div>
   </div>
   <div class="info-card">
     <label>🧱 Resistencia fija</label>
@@ -84,18 +88,19 @@
 
 <div class="explicacion">
   <strong>¿Cómo funciona?</strong><br>
-  El <strong>potenciómetro</strong> es una resistencia variable en serie con el LED.
-  Al girar al <strong style="color:#6bffb0">mínimo</strong> (0 Ω), la resistencia total es solo 330 Ω → máxima corriente → LED brillante.
-  Al girar al <strong style="color:#ff6b6b">máximo</strong> (1000 Ω), la resistencia total es 1330 Ω → mínima corriente → LED tenue.<br>
-  <strong>I = (9V − 2V) / (R<sub>pot</sub> + 330 Ω)</strong> &nbsp;·&nbsp; La resistencia fija protege al LED de quemarse cuando el pot está en cero.
+  El potenciómetro tiene tres terminales: <strong>pin1</strong> y <strong>pin3</strong> son los extremos fijos, y <strong>pin2 (cursor)</strong> es el terminal móvil que recorre el resistor interno.<br>
+  En este circuito se usan <strong style="color:#a78bfa">pin1 + cursor</strong> — el <strong style="color:#ff6060">pin3 queda desconectado (NC)</strong>.<br>
+  <strong style="color:#a78bfa">R₁</strong> (pin1→cursor) es la resistencia activa en el circuito — crece de 0 a 1000 Ω al girar hacia MÁX.<br>
+  <strong style="color:#ff9f43">R₂</strong> (cursor→pin3) es la porción sin uso — siempre se cumple <strong>R₁ + R₂ = 1000 Ω</strong>.<br>
+  <strong>I = (9V − 2V) / (R₁ + 330 Ω)</strong> &nbsp;·&nbsp; La resistencia fija protege al LED cuando el pot está en cero.
 </div>
 
 <script>
 // ─── Estado ────────────────────────────────────────────────────────────────
 let potValue = 500;
 const VOLT = 9, R_FIXED = 330, LED_VF = 2;
-const I_MAX = (VOLT - LED_VF) / R_FIXED;         // ~21.2 mA
-const I_MIN = (VOLT - LED_VF) / (1000 + R_FIXED); // ~5.3 mA
+const I_MAX = (VOLT - LED_VF) / R_FIXED;
+const I_MIN = (VOLT - LED_VF) / (1000 + R_FIXED);
 
 function current() { return (VOLT - LED_VF) / (potValue + R_FIXED); }
 function brightness() { return Math.max(0, Math.min(1, (current() - I_MIN) / (I_MAX - I_MIN))); }
@@ -108,7 +113,6 @@ const CW = circ.width, CH = circ.height;
 const X1 = 78, Y1 = 52, X2 = 602, Y2 = 248;
 const midY = (Y1 + Y2) / 2;
 
-// Component positions on top wire
 const POT_X1 = 140, POT_X2 = 295;
 const RES_X1 = 365, RES_X2 = 500;
 
@@ -150,7 +154,6 @@ function drawWires() {
   ctx.restore();
 }
 
-// Battery: left side, IEC multi-cell
 function drawBattery() {
   const bx = X1;
   ctx.save();
@@ -181,18 +184,23 @@ function drawBattery() {
   ctx.restore();
 }
 
-// Potentiometer: top wire, x from POT_X1 to POT_X2
 function drawPot() {
   const py = Y1;
   const rw = POT_X2 - POT_X1, rh = 20;
-  const mx = (POT_X1 + POT_X2) / 2;
   const frac = potValue / 1000;
   const wiperX = POT_X1 + frac * rw;
+  const r1 = potValue;
+  const r2 = 1000 - potValue;
+  const ay = py + rh / 2;       // bottom edge of body
+  const routEndX = POT_X2 + 15; // where wiper routing reconnects to wire
 
   ctx.save();
-  // Body
+
+  // Erase the top wire at pin3 area to show NC gap
   ctx.fillStyle = '#111e2e';
-  ctx.fillRect(POT_X1, py - rh/2, rw, rh);
+  ctx.fillRect(POT_X2 - 2, py - 8, 20, 16);
+
+  // Body
   ctx.fillStyle = '#1a0f3a';
   ctx.strokeStyle = '#a78bfa';
   ctx.lineWidth = 2.5;
@@ -200,34 +208,85 @@ function drawPot() {
   ctx.roundRect(POT_X1, py - rh/2, rw, rh, 4);
   ctx.fill(); ctx.stroke();
 
-  // Zigzag inside
-  ctx.strokeStyle = '#c4b5fd'; ctx.lineWidth = 1.5;
+  // Two-color zigzag using clip regions
   const steps = 9, sw = rw - 16, sx = POT_X1 + 8;
+
+  // R1 segment — purple, pin1 to wiper
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(POT_X1, py - rh, wiperX - POT_X1, rh * 2);
+  ctx.clip();
+  ctx.strokeStyle = '#c4b5fd'; ctx.lineWidth = 1.8;
   ctx.beginPath(); ctx.moveTo(sx, py);
   for (let i = 1; i <= steps; i++) ctx.lineTo(sx + (i/steps)*sw, py + (i%2===0?-5:5));
-  ctx.lineTo(sx + sw, py); ctx.stroke();
+  ctx.lineTo(sx + sw, py);
+  ctx.stroke();
+  ctx.restore();
 
-  // Wiper arrow (from below pointing up to zigzag)
-  const ay = py + rh/2;
-  ctx.strokeStyle = '#a78bfa'; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(wiperX, ay+22); ctx.lineTo(wiperX, ay+1); ctx.stroke();
-  ctx.fillStyle = '#a78bfa';
+  // R2 segment — orange, wiper to pin3
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(wiperX, py - rh, POT_X2 - wiperX + 1, rh * 2);
+  ctx.clip();
+  ctx.strokeStyle = '#ffb347'; ctx.lineWidth = 1.8;
+  ctx.beginPath(); ctx.moveTo(sx, py);
+  for (let i = 1; i <= steps; i++) ctx.lineTo(sx + (i/steps)*sw, py + (i%2===0?-5:5));
+  ctx.lineTo(sx + sw, py);
+  ctx.stroke();
+  ctx.restore();
+
+  // Pin3 NC indicator — open circle + label
+  ctx.beginPath(); ctx.arc(POT_X2, py, 5, 0, Math.PI*2);
+  ctx.strokeStyle = '#ff4444'; ctx.lineWidth = 2.2; ctx.stroke();
+  ctx.fillStyle = '#ff4444'; ctx.font = 'bold 9px Segoe UI';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText('NC', POT_X2, py - 10);
+
+  // Wiper arrow — white, points up from stem to track
+  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2.2;
+  ctx.beginPath(); ctx.moveTo(wiperX, ay + 26); ctx.lineTo(wiperX, ay + 2); ctx.stroke();
+  ctx.fillStyle = '#ffffff';
   ctx.beginPath();
   ctx.moveTo(wiperX, ay);
-  ctx.lineTo(wiperX-5, ay+8); ctx.lineTo(wiperX+5, ay+8);
+  ctx.lineTo(wiperX - 5, ay + 8); ctx.lineTo(wiperX + 5, ay + 8);
   ctx.closePath(); ctx.fill();
-  // Contact dot on track
-  ctx.beginPath(); ctx.arc(wiperX, py, 3, 0, Math.PI*2);
+
+  // Wiper routing — dashed line from wiper stem end → right → up to main wire
+  const routY = ay + 26;
+  ctx.strokeStyle = '#a78bfa'; ctx.lineWidth = 2;
+  ctx.setLineDash([5, 3]);
+  ctx.beginPath();
+  ctx.moveTo(wiperX, routY);
+  ctx.lineTo(routEndX, routY);
+  ctx.lineTo(routEndX, py);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Junction dot where wiper routing meets main wire
+  ctx.beginPath(); ctx.arc(routEndX, py, 4.5, 0, Math.PI*2);
+  ctx.fillStyle = '#a78bfa'; ctx.fill();
+
+  // Contact dot on track at wiper position
+  ctx.beginPath(); ctx.arc(wiperX, py, 3.5, 0, Math.PI*2);
   ctx.fillStyle = '#ffffff'; ctx.fill();
 
-  // Label
-  ctx.fillStyle = '#a78bfa'; ctx.font = 'bold 11px Segoe UI';
-  ctx.textAlign = 'center';
-  ctx.fillText('Potenciómetro  ' + potValue + ' Ω', mx, py - rh/2 - 10);
+  // R1 label above left segment (only if segment wide enough)
+  if (wiperX - POT_X1 > 20) {
+    ctx.fillStyle = '#c4b5fd'; ctx.font = 'bold 10px Segoe UI';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('R₁=' + r1 + 'Ω', (POT_X1 + wiperX) / 2, py - rh/2 - 5);
+  }
+
+  // R2 label above right segment
+  if (POT_X2 - wiperX > 20) {
+    ctx.fillStyle = '#ffb347'; ctx.font = 'bold 10px Segoe UI';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('R₂=' + r2 + 'Ω', (wiperX + POT_X2) / 2, py - rh/2 - 5);
+  }
+
   ctx.restore();
 }
 
-// Resistor: top wire, x from RES_X1 to RES_X2
 function drawResistor() {
   const ry = Y1;
   const rw = RES_X2 - RES_X1, rh = 20;
@@ -249,12 +308,11 @@ function drawResistor() {
   ctx.lineTo(sx + sw, ry); ctx.stroke();
 
   ctx.fillStyle = '#ff6b6b'; ctx.font = 'bold 11px Segoe UI';
-  ctx.textAlign = 'center';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
   ctx.fillText('330 Ω', mx, ry - rh/2 - 10);
   ctx.restore();
 }
 
-// LED: right side
 function drawLED() {
   const lx = X2;
   const br = brightness();
@@ -265,7 +323,6 @@ function drawLED() {
   ctx.fillStyle = '#111e2e';
   ctx.fillRect(lx - 24, midY - 34, 48, 68);
 
-  // Glow
   if (br > 0.05) {
     const glowR = 18 + br * 34;
     const g = ctx.createRadialGradient(lx, midY, 3, lx, midY, glowR);
@@ -275,27 +332,23 @@ function drawLED() {
     ctx.fillStyle = g; ctx.fill();
   }
 
-  // Diode triangle (conventional current flows downward on right side)
-  // Anode at top, cathode at bottom
   const ledFill = br > 0.08
     ? `rgba(${Math.round(40+br*210)},${Math.round(180+br*75)},30,0.95)`
     : '#1a2a1a';
   const ledStroke = br > 0.08 ? `rgba(100,255,100,${0.4+br*0.6})` : '#2a3a2a';
 
   ctx.beginPath();
-  ctx.moveTo(lx, bot);             // bottom tip (pointing down)
-  ctx.lineTo(lx - triW/2, top);   // top-left
-  ctx.lineTo(lx + triW/2, top);   // top-right
+  ctx.moveTo(lx, bot);
+  ctx.lineTo(lx - triW/2, top);
+  ctx.lineTo(lx + triW/2, top);
   ctx.closePath();
   ctx.fillStyle = ledFill; ctx.fill();
   ctx.strokeStyle = ledStroke; ctx.lineWidth = 1.8; ctx.stroke();
 
-  // Cathode bar at bottom
   ctx.beginPath();
   ctx.moveTo(lx - triW/2, bot); ctx.lineTo(lx + triW/2, bot);
   ctx.strokeStyle = ledStroke; ctx.lineWidth = 3; ctx.stroke();
 
-  // Light rays
   if (br > 0.25) {
     const rayAlpha = br * 0.75;
     ctx.strokeStyle = `rgba(100,255,100,${rayAlpha})`;
@@ -315,7 +368,6 @@ function drawLED() {
     });
   }
 
-  // Label
   ctx.fillStyle = br > 0.1 ? '#88ff88' : '#3a5a3a';
   ctx.font = 'bold 12px Segoe UI'; ctx.textAlign = 'center';
   ctx.fillText('LED', lx, bot + 18);
@@ -370,7 +422,8 @@ function animate(ts) {
 // ─── Info update ───────────────────────────────────────────────────────────
 function updateInfo() {
   const I = current()*1000;
-  document.getElementById('val-pot').textContent = potValue + ' Ω';
+  document.getElementById('val-r1').textContent = potValue + ' Ω';
+  document.getElementById('val-r2').textContent = (1000 - potValue) + ' Ω';
   document.getElementById('val-corriente').textContent = I.toFixed(1) + ' mA';
 }
 
@@ -381,13 +434,11 @@ const KW = knobEl.width, KH = knobEl.height;
 const KCX = KW / 2, KCY = 118;
 const KR = 65;
 
-// 7 o'clock = 120° in canvas coords (canvas: 0°=right, clockwise positive)
-// 5 o'clock = 60°, extended: 60°+360°=420° = 120°+300° → use 300° sweep
 const K_START_DEG = 120;
 const K_SWEEP_DEG = 300;
 const K_START = K_START_DEG * Math.PI / 180;
 const K_SWEEP = K_SWEEP_DEG * Math.PI / 180;
-const K_END = K_START + K_SWEEP; // 120°+300° = 420°
+const K_END = K_START + K_SWEEP;
 
 function drawKnob() {
   kCtx.clearRect(0, 0, KW, KH);
@@ -400,11 +451,19 @@ function drawKnob() {
   kCtx.strokeStyle = '#2a3f5a'; kCtx.lineWidth = 11; kCtx.lineCap = 'round';
   kCtx.stroke();
 
-  // Active track
-  if (frac > 0) {
+  // R1 arc — purple, pin1 to cursor
+  if (frac > 0.005) {
     kCtx.beginPath();
     kCtx.arc(KCX, KCY, KR, K_START, curAngle);
     kCtx.strokeStyle = '#a78bfa'; kCtx.lineWidth = 11; kCtx.lineCap = 'round';
+    kCtx.stroke();
+  }
+
+  // R2 arc — orange, cursor to pin3
+  if (frac < 0.995) {
+    kCtx.beginPath();
+    kCtx.arc(KCX, KCY, KR, curAngle, K_END);
+    kCtx.strokeStyle = '#ff9f43'; kCtx.lineWidth = 11; kCtx.lineCap = 'round';
     kCtx.stroke();
   }
 
@@ -412,10 +471,10 @@ function drawKnob() {
   for (let i = 0; i <= 10; i++) {
     const ta = K_START + (i/10)*K_SWEEP;
     const major = i % 5 === 0;
-    const r1 = KR + 6, r2 = KR + (major ? 16 : 11);
+    const r1k = KR + 6, r2k = KR + (major ? 16 : 11);
     kCtx.beginPath();
-    kCtx.moveTo(KCX + Math.cos(ta)*r1, KCY + Math.sin(ta)*r1);
-    kCtx.lineTo(KCX + Math.cos(ta)*r2, KCY + Math.sin(ta)*r2);
+    kCtx.moveTo(KCX + Math.cos(ta)*r1k, KCY + Math.sin(ta)*r1k);
+    kCtx.lineTo(KCX + Math.cos(ta)*r2k, KCY + Math.sin(ta)*r2k);
     kCtx.strokeStyle = major ? '#5a7a9a' : '#2a3f5a';
     kCtx.lineWidth = major ? 2 : 1.5; kCtx.lineCap = 'round';
     kCtx.stroke();
@@ -426,6 +485,18 @@ function drawKnob() {
       kCtx.fillText((i*100)+'Ω', KCX + Math.cos(ta)*lr, KCY + Math.sin(ta)*lr);
     }
   }
+
+  // "Patita" — cursor indicator: white tick crossing the arc at current position
+  const patInR = KR - 10, patOutR = KR + 10;
+  kCtx.beginPath();
+  kCtx.moveTo(KCX + Math.cos(curAngle)*patInR, KCY + Math.sin(curAngle)*patInR);
+  kCtx.lineTo(KCX + Math.cos(curAngle)*patOutR, KCY + Math.sin(curAngle)*patOutR);
+  kCtx.strokeStyle = '#ffffff'; kCtx.lineWidth = 3; kCtx.lineCap = 'round';
+  kCtx.stroke();
+  // Dot at arc center on cursor
+  kCtx.beginPath();
+  kCtx.arc(KCX + Math.cos(curAngle)*KR, KCY + Math.sin(curAngle)*KR, 4.5, 0, Math.PI*2);
+  kCtx.fillStyle = '#ffffff'; kCtx.fill();
 
   // Knob body
   kCtx.beginPath(); kCtx.arc(KCX, KCY, KR*0.68, 0, Math.PI*2);
@@ -446,29 +517,25 @@ function drawKnob() {
   kCtx.beginPath(); kCtx.arc(KCX, KCY, 4, 0, Math.PI*2);
   kCtx.fillStyle = '#3a5070'; kCtx.fill();
 
-  // Value inside knob
-  kCtx.fillStyle = '#a78bfa'; kCtx.font = 'bold 13px Segoe UI';
+  // Values inside knob (R1 purple, R2 orange)
   kCtx.textAlign = 'center'; kCtx.textBaseline = 'middle';
-  kCtx.fillText(potValue + ' Ω', KCX, KCY + 24);
+  kCtx.fillStyle = '#a78bfa'; kCtx.font = 'bold 12px Segoe UI';
+  kCtx.fillText('R₁: ' + potValue + ' Ω', KCX, KCY + 14);
+  kCtx.fillStyle = '#ff9f43'; kCtx.font = 'bold 12px Segoe UI';
+  kCtx.fillText('R₂: ' + (1000 - potValue) + ' Ω', KCX, KCY + 30);
 
   // MIN / MÁX labels
-  const minA = K_START, maxA = K_END;
-  kCtx.fillStyle = '#6bffb0'; kCtx.font = '10px Segoe UI';
-  kCtx.fillText('MIN', KCX + Math.cos(minA)*(KR+38), KCY + Math.sin(minA)*(KR+38));
-  kCtx.fillText('MÁX', KCX + Math.cos(maxA)*(KR+38), KCY + Math.sin(maxA)*(KR+38));
+  kCtx.fillStyle = '#6bffb0'; kCtx.font = '10px Segoe UI'; kCtx.textBaseline = 'middle';
+  kCtx.fillText('MIN', KCX + Math.cos(K_START)*(KR+38), KCY + Math.sin(K_START)*(KR+38));
+  kCtx.fillText('MÁX', KCX + Math.cos(K_END)*(KR+38),   KCY + Math.sin(K_END)*(KR+38));
 }
 
 // ─── Knob interaction ─────────────────────────────────────────────────────
-// K_START_DEG=120°, K_SWEEP_DEG=300°
-// Dead zone: from 60° (5 o'clock / MAX) to 120° (7 o'clock / MIN) going clockwise = 60° gap
 function angleToFraction(mouseAngle) {
   let deg = mouseAngle * 180 / Math.PI;
   if (deg < 0) deg += 360;
-  // Distance from K_START_DEG (120°) going clockwise
   let dist = deg - K_START_DEG;
   if (dist < 0) dist += 360;
-  // Dead zone is 60° (360 - 300 = 60), centered at 120° + 300° + 30° = 90°...
-  // If dist > K_SWEEP_DEG + 30 → closer to MIN end
   if (dist > K_SWEEP_DEG + 30) return 0;
   if (dist > K_SWEEP_DEG) return 1;
   return dist / K_SWEEP_DEG;
