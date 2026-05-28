@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transistor NPN BC337 – Animación interactiva</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0d1b2a; color: #e0e8f0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+    h1 { font-size: 1.5rem; color: #7ecfff; margin-bottom: 4px; text-align: center; }
+    .subtitle { font-size: 0.92rem; color: #8da8c0; margin-bottom: 20px; text-align: center; }
+    .circuit-wrapper { width: 100%; max-width: 720px; margin-bottom: 18px; }
+    canvas#circ { border-radius: 12px; background: #111e2e; display: block; width: 100%; height: auto; }
+
+    .controls { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 720px; margin-bottom: 18px; }
+    .ctrl-card { background: #162235; border: 1px solid #2a3f5a; border-radius: 12px; padding: 14px 20px; flex: 1; min-width: 180px; text-align: center; }
+    .ctrl-card label { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 8px; }
+    .ctrl-card input[type=range] { width: 100%; accent-color: #7ecfff; cursor: pointer; }
+    .val { font-size: 1.4rem; font-weight: 700; margin-top: 6px; }
+
+    .stats { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 720px; margin-bottom: 18px; }
+    .stat-box { background: #162235; border: 1px solid #2a3f5a; border-radius: 10px; padding: 12px 16px; text-align: center; flex: 1; min-width: 130px; }
+    .stat-box label { font-size: 0.75rem; color: #8da8c0; display: block; margin-bottom: 4px; font-weight: 600; }
+    .stat-val { font-size: 1.25rem; font-weight: 700; }
+
+    .mode-row { display: flex; gap: 0; border-radius: 10px; overflow: hidden; border: 1px solid #2a3f5a; margin-bottom: 20px; }
+    .mode-btn { padding: 10px 28px; font-size: 0.9rem; font-weight: 700; cursor: pointer; border: none; background: #162235; color: #8da8c0; transition: all .2s; }
+    .mode-btn.active { background: #1a3a5a; color: #7ecfff; }
+
+    .explicacion { background: #162235; border-left: 4px solid #7ecfff; border-radius: 8px; padding: 14px 18px; max-width: 720px; width: 100%; font-size: 0.88rem; line-height: 1.7; color: #c5ddf0; margin-bottom: 16px; }
+    .explicacion strong { color: #7ecfff; }
+
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; max-width: 720px; width: 100%; margin-bottom: 18px; }
+    .info-card { background: #162235; border-radius: 10px; padding: 13px 15px; border-left: 4px solid; }
+    .info-card h4 { font-size: 0.85rem; margin-bottom: 7px; }
+    .info-card p { font-size: 0.80rem; color: #a0b8d0; line-height: 1.65; }
+
+    .bc-data { background: #101e2e; border: 1px solid #2a3f5a; border-radius: 10px; padding: 14px 18px; max-width: 720px; width: 100%; font-size: 0.82rem; color: #8da8c0; margin-bottom: 18px; }
+    .bc-data strong { color: #7ecfff; }
+    .bc-data table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .bc-data td { padding: 4px 10px; border-bottom: 1px solid #1a2e44; }
+    .bc-data td:first-child { color: #a0c0e0; font-weight: 600; }
+
+    .brand-bar { display:flex; align-items:center; gap:12px; width:100%; max-width:720px; margin-bottom:14px; padding:10px 16px; background:#111e2e; border-radius:10px; border:1px solid #2a3f5a; }
+    .brand-bar img { height:38px; border-radius:8px; object-fit:contain; }
+    .brand-name { font-size:0.95rem; font-weight:700; color:#e0e8f0; }
+    .brand-sub { font-size:0.74rem; color:#8da8c0; margin-top:1px; }
+
+    @media (max-width: 560px) {
+      .info-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="brand-bar">
+  <img src="../electronica/img/logoSP.png" alt="Logo" onerror="this.style.display='none'">
+  <div>
+    <div class="brand-name">Ing. Marcos Pirani</div>
+    <div class="brand-sub">Taller de Electrónica I</div>
+  </div>
+</div>
+
+<nav style="width:100%;max-width:720px;display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+  <a href="../electronica/index.html" style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;border:1px solid #4a6a8a;color:#6aafdf">← Electrónica</a>
+  <a href="index.html" style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;border:1px solid #2a3f5a;color:#8da8c0">⚡ Ley de Ohm</a>
+  <a href="corrientes.html" style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;border:1px solid #2a3f5a;color:#8da8c0">〜 CC vs CA</a>
+  <a href="potenciometro.html" style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;border:1px solid #2a3f5a;color:#8da8c0">🎛️ Potenciómetro</a>
+  <a href="transistor.html" style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;background:#1a2a1a;color:#6bffb0;border:1px solid #6bffb0">🔌 Transistor NPN</a>
+</nav>
+
+<h1>🔌 Transistor NPN — BC337</h1>
+<p class="subtitle">Explorá cómo una pequeña corriente de base controla una corriente de colector mucho mayor</p>
+
+<div class="mode-row">
+  <button class="mode-btn active" id="btn-switch" onclick="setMode('switch')">Modo Interruptor</button>
+  <button class="mode-btn" id="btn-amp" onclick="setMode('amp')">Modo Amplificador</button>
+</div>
+
+<div class="circuit-wrapper">
+  <canvas id="circ" width="720" height="380"></canvas>
+</div>
+
+<div class="controls">
+  <div class="ctrl-card">
+    <label style="color:#f7a830">🔶 Corriente de Base (I<sub>B</sub>)</label>
+    <input type="range" id="sl-ib" min="0" max="500" value="0" step="5"/>
+    <div class="val" style="color:#f7a830" id="val-ib">0 µA</div>
+  </div>
+  <div class="ctrl-card">
+    <label style="color:#f7c948">⚡ Tensión V<sub>CC</sub></label>
+    <input type="range" id="sl-vcc" min="3" max="12" value="5" step="1"/>
+    <div class="val" style="color:#f7c948" id="val-vcc">5 V</div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat-box">
+    <label>I<sub>B</sub> — Base</label>
+    <div class="stat-val" style="color:#f7a830" id="st-ib">0 µA</div>
+  </div>
+  <div class="stat-box">
+    <label>I<sub>C</sub> — Colector</label>
+    <div class="stat-val" style="color:#6bffb0" id="st-ic">0 mA</div>
+  </div>
+  <div class="stat-box">
+    <label>I<sub>E</sub> — Emisor</label>
+    <div class="stat-val" style="color:#7ecfff" id="st-ie">0 mA</div>
+  </div>
+  <div class="stat-box">
+    <label>V<sub>CE</sub></label>
+    <div class="stat-val" style="color:#ff9f43" id="st-vce">5.0 V</div>
+  </div>
+  <div class="stat-box">
+    <label>Región</label>
+    <div class="stat-val" style="font-size:1rem" id="st-region">Corte</div>
+  </div>
+  <div class="stat-box">
+    <label>Ganancia (hFE)</label>
+    <div class="stat-val" style="color:#a78bfa" id="st-hfe">100×</div>
+  </div>
+</div>
+
+<div class="explicacion" id="explicacion">
+  <strong>Región de Corte:</strong> I<sub>B</sub> = 0 → el transistor está <strong>apagado</strong>. No circula corriente por el colector. V<sub>CE</sub> = V<sub>CC</sub> (toda la tensión cae sobre el transistor). El LED permanece apagado.
+</div>
+
+<div class="info-grid">
+  <div class="info-card" style="border-color:#f7a830">
+    <h4 style="color:#f7a830">Base (B)</h4>
+    <p>Terminal de control. Una pequeña corriente I<sub>B</sub> (microamperes) activa el transistor y permite el paso de una corriente mucho mayor por el colector.</p>
+  </div>
+  <div class="info-card" style="border-color:#6bffb0">
+    <h4 style="color:#6bffb0">Colector (C)</h4>
+    <p>Terminal de salida. La corriente I<sub>C</sub> = hFE × I<sub>B</sub>. En el BC337, la ganancia típica (hFE) va de 100 a 630 según el grupo.</p>
+  </div>
+  <div class="info-card" style="border-color:#7ecfff">
+    <h4 style="color:#7ecfff">Emisor (E)</h4>
+    <p>Terminal de referencia (masa). I<sub>E</sub> = I<sub>B</sub> + I<sub>C</sub>. Es la suma de toda la corriente que sale del transistor.</p>
+  </div>
+</div>
+
+<div class="bc-data">
+  <strong>Datos del BC337 (Fairchild / ON Semi)</strong>
+  <table>
+    <tr><td>Tipo</td><td>NPN BJT, encapsulado TO-92</td></tr>
+    <tr><td>V<sub>CEO</sub> máx</td><td>45 V</td></tr>
+    <tr><td>I<sub>C</sub> máx</td><td>800 mA</td></tr>
+    <tr><td>P<sub>T</sub> máx</td><td>625 mW</td></tr>
+    <tr><td>hFE (grupo -16)</td><td>100 – 250</td></tr>
+    <tr><td>hFE (grupo -25)</td><td>160 – 400</td></tr>
+    <tr><td>hFE (grupo -40)</td><td>250 – 630</td></tr>
+    <tr><td>V<sub>BE(sat)</sub></td><td>≈ 0.7 V</td></tr>
+    <tr><td>V<sub>CE(sat)</sub></td><td>≈ 0.5 V</td></tr>
+    <tr><td>Uso típico</td><td>Interruptor, driver de LED/relay, amplificador de señal pequeña</td></tr>
+  </table>
+</div>
+
+<script>
+// ─── Parámetros ────────────────────────────────────────────────────────────
+const HFE = 100;
+const RC = 100;       // resistencia de colector Ω
+const RB = 10000;     // resistencia de base Ω
+const VBE = 0.7;
+const VCESAT = 0.5;
+
+let ibUA = 0;   // µA
+let vcc = 5;
+let appMode = 'switch';
+
+function ibA() { return ibUA * 1e-6; }
+function icA() {
+  const icIdeal = HFE * ibA();
+  const icSat = (vcc - VCESAT) / RC;
+  return Math.min(icIdeal, icSat);
+}
+function ieA() { return ibA() + icA(); }
+function vce() {
+  const ic = icA();
+  return Math.max(VCESAT, vcc - ic * RC);
+}
+function region() {
+  if (ibUA === 0) return 'corte';
+  if (vce() <= VCESAT + 0.05) return 'saturacion';
+  return 'activa';
+}
+function ledBrightness() {
+  const ic = icA() * 1000; // mA
+  const icMax = (vcc - VCESAT) / RC * 1000;
+  return Math.min(1, ic / icMax);
+}
+
+// ─── Canvas ────────────────────────────────────────────────────────────────
+const canvas = document.getElementById('circ');
+const ctx = canvas.getContext('2d');
+const CW = canvas.width, CH = canvas.height;
+
+// Coordenadas del circuito
+// VCC arriba-centro, resistor RC, colector, transistor, emisor, masa
+// Base: línea horizontal desde la izquierda
+
+const TX = 360, TY = 200;  // centro del transistor
+
+// Puntos del circuito principal (colector path)
+const VCC_X = TX, VCC_Y = 30;
+const RC_TOP = { x: TX, y: VCC_Y + 20 };
+const RC_BOT = { x: TX, y: VCC_Y + 90 };
+const COLL  = { x: TX, y: RC_BOT.y + 10 };   // terminal colector del transistor
+const EMIT  = { x: TX, y: TY + 70 };           // terminal emisor
+const GND_Y = CH - 30;
+
+// Base
+const BASE_X_LEFT = 120;
+const BASE  = { x: TX - 46, y: TY };
+const RB_LEFT  = { x: BASE_X_LEFT + 10, y: TY };
+const RB_RIGHT = { x: BASE_X_LEFT + 80, y: TY };
+
+// LED en el colector branch (entre RC y colector)
+const LED_CX = TX + 90, LED_CY = (RC_BOT.y + COLL.y) / 2 + 10;
+
+// Para el modo amplificador usamos un LED en lugar de una carga diferente
+// pero visualmente mostramos el transistor en región activa
+
+// Segmentos para partículas
+let collectorPath = [];
+let basePath = [];
+
+function buildPaths() {
+  // Colector: VCC → RC top → RC bot → colector del transistor → emisor → GND
+  collectorPath = [
+    {x: TX, y: VCC_Y},
+    {x: TX, y: RC_TOP.y},
+    {x: TX, y: RC_BOT.y},
+    {x: TX, y: COLL.y},
+    {x: TX, y: TY - 30},     // into transistor body (colector)
+    {x: TX, y: TY + 30},     // out transistor body (emisor)
+    {x: TX, y: EMIT.y},
+    {x: TX, y: GND_Y},
+  ];
+  // Base: RB_LEFT → transistor base
+  basePath = [
+    {x: BASE_X_LEFT, y: TY},
+    {x: RB_LEFT.x, y: TY},
+    {x: RB_RIGHT.x, y: TY},
+    {x: BASE.x, y: TY},
+  ];
+}
+buildPaths();
+
+function segLen(a, b) { return Math.hypot(b.x - a.x, b.y - a.y); }
+
+function totalPathLen(pts) {
+  let l = 0;
+  for (let i = 0; i < pts.length - 1; i++) l += segLen(pts[i], pts[i+1]);
+  return l;
+}
+
+function posOnSeg(pts, dist) {
+  dist = Math.max(0, dist);
+  for (let i = 0; i < pts.length - 1; i++) {
+    const sl = segLen(pts[i], pts[i+1]);
+    if (dist <= sl) {
+      const f = dist / sl;
+      return { x: pts[i].x + (pts[i+1].x - pts[i].x)*f, y: pts[i].y + (pts[i+1].y - pts[i].y)*f };
+    }
+    dist -= sl;
+  }
+  return pts[pts.length-1];
+}
+
+// ─── Dibujo ────────────────────────────────────────────────────────────────
+function drawWires() {
+  ctx.save();
+  ctx.strokeStyle = '#3a6aaa';
+  ctx.lineWidth = 6;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  // Rama colector: VCC → nodo top → colector
+  ctx.beginPath();
+  ctx.moveTo(TX, VCC_Y);
+  ctx.lineTo(TX, COLL.y);
+  ctx.stroke();
+
+  // Rama emisor → GND
+  ctx.beginPath();
+  ctx.moveTo(TX, EMIT.y);
+  ctx.lineTo(TX, GND_Y);
+  ctx.stroke();
+
+  // Rama base: desde izquierda → base del transistor
+  ctx.beginPath();
+  ctx.moveTo(BASE_X_LEFT, TY);
+  ctx.lineTo(BASE.x, TY);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawVCC() {
+  ctx.save();
+  ctx.fillStyle = '#f7c948';
+  ctx.font = 'bold 14px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('V\u{CC}', TX - 14, VCC_Y - 4);
+  ctx.fillText(vcc + 'V', TX + 20, VCC_Y - 4);
+  // símbolo VCC (flecha hacia arriba)
+  ctx.strokeStyle = '#f7c948'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(TX, VCC_Y); ctx.lineTo(TX, VCC_Y - 16); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(TX, VCC_Y - 16);
+  ctx.lineTo(TX - 5, VCC_Y - 10);
+  ctx.lineTo(TX + 5, VCC_Y - 10);
+  ctx.closePath();
+  ctx.fillStyle = '#f7c948'; ctx.fill();
+  ctx.restore();
+}
+
+function drawGND() {
+  ctx.save();
+  ctx.strokeStyle = '#8da8c0'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+  [0,1,2].forEach(i => {
+    const hw = 14 - i * 4;
+    ctx.beginPath();
+    ctx.moveTo(TX - hw, GND_Y + i * 6);
+    ctx.lineTo(TX + hw, GND_Y + i * 6);
+    ctx.stroke();
+  });
+  ctx.fillStyle = '#8da8c0'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'center';
+  ctx.fillText('GND', TX, GND_Y + 26);
+  ctx.restore();
+}
+
+function drawRC() {
+  const rw = 56, rh = 20;
+  const mx = TX, my = (RC_TOP.y + RC_BOT.y) / 2 + 10;
+  ctx.save();
+  ctx.fillStyle = '#111e2e';
+  ctx.fillRect(mx - rw/2, my - rh/2, rw, rh);
+  ctx.fillStyle = '#2a0a0a';
+  ctx.strokeStyle = '#ff6b6b'; ctx.lineWidth = 2.2;
+  ctx.beginPath(); ctx.roundRect(mx - rw/2, my - rh/2, rw, rh, 4);
+  ctx.fill(); ctx.stroke();
+  const steps = 5, sw = rw - 12, sx = mx - sw/2;
+  ctx.strokeStyle = '#ff8888'; ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.moveTo(sx, my);
+  for (let i = 1; i <= steps; i++) ctx.lineTo(sx + (i/steps)*sw, my + (i%2===0?-5:5));
+  ctx.lineTo(sx + sw, my); ctx.stroke();
+  ctx.fillStyle = '#ff6b6b'; ctx.font = 'bold 10px Segoe UI';
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('RC = ' + RC + ' Ω', mx + rw/2 + 6, my);
+  ctx.restore();
+}
+
+function drawRB() {
+  const rw = 60, rh = 18;
+  const mx = (RB_LEFT.x + RB_RIGHT.x) / 2, my = TY;
+  ctx.save();
+  ctx.fillStyle = '#111e2e';
+  ctx.fillRect(mx - rw/2, my - rh/2, rw, rh);
+  ctx.fillStyle = '#1a1a0a';
+  ctx.strokeStyle = '#f7c948'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.roundRect(mx - rw/2, my - rh/2, rw, rh, 4);
+  ctx.fill(); ctx.stroke();
+  const steps = 5, sw = rw - 12, sx = mx - sw/2;
+  ctx.strokeStyle = '#f7dd88'; ctx.lineWidth = 1.3;
+  ctx.beginPath(); ctx.moveTo(sx, my);
+  for (let i = 1; i <= steps; i++) ctx.lineTo(sx + (i/steps)*sw, my + (i%2===0?-4:4));
+  ctx.lineTo(sx + sw, my); ctx.stroke();
+  ctx.fillStyle = '#f7c948'; ctx.font = 'bold 10px Segoe UI';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+  ctx.fillText('RB = ' + (RB/1000).toFixed(0) + ' kΩ', mx, my - rh/2 - 4);
+  ctx.restore();
+}
+
+function drawLED() {
+  // LED entre RC bottom y colector del transistor (en serie)
+  const lx = TX + 60, ly = (RC_BOT.y + COLL.y) / 2;
+  const br = ledBrightness();
+  ctx.save();
+
+  // cable horizontal hacia el LED y de vuelta
+  ctx.strokeStyle = '#3a6aaa'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(TX, (RC_BOT.y + COLL.y)/2);
+  ctx.lineTo(lx - 14, ly);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(lx + 14, ly);
+  ctx.lineTo(TX + 100, ly);
+  ctx.lineTo(TX + 100, VCC_Y + 40);
+  ctx.lineTo(TX, VCC_Y + 40);
+  ctx.stroke();
+
+  if (br > 0.05) {
+    const gR = 16 + br * 30;
+    const g = ctx.createRadialGradient(lx, ly, 2, lx, ly, gR);
+    g.addColorStop(0, `rgba(80,255,80,${br*0.6})`);
+    g.addColorStop(1, 'rgba(0,255,0,0)');
+    ctx.beginPath(); ctx.arc(lx, ly, gR, 0, Math.PI*2);
+    ctx.fillStyle = g; ctx.fill();
+  }
+
+  const triH = 20, triW = 16;
+  const top = ly - triH/2, bot = ly + triH/2;
+  const ledFill = br > 0.05 ? `rgba(${Math.round(40+br*200)},${Math.round(180+br*75)},30,0.95)` : '#1a2a1a';
+  const ledStroke = br > 0.05 ? `rgba(80,255,80,${0.4+br*0.6})` : '#2a3a2a';
+
+  ctx.beginPath();
+  ctx.moveTo(lx, bot); ctx.lineTo(lx - triW/2, top); ctx.lineTo(lx + triW/2, top);
+  ctx.closePath();
+  ctx.fillStyle = ledFill; ctx.fill();
+  ctx.strokeStyle = ledStroke; ctx.lineWidth = 1.8; ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(lx - triW/2, bot); ctx.lineTo(lx + triW/2, bot);
+  ctx.strokeStyle = ledStroke; ctx.lineWidth = 2.8; ctx.stroke();
+
+  if (br > 0.2) {
+    const ra = br * 0.75;
+    ctx.strokeStyle = `rgba(80,255,80,${ra})`; ctx.lineWidth = 1.6;
+    [-55,-40,-25].forEach(deg => {
+      const a = deg * Math.PI / 180;
+      const r1 = 14, r2 = 24 + br*10;
+      ctx.beginPath();
+      ctx.moveTo(lx + Math.cos(a)*r1, ly + Math.sin(a)*r1);
+      ctx.lineTo(lx + Math.cos(a)*r2, ly + Math.sin(a)*r2);
+      ctx.stroke();
+    });
+  }
+
+  ctx.fillStyle = br > 0.08 ? '#88ff88' : '#3a5a3a';
+  ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'center';
+  ctx.fillText('LED', lx, bot + 14);
+  ctx.restore();
+}
+
+function drawTransistor() {
+  const cx = TX, cy = TY;
+  const bw = 72, bh = 72;
+
+  ctx.save();
+
+  // Cuerpo TO-92 (silueta)
+  ctx.fillStyle = '#1a2030';
+  ctx.strokeStyle = '#4a6a9a'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.roundRect(cx - bw/2, cy - bh/2, bw, bh, 8);
+  ctx.fill(); ctx.stroke();
+
+  // Etiqueta BC337
+  ctx.fillStyle = '#7ecfff'; ctx.font = 'bold 11px Segoe UI';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('BC337', cx, cy - 8);
+  ctx.fillStyle = '#8da8c0'; ctx.font = '9px Segoe UI';
+  ctx.fillText('NPN', cx, cy + 6);
+
+  // Líneas terminales internas (símbolo BJT)
+  // Base line vertical
+  ctx.strokeStyle = '#f7a830'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(cx - bw/2 + 10, cy - 20);
+  ctx.lineTo(cx - bw/2 + 10, cy + 20);
+  ctx.stroke();
+
+  // Base horizontal wire to body
+  ctx.strokeStyle = '#f7a830'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx - bw/2, cy);
+  ctx.lineTo(cx - bw/2 + 10, cy);
+  ctx.stroke();
+
+  // Colector diagonal (arriba derecha)
+  ctx.strokeStyle = '#6bffb0'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx - bw/2 + 10, cy - 14);
+  ctx.lineTo(cx, cy - 26);
+  ctx.stroke();
+
+  // Emisor diagonal (abajo derecha) con flecha NPN
+  ctx.strokeStyle = '#7ecfff'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx - bw/2 + 10, cy + 14);
+  ctx.lineTo(cx, cy + 26);
+  ctx.stroke();
+
+  // Flecha en emisor (NPN → flecha apunta hacia afuera)
+  const ex = cx, ey = cy + 26;
+  const angle = Math.atan2(ey - (cy + 14), ex - (cx - bw/2 + 10));
+  ctx.save();
+  ctx.translate(ex, ey);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.moveTo(0, 0); ctx.lineTo(-10, -4); ctx.lineTo(-10, 4);
+  ctx.closePath();
+  ctx.fillStyle = '#7ecfff'; ctx.fill();
+  ctx.restore();
+
+  // Labels terminales
+  ctx.font = 'bold 10px Segoe UI'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#f7a830'; ctx.textAlign = 'right';
+  ctx.fillText('B', cx - bw/2 - 4, cy);
+  ctx.fillStyle = '#6bffb0'; ctx.textAlign = 'center';
+  ctx.fillText('C', cx + 4, cy - bh/2 - 10);
+  ctx.fillStyle = '#7ecfff';
+  ctx.fillText('E', cx + 4, cy + bh/2 + 10);
+
+  ctx.restore();
+}
+
+function drawBaseInput() {
+  // Símbolo de fuente de señal de base (cuadrado con ondita)
+  const sx = BASE_X_LEFT, sy = TY;
+  const sr = 16;
+  ctx.save();
+  ctx.strokeStyle = '#f7a830'; ctx.lineWidth = 2.2;
+  ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI*2); ctx.stroke();
+
+  // onda interior
+  ctx.strokeStyle = '#f7a830'; ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  for (let i = 0; i <= 20; i++) {
+    const px = sx - 10 + i;
+    const py = sy + Math.sin(i * Math.PI / 5) * 5;
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  ctx.fillStyle = '#f7a830'; ctx.font = 'bold 10px Segoe UI';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText('I₂', sx, sy + sr + 4);
+  ctx.restore();
+}
+
+// ─── Partículas ────────────────────────────────────────────────────────────
+let circPhase = 0, basePhase = 0, animT = 0, lastTS = 0;
+
+const collLen = totalPathLen(collectorPath);
+const baseLen = totalPathLen(basePath);
+
+function getNColl() {
+  const ic = icA() * 1000;
+  const icMax = (vcc - VCESAT) / RC * 1000;
+  if (ic < 0.01) return 0;
+  return Math.max(2, Math.min(24, Math.round(3 + 21 * ic / icMax)));
+}
+function getSpeedColl() {
+  const ic = icA() * 1000;
+  const icMax = (vcc - VCESAT) / RC * 1000;
+  if (ic < 0.01) return 0;
+  return Math.max(30, Math.min(280, Math.round(30 + 250 * ic / icMax)));
+}
+function getNBase() {
+  if (ibUA < 5) return 0;
+  return Math.max(1, Math.min(8, Math.round(1 + 7 * ibUA / 500)));
+}
+function getSpeedBase() {
+  if (ibUA < 5) return 0;
+  return Math.max(20, Math.min(100, Math.round(20 + 80 * ibUA / 500)));
+}
+
+function drawParticles() {
+  const nC = getNColl(), nB = getNBase();
+
+  // Colector: verde
+  for (let i = 0; i < nC; i++) {
+    const dist = (circPhase + (i/nC)*collLen) % collLen;
+    const pos = posOnSeg(collectorPath, dist);
+    const gA = 0.4 + 0.28 * Math.sin(animT*3 + i*2*Math.PI/nC);
+    ctx.save();
+    const grad = ctx.createRadialGradient(pos.x, pos.y, 1, pos.x, pos.y, 15);
+    grad.addColorStop(0, `rgba(80,230,160,${gA})`);
+    grad.addColorStop(1, 'rgba(80,230,160,0)');
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, 15, 0, Math.PI*2);
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, 5, 0, Math.PI*2);
+    ctx.fillStyle = '#6bffb0'; ctx.fill();
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, 2, 0, Math.PI*2);
+    ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.restore();
+  }
+
+  // Base: naranja, más chico
+  for (let i = 0; i < nB; i++) {
+    const dist = (basePhase + (i/nB)*baseLen) % baseLen;
+    const pos = posOnSeg(basePath, dist);
+    const gA = 0.35 + 0.25 * Math.sin(animT*4 + i*2*Math.PI/nB);
+    ctx.save();
+    const grad = ctx.createRadialGradient(pos.x, pos.y, 1, pos.x, pos.y, 10);
+    grad.addColorStop(0, `rgba(247,168,48,${gA})`);
+    grad.addColorStop(1, 'rgba(247,168,48,0)');
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, 10, 0, Math.PI*2);
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, 3.5, 0, Math.PI*2);
+    ctx.fillStyle = '#f7a830'; ctx.fill();
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, 1.5, 0, Math.PI*2);
+    ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.restore();
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  drawWires();
+  drawLED();
+  drawRC();
+  drawRB();
+  drawVCC();
+  drawGND();
+  drawTransistor();
+  drawBaseInput();
+  drawParticles();
+}
+
+function loop(ts) {
+  const dt = Math.min((ts - lastTS) / 1000, 0.05);
+  lastTS = ts;
+  animT += dt;
+
+  const sc = getSpeedColl(), sb = getSpeedBase();
+  circPhase = (circPhase + dt * sc) % collLen;
+  basePhase = (basePhase + dt * sb) % baseLen;
+
+  draw();
+  requestAnimationFrame(loop);
+}
+
+// ─── UI ────────────────────────────────────────────────────────────────────
+function updateStats() {
+  const ib = ibUA;
+  const ic = icA() * 1000;
+  const ie = ieA() * 1000;
+  const v = vce().toFixed(2);
+  const reg = region();
+
+  document.getElementById('st-ib').textContent = ib + ' µA';
+  document.getElementById('st-ic').textContent = ic.toFixed(1) + ' mA';
+  document.getElementById('st-ie').textContent = ie.toFixed(1) + ' mA';
+  document.getElementById('st-vce').textContent = v + ' V';
+  document.getElementById('val-ib').textContent = ib + ' µA';
+  document.getElementById('val-vcc').textContent = vcc + ' V';
+
+  const regionLabels = { corte: 'Corte', activa: 'Activa', saturacion: 'Saturación' };
+  const regionColors = { corte: '#ff6b6b', activa: '#6bffb0', saturacion: '#f7c948' };
+  document.getElementById('st-region').textContent = regionLabels[reg];
+  document.getElementById('st-region').style.color = regionColors[reg];
+
+  const hfe = ib > 0 ? Math.round(ic / (ib * 0.001)) : HFE;
+  document.getElementById('st-hfe').textContent = (isFinite(hfe) ? hfe : HFE) + '×';
+
+  const expl = document.getElementById('explicacion');
+  if (reg === 'corte') {
+    expl.innerHTML = '<strong>Región de Corte:</strong> I<sub>B</sub> = 0 → el transistor está <strong>apagado</strong>. No circula corriente por el colector. V<sub>CE</sub> = V<sub>CC</sub> (toda la tensión cae sobre el transistor). El LED permanece apagado.';
+  } else if (reg === 'activa') {
+    expl.innerHTML = `<strong>Región Activa:</strong> el transistor <strong>amplifica</strong>. I<sub>C</sub> = hFE × I<sub>B</sub> = ${HFE} × ${ib} µA = <strong>${ic.toFixed(1)} mA</strong>. V<sub>CE</sub> = ${v} V. El LED enciende con una fracción del brillo máximo. Cada electrón de base "habilita" ${HFE} electrones por el colector.`;
+  } else {
+    expl.innerHTML = `<strong>Región de Saturación:</strong> el transistor está <strong>completamente abierto</strong>. I<sub>C</sub> está limitada por RC: I<sub>C(sat)</sub> = (V<sub>CC</sub> − V<sub>CE(sat)</sub>) / RC = (${vcc} − ${VCESAT}) / ${RC} = <strong>${ic.toFixed(1)} mA</strong>. V<sub>CE</sub> ≈ ${VCESAT} V. Aumentar más I<sub>B</sub> no aumenta I<sub>C</sub>. LED al máximo brillo.`;
+  }
+}
+
+function setMode(m) {
+  appMode = m;
+  document.getElementById('btn-switch').className = 'mode-btn' + (m === 'switch' ? ' active' : '');
+  document.getElementById('btn-amp').className = 'mode-btn' + (m === 'amp' ? ' active' : '');
+  if (m === 'switch') {
+    document.getElementById('sl-ib').max = 500;
+    document.getElementById('sl-ib').step = 5;
+  } else {
+    document.getElementById('sl-ib').max = 200;
+    document.getElementById('sl-ib').step = 1;
+  }
+  updateStats();
+}
+
+document.getElementById('sl-ib').addEventListener('input', e => {
+  ibUA = parseInt(e.target.value);
+  updateStats();
+});
+document.getElementById('sl-vcc').addEventListener('input', e => {
+  vcc = parseInt(e.target.value);
+  updateStats();
+});
+
+updateStats();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
