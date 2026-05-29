@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Capacitor RC — Carga y Descarga</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0d1b2a; color: #e0e8f0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+    h1  { font-size: 1.5rem; color: #7ecfff; margin-bottom: 4px; text-align: center; }
+    .subtitle { font-size: 0.92rem; color: #8da8c0; margin-bottom: 18px; text-align: center; }
+
+    .brand-bar { display:flex; align-items:center; gap:12px; width:100%; max-width:720px; margin-bottom:14px; padding:10px 16px; background:#111e2e; border-radius:10px; border:1px solid #2a3f5a; }
+    .brand-bar img { height:38px; border-radius:8px; object-fit:contain; }
+    .brand-name { font-size:0.95rem; font-weight:700; color:#e0e8f0; }
+    .brand-sub  { font-size:0.74rem; color:#8da8c0; margin-top:1px; }
+
+    .circuit-wrapper { width:100%; max-width:720px; margin-bottom:14px; }
+    canvas#circ { border-radius:12px; background:#111e2e; display:block; width:100%; height:auto; }
+
+    .mode-row { display:flex; gap:10px; justify-content:center; margin-bottom:14px; }
+    .mode-btn { padding:9px 28px; border-radius:22px; border:1px solid #2a3f5a; background:transparent; color:#8da8c0; font-size:.9rem; font-weight:700; cursor:pointer; transition:all .25s; }
+    .mode-btn.active-charge    { background:#1a3a5a; border-color:#7ecfff; color:#7ecfff; }
+    .mode-btn.active-discharge { background:#2a1a3a; border-color:#c084fc; color:#c084fc; }
+
+    .ctrl-row { display:flex; gap:12px; flex-wrap:wrap; width:100%; max-width:720px; margin-bottom:12px; }
+    .ctrl-card { background:#162235; border:1px solid #2a3f5a; border-radius:12px; padding:14px 18px; flex:1; min-width:200px; }
+    .ctrl-card label { display:block; font-size:.88rem; font-weight:700; margin-bottom:8px; }
+    .ctrl-card input[type=range] { width:100%; cursor:pointer; }
+    .ctrl-val { font-size:1.3rem; font-weight:700; margin-top:6px; }
+
+    .stats { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; width:100%; max-width:720px; margin-bottom:14px; }
+    .stat-box { background:#162235; border:1px solid #2a3f5a; border-radius:10px; padding:10px 14px; text-align:center; flex:1; min-width:100px; }
+    .stat-box label { font-size:.7rem; color:#8da8c0; display:block; margin-bottom:3px; font-weight:600; }
+    .stat-val { font-size:1.1rem; font-weight:700; }
+
+    .explicacion { background:#162235; border-left:4px solid #7ecfff; border-radius:8px; padding:14px 18px; max-width:720px; width:100%; font-size:.88rem; line-height:1.72; color:#c5ddf0; margin-bottom:14px; }
+    .explicacion strong { color:#7ecfff; }
+
+    .info-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; max-width:720px; width:100%; margin-bottom:18px; }
+    .info-card { background:#162235; border-radius:10px; padding:13px 15px; border-left:4px solid; }
+    .info-card h4 { font-size:.85rem; margin-bottom:7px; }
+    .info-card p  { font-size:.80rem; color:#a0b8d0; line-height:1.65; }
+
+    @media (max-width:580px) {
+      .info-grid { grid-template-columns:1fr; }
+      .ctrl-row  { flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="brand-bar">
+  <img src="../electronica/img/logoSP.png" alt="Logo" onerror="this.style.display='none'">
+  <div>
+    <div class="brand-name">Ing. Marcos Pirani</div>
+    <div class="brand-sub">Taller de Electrónica I</div>
+  </div>
+</div>
+
+<nav style="width:100%;max-width:720px;display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+  <a href="../electronica/index.html" style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;border:1px solid #4a6a8a;color:#6aafdf">← Electrónica</a>
+  <a href="index.html"          style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;border:1px solid #2a3f5a;color:#8da8c0">⚡ Ley de Ohm</a>
+  <a href="corrientes.html"     style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;border:1px solid #2a3f5a;color:#8da8c0">〜 CC vs CA</a>
+  <a href="potenciometro.html"  style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;border:1px solid #2a3f5a;color:#8da8c0">🎛️ Potenciómetro</a>
+  <a href="transistor.html"     style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;border:1px solid #2a3f5a;color:#8da8c0">🔌 Transistor NPN</a>
+  <a href="capacitor.html"      style="padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.87rem;background:#1a2a1a;color:#34d399;border:1px solid #34d399">🔋 Capacitor RC</a>
+</nav>
+
+<h1>🔋 Capacitor RC — Carga y Descarga</h1>
+<p class="subtitle">Observá cómo la corriente disminuye a medida que el capacitor se carga (o descarga)</p>
+
+<div class="mode-row">
+  <button class="mode-btn active-charge" id="btn-charge" onclick="setMode('charge')">⚡ Carga</button>
+  <button class="mode-btn" id="btn-discharge" onclick="setMode('discharge')">💡 Descarga (LED)</button>
+</div>
+
+<div class="circuit-wrapper">
+  <canvas id="circ" width="720" height="420"></canvas>
+</div>
+
+<div class="ctrl-row">
+  <div class="ctrl-card">
+    <label style="color:#34d399">🔋 Capacitancia — C</label>
+    <input type="range" id="sl-c" min="10" max="1000" value="220" step="10" style="accent-color:#34d399"/>
+    <div class="ctrl-val" style="color:#34d399" id="val-c">220 µF</div>
+  </div>
+  <div class="ctrl-card">
+    <label style="color:#f97316">🧱 Resistencia — R</label>
+    <input type="range" id="sl-r" min="100" max="10000" value="1000" step="100" style="accent-color:#f97316"/>
+    <div class="ctrl-val" style="color:#f97316" id="val-r">1 kΩ</div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat-box">
+    <label>τ = R × C</label>
+    <div class="stat-val" style="color:#7ecfff" id="st-tau">220 ms</div>
+  </div>
+  <div class="stat-box">
+    <label>V<sub>C</sub></label>
+    <div class="stat-val" style="color:#34d399" id="st-vc">0.0 V</div>
+  </div>
+  <div class="stat-box">
+    <label>Corriente</label>
+    <div class="stat-val" style="color:#f97316" id="st-ic">5.0 mA</div>
+  </div>
+  <div class="stat-box">
+    <label>% cargado</label>
+    <div class="stat-val" style="color:#f7c948" id="st-pct">0%</div>
+  </div>
+</div>
+
+<div class="explicacion" id="explicacion">...</div>
+
+<div class="info-grid">
+  <div class="info-card" style="border-color:#34d399">
+    <h4 style="color:#34d399">Constante de tiempo τ</h4>
+    <p>τ = R × C es el tiempo que tarda el capacitor en cargarse al <strong style="color:#f8fafc">63.2%</strong>. A los <strong style="color:#f8fafc">5τ</strong> alcanza el 99% — prácticamente cargado. Más R o más C → más lento.</p>
+  </div>
+  <div class="info-card" style="border-color:#f97316">
+    <h4 style="color:#f97316">Carga exponencial</h4>
+    <p>Al inicio la corriente es máxima (I = Vcc/R). A medida que el capacitor acumula carga, genera una tensión opuesta que frena la corriente — por eso las partículas se van <strong style="color:#f8fafc">desacelerando</strong>.</p>
+  </div>
+  <div class="info-card" style="border-color:#c084fc">
+    <h4 style="color:#c084fc">Descarga con LED</h4>
+    <p>El capacitor ahora es la fuente. La energía almacenada se libera: el LED empieza a máximo brillo y se apaga gradualmente. Las partículas también van más <strong style="color:#f8fafc">lentas</strong> con el tiempo.</p>
+  </div>
+</div>
+
+<script>
+const VCC = 5;
+
+let mode = 'charge';
+let C_uF  = 220;
+let R_ohm = 1000;
+let simT  = 0;
+let lastTS = 0, animT = 0;
+let particlePhase = 0;
+
+function tau() { return R_ohm * C_uF * 1e-6; }
+
+function vc() {
+  const τ = tau();
+  if (mode === 'charge') return VCC * (1 - Math.exp(-simT / τ));
+  return VCC * Math.exp(-simT / τ);
+}
+
+function ic_A() {
+  return (VCC / R_ohm) * Math.exp(-simT / tau());
+}
+
+function chargePct() {
+  return mode === 'charge' ? vc() / VCC : 1 - vc() / VCC;
+}
+
+// ── Canvas ──────────────────────────────────────────────────────────────────
+const cv  = document.getElementById('circ');
+const ctx = cv.getContext('2d');
+const CW  = cv.width, CH = cv.height;
+
+// Layout: circuito rectangular
+// Fuente (izq), R (arriba), Capacitor (centro-abajo), LED (der, solo descarga)
+const LEFT  = 110, RIGHT = 610;
+const TOP   = 70,  BOT   = 350;
+const MID_Y = (TOP + BOT) / 2;
+const CAP_X = (LEFT + RIGHT) / 2;
+
+// Paths para las partículas
+// Carga: fuente → R (por arriba) → placa+ del capacitor → placa- → GND → fuente
+const pathCharge = [
+  {x: LEFT,  y: TOP},
+  {x: CAP_X, y: TOP},        // llegan a la rama del cap
+  {x: CAP_X, y: MID_Y - 36}, // placa superior del cap
+  // — partículas se acumulan en el capacitor —
+  {x: CAP_X, y: MID_Y + 36}, // placa inferior
+  {x: CAP_X, y: BOT},
+  {x: LEFT,  y: BOT},
+];
+
+// Descarga: placa+ cap → R (por arriba) → LED (der) → GND → placa- cap
+const pathDischarge = [
+  {x: CAP_X, y: MID_Y - 36},
+  {x: CAP_X, y: TOP},
+  {x: RIGHT, y: TOP},
+  {x: RIGHT, y: BOT},
+  {x: CAP_X, y: BOT},
+  {x: CAP_X, y: MID_Y + 36},
+];
+
+function segLen(a, b)  { return Math.hypot(b.x-a.x, b.y-a.y); }
+function pathLen(pts)  { let l=0; for(let i=0;i<pts.length-1;i++) l+=segLen(pts[i],pts[i+1]); return l; }
+function posOnPath(pts, dist) {
+  const total = pathLen(pts);
+  dist = ((dist % total) + total) % total;
+  for (let i=0; i<pts.length-1; i++) {
+    const sl = segLen(pts[i], pts[i+1]);
+    if (dist <= sl) {
+      const f = dist/sl;
+      return {x: pts[i].x+(pts[i+1].x-pts[i].x)*f, y: pts[i].y+(pts[i+1].y-pts[i].y)*f};
+    }
+    dist -= sl;
+  }
+  return pts[pts.length-1];
+}
+
+// ── Dibujo cables ────────────────────────────────────────────────────────────
+function drawWires() {
+  ctx.save();
+  ctx.strokeStyle = '#3a6aaa'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  if (mode === 'charge') {
+    // Arriba: fuente → cap
+    ctx.beginPath(); ctx.moveTo(LEFT, TOP); ctx.lineTo(CAP_X, TOP); ctx.stroke();
+    // Abajo: cap → fuente
+    ctx.beginPath(); ctx.moveTo(CAP_X, BOT); ctx.lineTo(LEFT, BOT); ctx.stroke();
+    // Fuente vertical
+    ctx.beginPath(); ctx.moveTo(LEFT, TOP); ctx.lineTo(LEFT, BOT); ctx.stroke();
+  } else {
+    // Arriba: cap → LED
+    ctx.beginPath(); ctx.moveTo(CAP_X, TOP); ctx.lineTo(RIGHT, TOP); ctx.stroke();
+    // Abajo: LED → cap
+    ctx.beginPath(); ctx.moveTo(RIGHT, BOT); ctx.lineTo(CAP_X, BOT); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// ── Fuente de tensión ────────────────────────────────────────────────────────
+function drawSource() {
+  if (mode !== 'charge') return;
+  const cx = LEFT, cy = MID_Y;
+  ctx.save();
+  // Cuerpo
+  ctx.beginPath(); ctx.arc(cx, cy, 28, 0, Math.PI*2);
+  ctx.fillStyle = '#0d1824'; ctx.strokeStyle = '#f7c948'; ctx.lineWidth = 2.5;
+  ctx.fill(); ctx.stroke();
+  // Líneas internas (pila)
+  ctx.strokeStyle = '#f7c948';
+  for (let i=-1; i<=1; i++) {
+    ctx.lineWidth = i===0 ? 3 : 1.5;
+    const hw = i===0 ? 14 : 9;
+    ctx.beginPath(); ctx.moveTo(cx-hw, cy+i*9); ctx.lineTo(cx+hw, cy+i*9); ctx.stroke();
+  }
+  // Labels
+  ctx.font='bold 12px Segoe UI'; ctx.textAlign='center'; ctx.textBaseline='bottom';
+  ctx.fillStyle='#f7c948'; ctx.fillText('VCC '+VCC+'V', cx, cy-36);
+  ctx.textBaseline='top';
+  ctx.fillStyle='#5a7a8a'; ctx.font='11px Segoe UI';
+  ctx.fillText('GND', cx, cy+36);
+  // GND lines bajo la fuente
+  ctx.strokeStyle='#8da8c0'; ctx.lineWidth=2.5; ctx.lineCap='round';
+  [0,1,2].forEach(i => {
+    const hw=13-i*4;
+    ctx.beginPath(); ctx.moveTo(cx-hw, BOT+i*7); ctx.lineTo(cx+hw, BOT+i*7); ctx.stroke();
+  });
+  ctx.restore();
+}
+
+// ── Resistencia ───────────────────────────────────────────────────────────────
+function drawResistance() {
+  const midX = mode === 'charge' ? (LEFT+CAP_X)/2 : (CAP_X+RIGHT)/2;
+  const cy = TOP;
+  const rw = 76, rh = 24;
+  ctx.save();
+  ctx.fillStyle = '#1e0e00'; ctx.strokeStyle = '#f97316'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.roundRect(midX-rw/2, cy-rh/2, rw, rh, 5); ctx.fill(); ctx.stroke();
+  // Zigzag
+  ctx.strokeStyle = '#fb923c'; ctx.lineWidth = 1.6;
+  const sw = rw-16, sx = midX-sw/2;
+  ctx.beginPath(); ctx.moveTo(sx, cy);
+  for (let i=0; i<=7; i++) { ctx.lineTo(sx+(i/7)*sw, cy+(i%2===0?-6:6)); }
+  ctx.lineTo(midX+sw/2, cy); ctx.stroke();
+  // Label
+  const rLabel = R_ohm>=1000 ? (R_ohm/1000).toFixed(1)+' kΩ' : R_ohm+' Ω';
+  ctx.fillStyle='#f97316'; ctx.font='bold 12px Segoe UI';
+  ctx.textAlign='center'; ctx.textBaseline='bottom';
+  ctx.fillText(rLabel, midX, cy-rh/2-5);
+  ctx.restore();
+}
+
+// ── Capacitor ─────────────────────────────────────────────────────────────────
+function drawCapacitor() {
+  const cx = CAP_X, cy = MID_Y;
+  const plateW = 50, gap = 18, bw = 70, bh = 100;
+  const filled = vc() / VCC;
+
+  ctx.save();
+
+  // Cuerpo del capacitor
+  ctx.beginPath(); ctx.roundRect(cx-bw/2, cy-bh/2, bw, bh, 9);
+  ctx.fillStyle='#0a1520'; ctx.strokeStyle='#34d399'; ctx.lineWidth=2;
+  ctx.fill(); ctx.stroke();
+
+  // Relleno de energía acumulada (sube de abajo hacia arriba)
+  if (filled > 0.01) {
+    const fillH = (bh-10) * filled;
+    ctx.save();
+    ctx.beginPath(); ctx.roundRect(cx-bw/2+3, cy+bh/2-5-fillH, bw-6, fillH, [0,0,6,6]);
+    const grad = ctx.createLinearGradient(cx, cy+bh/2, cx, cy-bh/2);
+    grad.addColorStop(0, `rgba(52,211,153,${0.12+filled*0.48})`);
+    grad.addColorStop(1, `rgba(16,185,129,${0.04+filled*0.18})`);
+    ctx.fillStyle=grad; ctx.fill();
+    ctx.restore();
+  }
+
+  // Placas del capacitor (símbolo)
+  ctx.strokeStyle='#7ecfff'; ctx.lineWidth=5; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(cx-plateW/2, cy-gap/2); ctx.lineTo(cx+plateW/2, cy-gap/2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx-plateW/2, cy+gap/2); ctx.lineTo(cx+plateW/2, cy+gap/2); ctx.stroke();
+
+  // Cables internos placa→borde
+  ctx.strokeStyle='#3a6aaa'; ctx.lineWidth=5;
+  ctx.beginPath(); ctx.moveTo(cx, cy-gap/2); ctx.lineTo(cx, cy-bh/2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, cy+gap/2); ctx.lineTo(cx, cy+bh/2); ctx.stroke();
+
+  // Voltaje actual
+  ctx.font='bold 13px Segoe UI'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle = vc()>0.1 ? '#34d399' : '#2a5040';
+  ctx.fillText(vc().toFixed(2)+' V', cx, cy);
+
+  // Valor de capacitancia sobre el cuerpo
+  ctx.fillStyle='#34d399'; ctx.font='bold 11px Segoe UI'; ctx.textBaseline='bottom';
+  ctx.fillText(C_uF+' µF', cx, cy-bh/2-5);
+
+  // +/- polaridad
+  ctx.font='bold 13px Segoe UI'; ctx.fillStyle='#7ecfff';
+  ctx.textAlign='right'; ctx.textBaseline='middle';
+  ctx.fillText('+', cx-plateW/2-7, cy-gap/2);
+  ctx.fillText('−', cx-plateW/2-7, cy+gap/2);
+
+  ctx.restore();
+}
+
+// ── LED ───────────────────────────────────────────────────────────────────────
+function drawLED() {
+  if (mode !== 'discharge') return;
+  const cx = RIGHT, cy = MID_Y;
+  const br  = Math.max(0, vc()/VCC);
+  const r   = 20;
+
+  ctx.save();
+
+  // Halo luminoso
+  if (br > 0.04) {
+    const gR = 28+br*46;
+    const g  = ctx.createRadialGradient(cx, cy, 4, cx, cy, gR);
+    g.addColorStop(0, `rgba(192,132,252,${br*0.65})`);
+    g.addColorStop(1, 'rgba(139,92,246,0)');
+    ctx.beginPath(); ctx.arc(cx, cy, gR, 0, Math.PI*2); ctx.fillStyle=g; ctx.fill();
+  }
+
+  // Cables a los rails
+  ctx.strokeStyle='#3a6aaa'; ctx.lineWidth=6;
+  ctx.beginPath(); ctx.moveTo(cx, TOP);   ctx.lineTo(cx, cy-r*0.85); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, cy+r*0.85); ctx.lineTo(cx, BOT); ctx.stroke();
+
+  // Triángulo (símbolo diodo/LED) — ánodo arriba, cátodo abajo
+  ctx.strokeStyle = br>0.05 ? `rgba(192,132,252,.9)` : '#3a2560';
+  ctx.fillStyle   = `rgba(${Math.round(50+br*140)},${Math.round(15+br*40)},${Math.round(90+br*165)},0.92)`;
+  ctx.lineWidth   = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(cx-r*0.85, cy-r*0.7);
+  ctx.lineTo(cx+r*0.85, cy-r*0.7);
+  ctx.lineTo(cx,         cy+r*0.8);
+  ctx.closePath();
+  ctx.fill(); ctx.stroke();
+
+  // Barra del cátodo
+  ctx.strokeStyle = br>0.05 ? '#c084fc' : '#3a2560';
+  ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(cx-r*0.9, cy+r*0.8); ctx.lineTo(cx+r*0.9, cy+r*0.8); ctx.stroke();
+
+  // Rayos de luz
+  if (br > 0.12) {
+    ctx.strokeStyle=`rgba(216,180,254,${br*0.75})`; ctx.lineWidth=1.5;
+    [-40,-20,0,20,40].forEach(deg => {
+      const rad=deg*Math.PI/180;
+      const ox=cx+Math.cos(rad)*r*1.1, oy=cy-r*0.4+Math.sin(rad)*r*1.1;
+      ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox+Math.cos(rad)*20*br, oy+Math.sin(rad)*20*br); ctx.stroke();
+    });
+  }
+
+  // Label
+  ctx.font='bold 11px Segoe UI'; ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillStyle = br>0.05 ? '#c084fc' : '#5a4070';
+  ctx.fillText('LED', cx, cy+r*0.9+6);
+
+  // GND bajo el LED
+  ctx.strokeStyle='#8da8c0'; ctx.lineWidth=2.5; ctx.lineCap='round';
+  [0,1,2].forEach(i => {
+    const hw=13-i*4;
+    ctx.beginPath(); ctx.moveTo(cx-hw, BOT+i*7); ctx.lineTo(cx+hw, BOT+i*7); ctx.stroke();
+  });
+  ctx.fillStyle='#6a8a9a'; ctx.font='11px Segoe UI'; ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillText('GND', cx, BOT+26);
+
+  ctx.restore();
+}
+
+// ── GND de la fuente (solo carga) ─────────────────────────────────────────────
+function drawGNDSource() {
+  if (mode !== 'charge') return;
+  const cx = LEFT;
+  ctx.save();
+  ctx.strokeStyle='#8da8c0'; ctx.lineWidth=2.5; ctx.lineCap='round';
+  [0,1,2].forEach(i => {
+    const hw=13-i*4;
+    ctx.beginPath(); ctx.moveTo(cx-hw, BOT+i*7); ctx.lineTo(cx+hw, BOT+i*7); ctx.stroke();
+  });
+  ctx.fillStyle='#6a8a9a'; ctx.font='11px Segoe UI'; ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillText('GND', cx, BOT+26);
+  ctx.restore();
+}
+
+// ── Partículas ────────────────────────────────────────────────────────────────
+function getN() {
+  // Cantidad proporcional a la corriente instantánea
+  const ratio = ic_A() / (VCC / R_ohm); // 0→1
+  if (ratio < 0.01) return 0;
+  return Math.max(1, Math.min(18, Math.round(ratio * 16)));
+}
+function getSpeed() {
+  const ratio = ic_A() / (VCC / R_ohm);
+  if (ratio < 0.01) return 0;
+  return Math.max(25, Math.min(280, ratio * 260));
+}
+
+function drawParticle(pos, cr, cg, cb) {
+  const r = 5;
+  ctx.save();
+  const grad = ctx.createRadialGradient(pos.x, pos.y, 1, pos.x, pos.y, r*3);
+  grad.addColorStop(0, `rgba(${cr},${cg},${cb},0.55)`);
+  grad.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+  ctx.beginPath(); ctx.arc(pos.x, pos.y, r*3, 0, Math.PI*2); ctx.fillStyle=grad; ctx.fill();
+  ctx.beginPath(); ctx.arc(pos.x, pos.y, r,   0, Math.PI*2); ctx.fillStyle=`rgb(${cr},${cg},${cb})`; ctx.fill();
+  ctx.beginPath(); ctx.arc(pos.x, pos.y, r*0.4,0, Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+  ctx.restore();
+}
+
+function drawParticles() {
+  const path = mode === 'charge' ? pathCharge : pathDischarge;
+  const n    = getN();
+  const len  = pathLen(path);
+  if (n === 0) return;
+  for (let i=0; i<n; i++) {
+    const dist = (particlePhase + (i/n)*len) % len;
+    const pos  = posOnPath(path, dist);
+    if (mode === 'charge') drawParticle(pos, 52, 211, 153);
+    else                   drawParticle(pos, 192, 132, 252);
+  }
+}
+
+// ── Stats y explicación ───────────────────────────────────────────────────────
+function updateUI() {
+  const τ    = tau();
+  const tauStr = τ>=1 ? τ.toFixed(2)+' s' : (τ*1000).toFixed(0)+' ms';
+  const icmA   = ic_A()*1000;
+  const icStr  = icmA>=1 ? icmA.toFixed(2)+' mA' : (icmA*1000).toFixed(0)+' µA';
+  const p      = Math.round(chargePct()*100);
+
+  document.getElementById('st-tau').textContent = tauStr;
+  document.getElementById('st-vc').textContent  = vc().toFixed(2)+' V';
+  document.getElementById('st-ic').textContent  = icStr;
+  document.getElementById('st-pct').textContent = p+'%';
+
+  const expl = document.getElementById('explicacion');
+  if (mode === 'charge') {
+    expl.innerHTML = `<strong>Carga:</strong> τ = R×C = ${R_ohm}Ω × ${C_uF}µF = <strong>${tauStr}</strong>.
+      La corriente empieza alta (${(VCC/R_ohm*1000).toFixed(1)} mA) y decae exponencialmente mientras el capacitor se opone.
+      Al 1τ llega al <strong>63%</strong>. A los 5τ está prácticamente cargado.
+      Ahora: <strong>${p}%</strong> — ${vc().toFixed(2)} V — ${icStr}.`;
+  } else {
+    expl.innerHTML = `<strong>Descarga (LED):</strong> el capacitor es la fuente.
+      τ = <strong>${tauStr}</strong>. La corriente empieza alta y el LED brilla fuerte.
+      Al 1τ queda el <strong>37%</strong> de carga. A los 5τ el LED se apaga casi completamente.
+      Ahora: <strong>${p}% restante</strong> — ${vc().toFixed(2)} V — ${icStr}.`;
+  }
+}
+
+// ── Loop ──────────────────────────────────────────────────────────────────────
+const TIME_SCALE = 4;   // velocidad de simulación (4× tiempo real)
+
+function loop(ts) {
+  const dt = Math.min((ts - lastTS)/1000, 0.05);
+  lastTS = ts;
+  animT += dt;
+
+  simT = Math.min(simT + dt * TIME_SCALE, tau()*6);
+  particlePhase = (particlePhase + dt * getSpeed()) % 99999;
+
+  ctx.clearRect(0, 0, CW, CH);
+  drawWires();
+  drawCapacitor();
+  drawSource();
+  drawResistance();
+  drawLED();
+  drawGNDSource();
+  drawParticles();
+
+  updateUI();
+  requestAnimationFrame(loop);
+}
+
+// ── Controles ─────────────────────────────────────────────────────────────────
+function resetSim() { simT = 0; particlePhase = 0; }
+
+function setMode(m) {
+  mode = m;
+  resetSim();
+  document.getElementById('btn-charge').className    = 'mode-btn'+(m==='charge'    ?' active-charge':'');
+  document.getElementById('btn-discharge').className = 'mode-btn'+(m==='discharge'?' active-discharge':'');
+  document.getElementById('explicacion').style.borderLeftColor = m==='charge' ? '#7ecfff' : '#c084fc';
+}
+
+document.getElementById('sl-c').addEventListener('input', function() {
+  C_uF = parseInt(this.value);
+  document.getElementById('val-c').textContent = C_uF+' µF';
+  resetSim();
+});
+document.getElementById('sl-r').addEventListener('input', function() {
+  R_ohm = parseInt(this.value);
+  document.getElementById('val-r').textContent = R_ohm>=1000 ? (R_ohm/1000).toFixed(1)+' kΩ' : R_ohm+' Ω';
+  resetSim();
+});
+
+updateUI();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
