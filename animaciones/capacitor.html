@@ -158,6 +158,10 @@ function chargePct() {
 const cv  = document.getElementById('circ');
 const ctx = cv.getContext('2d');
 const CW  = cv.width, CH = cv.height;
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+cv.width = CW * DPR;
+cv.height = CH * DPR;
+ctx.scale(DPR, DPR);
 
 // Layout: circuito rectangular
 // Fuente (izq), R (arriba), Capacitor (centro-abajo), LED (der, solo descarga)

@@ -340,6 +340,10 @@
 const canvas = document.getElementById('circuito');
 const ctx = canvas.getContext('2d');
 const W = canvas.width, H = canvas.height;
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+canvas.width = W * DPR;
+canvas.height = H * DPR;
+ctx.scale(DPR, DPR);
 
 const PAD = 60;
 const circuit = { x1: PAD, y1: PAD, x2: W - PAD, y2: H - PAD };

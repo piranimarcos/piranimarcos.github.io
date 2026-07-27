@@ -238,6 +238,10 @@ function lampBr() { return icA() / IC_SAT; }  // 0–1
 const canvas = document.getElementById('circ');
 const ctx    = canvas.getContext('2d');
 const CW = canvas.width, CH = canvas.height;
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+canvas.width = CW * DPR;
+canvas.height = CH * DPR;
+ctx.scale(DPR, DPR);
 
 const TX = 360, TY = 200, TR = 36;   // transistor centro y radio
 const VCC_Y  = 22;

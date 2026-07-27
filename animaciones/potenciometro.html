@@ -13,7 +13,7 @@
     canvas#circuito { border-radius: 12px; background: #111e2e; display: block; width: 100%; height: auto; }
     .knob-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 18px; width: 100%; max-width: 680px; }
     .knob-label { font-size: 0.85rem; color: #8da8c0; margin-bottom: 6px; font-weight: 600; }
-    canvas#knob { cursor: grab; touch-action: none; display: block; }
+    canvas#knob { cursor: grab; touch-action: none; display: block; max-width: 100%; height: auto; }
     canvas#knob:active { cursor: grabbing; }
     .range-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
     .range-row label { font-size: 0.82rem; color: #8da8c0; }
@@ -111,6 +111,10 @@ function brightness() { return Math.max(0, Math.min(1, (current() - I_MIN) / (I_
 const circ = document.getElementById('circuito');
 const ctx = circ.getContext('2d');
 const CW = circ.width, CH = circ.height;
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+circ.width = CW * DPR;
+circ.height = CH * DPR;
+ctx.scale(DPR, DPR);
 
 const X1 = 78, Y1 = 52, X2 = 602, Y2 = 248;
 const midY = (Y1 + Y2) / 2;
@@ -433,6 +437,9 @@ function updateInfo() {
 const knobEl = document.getElementById('knob');
 const kCtx = knobEl.getContext('2d');
 const KW = knobEl.width, KH = knobEl.height;
+knobEl.width = KW * DPR;
+knobEl.height = KH * DPR;
+kCtx.scale(DPR, DPR);
 const KCX = KW / 2, KCY = 118;
 const KR = 65;
 

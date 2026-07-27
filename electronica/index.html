@@ -29,12 +29,13 @@
         h1,h2,h3,h4,h5 { font-family:'Poppins',sans-serif; color:#f8fafc; }
 
         .site-header { background:rgba(10,10,15,.95); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); padding:14px 0; position:sticky; top:0; z-index:100; }
+        .site-header .container { flex-wrap:wrap; row-gap:10px; }
         .brand { font-family:'Poppins',sans-serif; font-size:1.3rem; font-weight:700; color:#f8fafc; text-decoration:none; display:flex; align-items:center; gap:10px; }
         .brand span { background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
         /* scroll-to-top */
-        .scroll-top { position:fixed; bottom:26px; right:26px; width:42px; height:42px; border-radius:50%; background:var(--primary); border:none; color:white; font-size:1rem; cursor:pointer; display:none; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(59,130,246,.45); transition:opacity .3s,transform .3s; z-index:500; }
-        .scroll-top.visible { display:flex; }
-        .scroll-top:hover { transform:translateY(-3px); }
+        .scroll-top { position:fixed; bottom:26px; right:26px; width:42px; height:42px; border-radius:50%; background:var(--primary); border:none; color:white; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(59,130,246,.45); opacity:0; visibility:hidden; transform:translateY(12px) scale(.85); transition:opacity .3s ease,transform .3s cubic-bezier(.34,1.56,.64,1),visibility .3s; z-index:500; }
+        .scroll-top.visible { opacity:1; visibility:visible; transform:translateY(0) scale(1); }
+        .scroll-top:hover { transform:translateY(-3px) scale(1); }
 
         .page-hero { padding:50px 0 30px; text-align:center; }
         .page-hero h1 { font-size:2.5rem; margin-bottom:12px; }
@@ -42,7 +43,9 @@
         .page-hero p { color:var(--text-light); font-size:1.1rem; max-width:600px; margin:0 auto; }
 
         /* Tabs */
-        .nav-tabs { border-bottom:1px solid var(--border-light); gap:4px; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; }
+        .nav-tabs-wrap { position:relative; }
+        .nav-tabs-wrap::after { content:''; position:absolute; top:0; right:0; bottom:1px; width:34px; background:linear-gradient(to right, transparent, var(--bg-dark) 75%); pointer-events:none; border-radius:0 10px 0 0; }
+        .nav-tabs { border-bottom:1px solid var(--border-light); gap:4px; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; scroll-behavior:smooth; -webkit-overflow-scrolling:touch; }
         .nav-tabs::-webkit-scrollbar { display:none; }
         .nav-tabs .nav-link { color:var(--text-muted); background:transparent; border:1px solid transparent; border-radius:10px 10px 0 0; padding:10px 18px; font-weight:500; font-size:.9rem; white-space:nowrap; transition:all .3s; }
         .nav-tabs .nav-link:hover { color:var(--text); border-color:var(--border); }
@@ -92,7 +95,7 @@
         /* Calculadora resistencias */
         .calc-section { background:var(--bg-darker); border:1px solid var(--border); border-radius:16px; padding:28px; margin-bottom:28px; }
         .calc-section h3 { font-size:1.15rem; margin-bottom:18px; display:flex; align-items:center; gap:10px; }
-        .bands-toggle { display:flex; justify-content:center; gap:10px; margin-bottom:18px; }
+        .bands-toggle { display:flex; justify-content:center; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
         .toggle-btn { padding:7px 20px; border-radius:20px; border:1px solid var(--border-light); background:transparent; color:var(--text-muted); font-size:.88rem; font-weight:500; cursor:pointer; transition:all .3s; }
         .toggle-btn.active { background:var(--primary); border-color:var(--primary); color:white; }
         .resistor-visual { display:flex; align-items:center; justify-content:center; margin:22px 0; }
@@ -132,8 +135,8 @@
         .input-group-custom input:focus, .input-group-custom select:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(59,130,246,.1); }
         .calc-btn { background:var(--gradient); border:none; border-radius:10px; color:white; padding:10px 24px; font-size:.92rem; font-weight:600; cursor:pointer; transition:all .3s; display:inline-flex; align-items:center; gap:8px; }
         .calc-btn:hover { transform:translateY(-2px); box-shadow:0 5px 20px var(--primary-glow); }
-        .led-result { margin-top:14px; padding:14px 18px; background:#0d0d18; border:1px solid var(--border-light); border-radius:10px; display:none; }
-        .led-result.show { display:block; }
+        .led-result { margin-top:0; padding:0 18px; background:#0d0d18; border:1px solid transparent; border-radius:10px; max-height:0; opacity:0; overflow:hidden; transition:max-height .4s ease,opacity .3s ease,margin-top .4s ease,padding .4s ease,border-color .3s ease; }
+        .led-result.show { display:block; max-height:600px; opacity:1; margin-top:14px; padding:14px 18px; border-color:var(--border-light); }
         .led-result-value { font-family:'Poppins',sans-serif; font-size:1.5rem; font-weight:700; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
         .led-result-sub { font-size:.81rem; color:var(--text-muted); margin-top:4px; }
         .led-warning { margin-top:8px; font-size:.8rem; color:#f97316; display:flex; align-items:center; gap:6px; }
@@ -178,6 +181,18 @@
             .band-select-group select{width:115px;}
             .page-hero h1{font-size:1.8rem;}
             .resistor-wire{width:18px;}
+            .site-header .container{justify-content:center;text-align:center;}
+            .site-header img{height:34px;}
+            .anim-nav-btn,.pdf-btn{padding:9px 13px;font-size:.82rem;}
+            .toggle-btn{padding:10px 18px;min-height:40px;}
+            .extra-toggle{padding:9px 15px;}
+            .scroll-top{width:46px;height:46px;bottom:20px;right:16px;}
+            .calcs-fab{width:54px;height:54px;bottom:20px;left:16px;}
+            .calcs-sheet-close{width:38px;height:38px;}
+            .dif{font-size:.64rem;}
+            .badge-tipo{font-size:.72rem;}
+            .ic-func{font-size:.72rem;}
+            .calcs-group-label{font-size:.72rem;}
         }
 
         /* ======================== BUSCADOR ======================== */
@@ -201,8 +216,9 @@
         .extra-toggle:hover { background:rgba(59,130,246,.08); }
         .extra-toggle i.arr { transition:transform .25s; }
         .extra-toggle.open i.arr { transform:rotate(90deg); }
-        .extra-body { display:none; margin-top:12px; padding:16px 20px; background:#0d0d18; border:1px solid var(--border); border-radius:10px; }
-        .extra-body.open { display:block; }
+        .extra-body { display:block; margin-top:0; padding:0 20px; background:#0d0d18; border:1px solid transparent; border-radius:10px; max-height:0; opacity:0; overflow:hidden; transition:max-height .4s ease,opacity .3s ease,margin-top .4s ease,padding .4s ease,border-color .3s ease; }
+        .extra-body.open { max-height:1200px; opacity:1; margin-top:12px; padding:16px 20px; border-color:var(--border); }
+        @media print { .extra-body.open, .led-result.show { max-height:none !important; overflow:visible !important; } }
         .extra-body p, .extra-body li { color:var(--text-light); font-size:.88rem; line-height:1.7; }
         .extra-body h5 { color:#f8fafc; font-size:.92rem; margin-top:14px; margin-bottom:6px; }
         .extra-body h5:first-child { margin-top:0; }
@@ -232,7 +248,7 @@
 
         /* ======================== 555 PINOUT ======================== */
         .ic-wrap { display:flex; justify-content:center; margin:20px 0; }
-        .ic-body { background:#1a1a2e; border:2px solid var(--border-light); border-radius:10px; overflow:hidden; width:280px; }
+        .ic-body { background:#1a1a2e; border:2px solid var(--border-light); border-radius:10px; overflow:hidden; width:280px; max-width:100%; }
         .ic-header { text-align:center; font-family:'Poppins',sans-serif; font-weight:700; color:#f8fafc; font-size:1.1rem; padding:10px; background:#0d0d18; border-bottom:1px solid var(--border); }
         .ic-row { display:flex; justify-content:space-between; align-items:stretch; border-bottom:1px solid rgba(255,255,255,.05); }
         .ic-row:last-child { border-bottom:none; }
@@ -528,6 +544,7 @@
         <div class="search-panel" id="searchPanel"></div>
     </div>
 
+    <div class="nav-tabs-wrap">
     <ul class="nav nav-tabs mb-0" id="mainTabs" role="tablist">
         <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#electricidad" type="button"><i class="fas fa-bolt me-1"></i>Electricidad<span class="dif dif-1">★</span></button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#herramientas" type="button"><i class="fas fa-screwdriver-wrench me-1"></i>Herramientas<span class="dif dif-1">★</span></button></li>
@@ -543,6 +560,7 @@
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tiristor" type="button"><i class="fas fa-fire-flame-curved me-1"></i>Tiristor (SCR)<span class="dif dif-3">★★★</span></button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#reguladores" type="button"><i class="fas fa-plug me-1"></i>Reguladores<span class="dif dif-2">★★</span></button></li>
     </ul>
+    </div>
 
     <div class="tab-content">
 

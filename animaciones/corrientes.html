@@ -7,8 +7,8 @@
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Segoe UI',sans-serif;background:#0d1b2a;color:#e0e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px}
-    nav{width:100%;max-width:860px;display:flex;gap:12px;margin-bottom:20px}
-    nav a{padding:8px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;border:1px solid #2a3f5a;color:#8da8c0;transition:all .2s}
+    nav{width:100%;max-width:860px;display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+    nav a{padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.87rem;border:1px solid #2a3f5a;color:#8da8c0;transition:all .2s}
     nav a:hover,nav a.active{background:#1a3a5a;color:#7ecfff;border-color:#7ecfff}
     h1{font-size:1.6rem;color:#7ecfff;margin-bottom:4px;text-align:center}
     .subtitle{font-size:0.92rem;color:#8da8c0;margin-bottom:22px;text-align:center}
@@ -45,6 +45,12 @@
     .brand-bar img{height:38px;border-radius:8px;object-fit:contain}
     .brand-name{font-size:0.95rem;font-weight:700;color:#e0e8f0}
     .brand-sub{font-size:0.74rem;color:#8da8c0;margin-top:1px}
+
+    @media(max-width:520px){
+      body{padding:14px}
+      .toggle-btn{padding:12px 18px;font-size:.9rem}
+      .info-grid{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
@@ -197,8 +203,8 @@ function drawElectron(ctx, px, py, r, glowPhase, coreColor, glowR, glowG, glowB)
 }
 
 function drawWire(dt) {
-  const W = wireCanvas.width;
-  const H = wireCanvas.height;
+  const W = cssW;
+  const H = cssH;
   wctx.clearRect(0, 0, W, H);
 
   const wireY = H / 2;
@@ -264,17 +270,31 @@ function drawWire(dt) {
     }
   }
 
-  // Etiqueta inferior
-  wctx.font = 'bold 12px Segoe UI';
-  wctx.fillStyle = mode === 'DC' ? '#f7c948' : '#6bffb0';
-  wctx.textAlign = 'left';
-  wctx.fillText(mode === 'DC'
+  // Etiqueta inferior (se achica si no entra en el ancho disponible)
+  const labelTxt = mode === 'DC'
     ? '→ Los electrones avanzan siempre en la misma dirección'
-    : '↔ Los electrones van y vuelven (oscilan)', wireX1, H - 8);
+    : '↔ Los electrones van y vuelven (oscilan)';
+  const labelMaxW = W - wireX1 - 10;
+  let labelSize = 12;
+  wctx.textAlign = 'left';
+  while (labelSize > 8) {
+    wctx.font = 'bold ' + labelSize + 'px Segoe UI';
+    if (wctx.measureText(labelTxt).width <= labelMaxW) break;
+    labelSize--;
+  }
+  wctx.fillStyle = mode === 'DC' ? '#f7c948' : '#6bffb0';
+  wctx.fillText(labelTxt, wireX1, H - 8);
 }
 
+let cssW = 0, cssH = 150;
 function resize() {
-  wireCanvas.width = wireCanvas.parentElement.clientWidth - 28;
+  cssW = wireCanvas.parentElement.clientWidth - 28;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  wireCanvas.width = Math.round(cssW * dpr);
+  wireCanvas.height = Math.round(cssH * dpr);
+  wireCanvas.style.width = cssW + 'px';
+  wireCanvas.style.height = cssH + 'px';
+  wctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
 
 let lastTs = 0;
